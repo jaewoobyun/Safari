@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MainWebVC" customModule="Safari" customModuleProvider="target">
+            <connections>
+                <outlet property="addresslb" destination="kEw-dS-7TH" id="Hrm-9t-Nb3"/>
+                <outlet property="deleteButton" destination="eGe-zq-9EM" id="iIa-Q2-qke"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="webView" destination="tbj-t1-LSy" id="3H9-h7-7Gt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tbj-t1-LSy">
+                    <rect key="frame" x="0.0" y="42" width="414" height="694"/>
+                    <color key="backgroundColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <wkWebViewConfiguration key="configuration">
+                        <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                        <wkPreferences key="preferences"/>
+                    </wkWebViewConfiguration>
+                </wkWebView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eGe-zq-9EM">
+                    <rect key="frame" x="0.0" y="0.0" width="34" height="34"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="eGe-zq-9EM" secondAttribute="height" id="Z9W-Yr-xpd"/>
+                        <constraint firstAttribute="height" constant="34" id="riw-0G-cdM"/>
+                        <constraint firstAttribute="width" secondItem="eGe-zq-9EM" secondAttribute="height" multiplier="1:1" id="te9-aS-itj"/>
+                        <constraint firstAttribute="width" constant="34" id="u2Z-0d-dCH"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                    <state key="normal" title="X">
+                        <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="onDeleteButtonTap:" destination="-1" eventType="touchUpInside" id="ciN-Sj-b1z"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="placeholder Address" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kEw-dS-7TH">
+                    <rect key="frame" x="39" y="0.0" width="375" height="34"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="34" id="6Eg-CI-Pnx"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="eGe-zq-9EM" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="0M5-pv-zHX"/>
+                <constraint firstItem="kEw-dS-7TH" firstAttribute="leading" secondItem="eGe-zq-9EM" secondAttribute="trailing" constant="5" id="13P-9A-VMu"/>
+                <constraint firstItem="tbj-t1-LSy" firstAttribute="top" secondItem="kEw-dS-7TH" secondAttribute="bottom" constant="8" symbolic="YES" id="4ur-BY-V14"/>
+                <constraint firstItem="kEw-dS-7TH" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="5Ay-7z-S7Z"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="tbj-t1-LSy" secondAttribute="bottom" id="7WH-bO-DD1"/>
+                <constraint firstItem="kEw-dS-7TH" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="8pb-E0-PHV"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="tbj-t1-LSy" secondAttribute="trailing" id="GaB-0x-YVI"/>
+                <constraint firstItem="eGe-zq-9EM" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="RXB-eU-m3A"/>
+                <constraint firstItem="tbj-t1-LSy" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="iCQ-uv-JSd"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="137.68115942028987" y="152.44565217391306"/>
+        </view>
+    </objects>
+</document>

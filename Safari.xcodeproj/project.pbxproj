@@ -3,19 +3,24 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B21035B4F5EF01DC5F0D1E8 /* Pods_SafariUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ADB72567865FD708C0A0D96 /* Pods_SafariUITests.framework */; };
+		ADEC2BEC631DBA25666425FD /* Pods_Safari.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 118EBEAF09E31FC912CCE38F /* Pods_Safari.framework */; };
 		DBA4B96223D6CBF600122D39 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B96123D6CBF600122D39 /* AppDelegate.swift */; };
 		DBA4B96423D6CBF600122D39 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B96323D6CBF600122D39 /* SceneDelegate.swift */; };
-		DBA4B96623D6CBF600122D39 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B96523D6CBF600122D39 /* ViewController.swift */; };
+		DBA4B96623D6CBF600122D39 /* ContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B96523D6CBF600122D39 /* ContainerVC.swift */; };
 		DBA4B96923D6CBF600122D39 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DBA4B96723D6CBF600122D39 /* Main.storyboard */; };
 		DBA4B96C23D6CBF600122D39 /* Safari.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B96A23D6CBF600122D39 /* Safari.xcdatamodeld */; };
 		DBA4B96E23D6CBF900122D39 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBA4B96D23D6CBF900122D39 /* Assets.xcassets */; };
 		DBA4B97123D6CBF900122D39 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DBA4B96F23D6CBF900122D39 /* LaunchScreen.storyboard */; };
 		DBA4B97C23D6CBFA00122D39 /* SafariTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B97B23D6CBFA00122D39 /* SafariTests.swift */; };
 		DBA4B98723D6CBFA00122D39 /* SafariUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B98623D6CBFA00122D39 /* SafariUITests.swift */; };
+		DBA4B99623D6D29100122D39 /* MainWebVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B99423D6D29100122D39 /* MainWebVC.swift */; };
+		DBA4B99723D6D29100122D39 /* MainWebVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = DBA4B99523D6D29100122D39 /* MainWebVC.xib */; };
+		F6D7BB6F5D818B6ECF7A8A41 /* Pods_SafariTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 126AC6A83B1F3FD52C8B880D /* Pods_SafariTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,10 +41,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		118EBEAF09E31FC912CCE38F /* Pods_Safari.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Safari.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		126AC6A83B1F3FD52C8B880D /* Pods_SafariTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SafariTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		79D7A958E75DFF297D5A05FE /* Pods-SafariTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SafariTests.release.xcconfig"; path = "Target Support Files/Pods-SafariTests/Pods-SafariTests.release.xcconfig"; sourceTree = "<group>"; };
+		897259337FFDC5D33225322D /* Pods-SafariUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SafariUITests.release.xcconfig"; path = "Target Support Files/Pods-SafariUITests/Pods-SafariUITests.release.xcconfig"; sourceTree = "<group>"; };
+		8ADB72567865FD708C0A0D96 /* Pods_SafariUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SafariUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C32323A48087BD0590A444C4 /* Pods-SafariTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SafariTests.debug.xcconfig"; path = "Target Support Files/Pods-SafariTests/Pods-SafariTests.debug.xcconfig"; sourceTree = "<group>"; };
+		CB681921592B8946273CB19A /* Pods-Safari.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Safari.release.xcconfig"; path = "Target Support Files/Pods-Safari/Pods-Safari.release.xcconfig"; sourceTree = "<group>"; };
 		DBA4B95E23D6CBF600122D39 /* Safari.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Safari.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBA4B96123D6CBF600122D39 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBA4B96323D6CBF600122D39 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		DBA4B96523D6CBF600122D39 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		DBA4B96523D6CBF600122D39 /* ContainerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerVC.swift; sourceTree = "<group>"; };
 		DBA4B96823D6CBF600122D39 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DBA4B96B23D6CBF600122D39 /* Safari.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Safari.xcdatamodel; sourceTree = "<group>"; };
 		DBA4B96D23D6CBF900122D39 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -51,6 +63,10 @@
 		DBA4B98223D6CBFA00122D39 /* SafariUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SafariUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBA4B98623D6CBFA00122D39 /* SafariUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariUITests.swift; sourceTree = "<group>"; };
 		DBA4B98823D6CBFA00122D39 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DBA4B99423D6D29100122D39 /* MainWebVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWebVC.swift; sourceTree = "<group>"; };
+		DBA4B99523D6D29100122D39 /* MainWebVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWebVC.xib; sourceTree = "<group>"; };
+		ECEA09382295F7242CFB3081 /* Pods-SafariUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SafariUITests.debug.xcconfig"; path = "Target Support Files/Pods-SafariUITests/Pods-SafariUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		ED32E9907F9188BF032D94E4 /* Pods-Safari.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Safari.debug.xcconfig"; path = "Target Support Files/Pods-Safari/Pods-Safari.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADEC2BEC631DBA25666425FD /* Pods_Safari.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6D7BB6F5D818B6ECF7A8A41 /* Pods_SafariTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,12 +90,26 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B21035B4F5EF01DC5F0D1E8 /* Pods_SafariUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D80531FDBE840E5232FDE7D7 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				ED32E9907F9188BF032D94E4 /* Pods-Safari.debug.xcconfig */,
+				CB681921592B8946273CB19A /* Pods-Safari.release.xcconfig */,
+				C32323A48087BD0590A444C4 /* Pods-SafariTests.debug.xcconfig */,
+				79D7A958E75DFF297D5A05FE /* Pods-SafariTests.release.xcconfig */,
+				ECEA09382295F7242CFB3081 /* Pods-SafariUITests.debug.xcconfig */,
+				897259337FFDC5D33225322D /* Pods-SafariUITests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		DBA4B95523D6CBF600122D39 = {
 			isa = PBXGroup;
 			children = (
@@ -85,6 +117,8 @@
 				DBA4B97A23D6CBFA00122D39 /* SafariTests */,
 				DBA4B98523D6CBFA00122D39 /* SafariUITests */,
 				DBA4B95F23D6CBF600122D39 /* Products */,
+				D80531FDBE840E5232FDE7D7 /* Pods */,
+				FA33DEA6CF58AEA0327B42AC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -103,7 +137,9 @@
 			children = (
 				DBA4B96123D6CBF600122D39 /* AppDelegate.swift */,
 				DBA4B96323D6CBF600122D39 /* SceneDelegate.swift */,
-				DBA4B96523D6CBF600122D39 /* ViewController.swift */,
+				DBA4B96523D6CBF600122D39 /* ContainerVC.swift */,
+				DBA4B99423D6D29100122D39 /* MainWebVC.swift */,
+				DBA4B99523D6D29100122D39 /* MainWebVC.xib */,
 				DBA4B96723D6CBF600122D39 /* Main.storyboard */,
 				DBA4B96D23D6CBF900122D39 /* Assets.xcassets */,
 				DBA4B96F23D6CBF900122D39 /* LaunchScreen.storyboard */,
@@ -131,6 +167,16 @@
 			path = SafariUITests;
 			sourceTree = "<group>";
 		};
+		FA33DEA6CF58AEA0327B42AC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				118EBEAF09E31FC912CCE38F /* Pods_Safari.framework */,
+				126AC6A83B1F3FD52C8B880D /* Pods_SafariTests.framework */,
+				8ADB72567865FD708C0A0D96 /* Pods_SafariUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -138,9 +184,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DBA4B98B23D6CBFA00122D39 /* Build configuration list for PBXNativeTarget "Safari" */;
 			buildPhases = (
+				EE88DFF5BFF0D61441186F73 /* [CP] Check Pods Manifest.lock */,
 				DBA4B95A23D6CBF600122D39 /* Sources */,
 				DBA4B95B23D6CBF600122D39 /* Frameworks */,
 				DBA4B95C23D6CBF600122D39 /* Resources */,
+				599079092FA628957C9E0B7C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -155,6 +203,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DBA4B98E23D6CBFA00122D39 /* Build configuration list for PBXNativeTarget "SafariTests" */;
 			buildPhases = (
+				387B5BE999302C860190B313 /* [CP] Check Pods Manifest.lock */,
 				DBA4B97323D6CBFA00122D39 /* Sources */,
 				DBA4B97423D6CBFA00122D39 /* Frameworks */,
 				DBA4B97523D6CBFA00122D39 /* Resources */,
@@ -173,6 +222,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DBA4B99123D6CBFA00122D39 /* Build configuration list for PBXNativeTarget "SafariUITests" */;
 			buildPhases = (
+				C6055C06386C2F051CE834D4 /* [CP] Check Pods Manifest.lock */,
 				DBA4B97E23D6CBFA00122D39 /* Sources */,
 				DBA4B97F23D6CBFA00122D39 /* Frameworks */,
 				DBA4B98023D6CBFA00122D39 /* Resources */,
@@ -237,6 +287,7 @@
 			files = (
 				DBA4B97123D6CBF900122D39 /* LaunchScreen.storyboard in Resources */,
 				DBA4B96E23D6CBF900122D39 /* Assets.xcassets in Resources */,
+				DBA4B99723D6D29100122D39 /* MainWebVC.xib in Resources */,
 				DBA4B96923D6CBF600122D39 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -257,12 +308,99 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		387B5BE999302C860190B313 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SafariTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		599079092FA628957C9E0B7C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Safari/Pods-Safari-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Safari/Pods-Safari-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Safari/Pods-Safari-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C6055C06386C2F051CE834D4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SafariUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EE88DFF5BFF0D61441186F73 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Safari-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		DBA4B95A23D6CBF600122D39 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DBA4B96623D6CBF600122D39 /* ViewController.swift in Sources */,
+				DBA4B99623D6D29100122D39 /* MainWebVC.swift in Sources */,
+				DBA4B96623D6CBF600122D39 /* ContainerVC.swift in Sources */,
 				DBA4B96C23D6CBF600122D39 /* Safari.xcdatamodeld in Sources */,
 				DBA4B96223D6CBF600122D39 /* AppDelegate.swift in Sources */,
 				DBA4B96423D6CBF600122D39 /* SceneDelegate.swift in Sources */,
@@ -436,6 +574,7 @@
 		};
 		DBA4B98C23D6CBFA00122D39 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = ED32E9907F9188BF032D94E4 /* Pods-Safari.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -454,6 +593,7 @@
 		};
 		DBA4B98D23D6CBFA00122D39 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CB681921592B8946273CB19A /* Pods-Safari.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -472,6 +612,7 @@
 		};
 		DBA4B98F23D6CBFA00122D39 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C32323A48087BD0590A444C4 /* Pods-SafariTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -494,6 +635,7 @@
 		};
 		DBA4B99023D6CBFA00122D39 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 79D7A958E75DFF297D5A05FE /* Pods-SafariTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -516,6 +658,7 @@
 		};
 		DBA4B99223D6CBFA00122D39 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = ECEA09382295F7242CFB3081 /* Pods-SafariUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -536,6 +679,7 @@
 		};
 		DBA4B99323D6CBFA00122D39 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 897259337FFDC5D33225322D /* Pods-SafariUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
