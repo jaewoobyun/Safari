@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9B21035B4F5EF01DC5F0D1E8 /* Pods_SafariUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ADB72567865FD708C0A0D96 /* Pods_SafariUITests.framework */; };
 		ADEC2BEC631DBA25666425FD /* Pods_Safari.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 118EBEAF09E31FC912CCE38F /* Pods_Safari.framework */; };
+		DB41938B23DFFF4E002C9216 /* NavigationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB41938A23DFFF4E002C9216 /* NavigationVC.swift */; };
 		DBA4B96223D6CBF600122D39 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B96123D6CBF600122D39 /* AppDelegate.swift */; };
 		DBA4B96423D6CBF600122D39 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B96323D6CBF600122D39 /* SceneDelegate.swift */; };
 		DBA4B96623D6CBF600122D39 /* ContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B96523D6CBF600122D39 /* ContainerVC.swift */; };
@@ -48,6 +49,7 @@
 		8ADB72567865FD708C0A0D96 /* Pods_SafariUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SafariUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C32323A48087BD0590A444C4 /* Pods-SafariTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SafariTests.debug.xcconfig"; path = "Target Support Files/Pods-SafariTests/Pods-SafariTests.debug.xcconfig"; sourceTree = "<group>"; };
 		CB681921592B8946273CB19A /* Pods-Safari.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Safari.release.xcconfig"; path = "Target Support Files/Pods-Safari/Pods-Safari.release.xcconfig"; sourceTree = "<group>"; };
+		DB41938A23DFFF4E002C9216 /* NavigationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationVC.swift; sourceTree = "<group>"; };
 		DBA4B95E23D6CBF600122D39 /* Safari.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Safari.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBA4B96123D6CBF600122D39 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBA4B96323D6CBF600122D39 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 				DBA4B96123D6CBF600122D39 /* AppDelegate.swift */,
 				DBA4B96323D6CBF600122D39 /* SceneDelegate.swift */,
 				DBA4B96523D6CBF600122D39 /* ContainerVC.swift */,
+				DB41938A23DFFF4E002C9216 /* NavigationVC.swift */,
 				DBA4B99423D6D29100122D39 /* MainWebVC.swift */,
 				DBA4B99523D6D29100122D39 /* MainWebVC.xib */,
 				DBA4B96723D6CBF600122D39 /* Main.storyboard */,
@@ -399,6 +402,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB41938B23DFFF4E002C9216 /* NavigationVC.swift in Sources */,
 				DBA4B99623D6D29100122D39 /* MainWebVC.swift in Sources */,
 				DBA4B96623D6CBF600122D39 /* ContainerVC.swift in Sources */,
 				DBA4B96C23D6CBF600122D39 /* Safari.xcdatamodeld in Sources */,

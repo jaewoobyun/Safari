@@ -74,9 +74,13 @@ class MainWebVC: UIViewController{
 	}
 	
 	func blockUserInteractionWhenOpeningTab(_ visible:Bool) {
-		guard let webView = self.webView else { return }
+		if self.isViewLoaded == false {
+			return
+		}
 		webView.isUserInteractionEnabled = (visible ? false : true)
 	}
+	
+	
 	
 	@IBAction fileprivate func onDeleteButtonTap(_ sender: UIButton) {
 		self.delegate?.viewControllerDidRequestDelete?(self)

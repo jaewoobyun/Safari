@@ -16,7 +16,9 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 	var dataSource = Array<MainWebVC?>()
 	let safariPageController: SCSafariPageController = SCSafariPageController()
 	
+//	@IBOutlet weak var toolbar: UIToolbar!
 	
+	@IBOutlet weak var tabsBarView: UIView!
 	@IBOutlet weak var doneButton: UIButton!
 	@IBOutlet weak var addButton: UIButton!
 	
@@ -30,6 +32,8 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 	var canGoBackObservationToken: NSKeyValueObservation?
 	var canGoForwardObservationToken: NSKeyValueObservation?
 
+	
+	// MARK: - View Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -51,10 +55,12 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		searchController.searchBar.delegate = self
 		searchController.searchBar.placeholder = "Search or enter website name"
 		searchController.obscuresBackgroundDuringPresentation = false
-
-//		webView?.navigationDelegate = self
 		
-//		webView.scrollView.delegate = self
+		for vc in self.dataSource {
+			vc?.webView.scrollView.delegate = self
+//			vc?.webView.navigationDelegate = self
+		}
+		
 		
 		if #available(iOS 11.0, *) {
 			searchBar = searchController.searchBar
@@ -79,12 +85,59 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		
 	}
 	
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated);
-		
-		self.safariPageController.zoomOut(animated: true, completion: nil)
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
 	}
 	
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated);
+		self.tabsBarView.isHidden = true
+//		self.safariPageController.zoomOut(animated: true, completion: nil)
+	}
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+	}
+	
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+	}
+	
+	
+	@IBAction func tabsBarButton(_ sender: UIBarButtonItem) {
+		self.safariPageController.zoomOut(animated: true, completion: nil)
+		self.navigationController?.navigationBar.isHidden = self.safariPageController.isZoomedOut ? true : false
+		self.navigationController?.isToolbarHidden = self.safariPageController.isZoomedOut ? true : false
+		self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true
+		
+		for viewController in self.dataSource {
+			viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
+			viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
+		}
+		
+		
+	}
+	
+	@IBAction func doneButtonTap(_ sender: UIButton) {
+//		self.toggleZoomWithPageIndex(self.safariPageController.currentPage)
+		if self.safariPageController.isZoomedOut {
+			self.safariPageController.zoomIntoPage(at: self.safariPageController.currentPage, animated: true, completion: nil)
+		}
+		self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true
+		
+	}
+	
+	@IBAction func addButtonTap(_ sender: UIButton) {
+		self.dataSource.insert(nil, at: Int(self.safariPageController.numberOfPages))
+		self.safariPageController.insertPages(at: IndexSet(integer: Int(self.safariPageController.numberOfPages)), animated: true) { () -> Void in
+//			self.toggleZoomWithPageIndex(self.safariPageController.numberOfPages - 1)
+			self.safariPageController.zoomIntoPage(at: self.safariPageController.numberOfPages - 1, animated: true, completion: nil)
+		}
+		self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? true : false
+	}
+	
+	
+	// MARK: - numberofpages
 	func numberOfPages(in pageController: SCSafariPageController!) -> UInt {
 		return UInt(self.dataSource.count)
 	}
@@ -108,7 +161,7 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		self.dataSource.remove(at: Int(pageIndex))
 	}
 	
-	// MARK: SCViewControllerDelegate
+	// MARK: SCViewControllerDelegate // MainWebVC Delegate?
 	
 	func viewControllerDidReceiveTap(_ viewController: MainWebVC) {
 		if !self.safariPageController.isZoomedOut {
@@ -116,7 +169,12 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		}
 		let pageIndex = self.dataSource.firstIndex{$0 === viewController}
 		
-		self.toggleZoomWithPageIndex(UInt(pageIndex!))
+//		self.toggleZoomWithPageIndex(UInt(pageIndex!))
+		for viewController in self.dataSource {
+			viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
+			viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
+		}
+		self.safariPageController.zoomIntoPage(at: UInt(pageIndex!), animated: true, completion: nil)
 	}
 	
 	func viewControllerDidRequestDelete(_ viewController: MainWebVC) {
@@ -149,16 +207,7 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		
 	}
 	
-	@IBAction func doneButtonTap(_ sender: UIButton) {
-		self.toggleZoomWithPageIndex(self.safariPageController.currentPage)
-	}
-	
-	@IBAction func addButtonTap(_ sender: UIButton) {
-		self.dataSource.insert(nil, at: Int(self.safariPageController.numberOfPages))
-		self.safariPageController.insertPages(at: IndexSet(integer: Int(self.safariPageController.numberOfPages)), animated: true) { () -> Void in
-			self.toggleZoomWithPageIndex(self.safariPageController.numberOfPages - 1)
-		}
-	}
+
 	
 
 }
@@ -237,7 +286,7 @@ extension ContainerVC: UIScrollViewDelegate {
 			//Code will work without the animation block.I am using animation block incase if you want to set any delay to it.
 			UIView.animate(withDuration: 0.5, delay: 0, options: UIView.AnimationOptions(), animations: {
 				self.navigationController?.setNavigationBarHidden(true, animated: true)
-//				self.navigationController?.setToolbarHidden(true, animated: true)
+				self.navigationController?.setToolbarHidden(true, animated: true)
 				//				self.navigationController?.navigationItem.hidesSearchBarWhenScrolling = false
 				//				self.navigationController?.toolbar.isHidden = true
 				
@@ -247,10 +296,16 @@ extension ContainerVC: UIScrollViewDelegate {
 		} else {
 			UIView.animate(withDuration: 0.1, delay: 0, options: UIView.AnimationOptions(), animations: {
 				self.navigationController?.setNavigationBarHidden(false, animated: true)
-//				self.navigationController?.setToolbarHidden(false, animated: true)
+				self.navigationController?.setToolbarHidden(false, animated: true)
 				print("Unhide")
 			}, completion: nil)
 		}
 	}
 	
+}
+
+extension ContainerVC: UIToolbarDelegate {
+	func position(for bar: UIBarPositioning) -> UIBarPosition {
+		return UIBarPosition.bottom
+	}
 }
