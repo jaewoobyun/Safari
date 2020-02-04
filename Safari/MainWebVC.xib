@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -11,6 +11,7 @@
             <connections>
                 <outlet property="addresslb" destination="kEw-dS-7TH" id="Hrm-9t-Nb3"/>
                 <outlet property="deleteButton" destination="eGe-zq-9EM" id="iIa-Q2-qke"/>
+                <outlet property="progressView" destination="OMS-yu-CfE" id="z8W-Ej-bQB"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="webView" destination="tbj-t1-LSy" id="3H9-h7-7Gt"/>
             </connections>
@@ -20,8 +21,11 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="OMS-yu-CfE">
+                    <rect key="frame" x="0.0" y="34" width="414" height="2"/>
+                </progressView>
                 <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tbj-t1-LSy">
-                    <rect key="frame" x="0.0" y="42" width="414" height="694"/>
+                    <rect key="frame" x="0.0" y="36" width="414" height="700"/>
                     <color key="backgroundColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <wkWebViewConfiguration key="configuration">
                         <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
@@ -58,11 +62,14 @@
             <constraints>
                 <constraint firstItem="eGe-zq-9EM" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="0M5-pv-zHX"/>
                 <constraint firstItem="kEw-dS-7TH" firstAttribute="leading" secondItem="eGe-zq-9EM" secondAttribute="trailing" constant="5" id="13P-9A-VMu"/>
-                <constraint firstItem="tbj-t1-LSy" firstAttribute="top" secondItem="kEw-dS-7TH" secondAttribute="bottom" constant="8" symbolic="YES" id="4ur-BY-V14"/>
+                <constraint firstItem="tbj-t1-LSy" firstAttribute="top" secondItem="OMS-yu-CfE" secondAttribute="bottom" id="4ur-BY-V14"/>
                 <constraint firstItem="kEw-dS-7TH" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="5Ay-7z-S7Z"/>
+                <constraint firstAttribute="trailing" secondItem="OMS-yu-CfE" secondAttribute="trailing" id="7EY-Nm-UkW"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="tbj-t1-LSy" secondAttribute="bottom" id="7WH-bO-DD1"/>
                 <constraint firstItem="kEw-dS-7TH" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="8pb-E0-PHV"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="tbj-t1-LSy" secondAttribute="trailing" id="GaB-0x-YVI"/>
+                <constraint firstItem="OMS-yu-CfE" firstAttribute="top" secondItem="eGe-zq-9EM" secondAttribute="bottom" id="HWa-KJ-d6p"/>
+                <constraint firstItem="OMS-yu-CfE" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="NFH-p3-ydW"/>
                 <constraint firstItem="eGe-zq-9EM" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="RXB-eU-m3A"/>
                 <constraint firstItem="tbj-t1-LSy" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="iCQ-uv-JSd"/>
             </constraints>

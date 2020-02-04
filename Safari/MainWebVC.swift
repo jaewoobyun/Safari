@@ -12,6 +12,9 @@ import WebKit
 @objc protocol ViewControllerDelegate {
 	@objc optional func viewControllerDidReceiveTap(_ viewController: MainWebVC)
 	@objc optional func viewControllerDidRequestDelete(_ viewController: MainWebVC)
+	@objc optional func requestLoad(_ viewController: MainWebVC)
+	
+//	@objc optional func canGoBack()s
 }
 
 class MainWebVC: UIViewController{
@@ -21,10 +24,18 @@ class MainWebVC: UIViewController{
 	@IBOutlet weak var deleteButton: UIButton!
 	@IBOutlet weak var addresslb: UILabel!
 	@IBOutlet weak var webView: WKWebView!
+	@IBOutlet weak var progressView: UIProgressView!
 	
 	var headerVisible:Bool = false
 	
-
+	var urlString: String = "https://www.google.com"
+	
+//	var currentContentMode: WKWebpagePreferences.ContentMode?
+//	var contentModeToRequestForHost: [String: WKWebpagePreferences.ContentMode] = [:]
+//	var estimatedProgressObservationToken: NSKeyValueObservation?
+//	var canGoBackObservationToken: NSKeyValueObservation?
+//	var canGoForwardObservationToken: NSKeyValueObservation?
+	
 	
 //	var visitedWebSiteHistoryRecords: [] = [] //FIXME: HistoryData
 	
@@ -32,23 +43,30 @@ class MainWebVC: UIViewController{
 		super.viewDidLoad()
 		
 		//-------------------
-		let urlString = "https://www.google.com"
+//		let urlString = "https://www.google.com"
 		let url = URL(string: urlString)
 		let urlRequest = URLRequest(url: url!)
 		webView.load(urlRequest)
-		//---------------------
+		
+		self.addresslb.text = urlString
+		//---------------------r
 		
 		let tapGesture = UITapGestureRecognizer(target: self, action: #selector(MainWebVC.onBackgroundTap(_:)))
 		self.view.addGestureRecognizer(tapGesture)
+		
+		setUpObservation()
 		
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+		self.delegate?.requestLoad?(self)
+		
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
+		self.delegate?.requestLoad?(self)
 		
 	}
 	
@@ -69,7 +87,6 @@ class MainWebVC: UIViewController{
 		UIView.animate(withDuration: (animated ? 0.25 : 0.0)) {
 			self.deleteButton?.alpha = (visible ? 1.0 : 0.0)
 			self.addresslb?.alpha = (visible ? 1.0 : 0.0)
-//			self.searchBar.alpha = (visible ? 0.0 : 1.0)
 		}
 	}
 	
@@ -81,13 +98,36 @@ class MainWebVC: UIViewController{
 	}
 	
 	
-	
 	@IBAction fileprivate func onDeleteButtonTap(_ sender: UIButton) {
 		self.delegate?.viewControllerDidRequestDelete?(self)
 	}
 	
 	@objc func onBackgroundTap(_ tapGesture:UITapGestureRecognizer) {
 		self.delegate?.viewControllerDidReceiveTap?(self)
+		
+	}
+	
+	func setUpObservation() {
+		Observables.shared.estimatedProgressObservationToken = webView.observe(\.estimatedProgress) { (object, change) in
+			let estimatedProgress = self.webView.estimatedProgress
+			self.progressView.alpha = 1
+			self.progressView.progress = Float(estimatedProgress)
+			if estimatedProgress >= 1 { //로딩이 끝나면 progressview 를 안 보이게 해준다.
+				self.progressView.alpha = 0
+			}
+		}
+		
+//		Observables.shared.canGoBackObservationToken = webView.observe(\.canGoBack) { (object, change) in
+////			self.backButton.isEnabled = self.webView.canGoBack
+//
+//		}
+//
+//		Observables.shared.canGoForwardObservationToken = webView.observe(\.canGoForward) { (object, change) in
+////			self.forwardButton.isEnabled = self.webView.canGoForward
+//
+//		}
+		
+		
 	}
 	
 }

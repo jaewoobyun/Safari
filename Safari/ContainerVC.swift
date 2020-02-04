@@ -23,14 +23,23 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 	@IBOutlet weak var addButton: UIButton!
 	
 	
+	
+	@IBOutlet weak var backButton: UIBarButtonItem!
+	@IBOutlet weak var forwardButton: UIBarButtonItem!
+	@IBOutlet weak var shareButton: UIBarButtonItem!
+	@IBOutlet weak var bookmarksButton: UIBarButtonItem!
+	@IBOutlet weak var tabsButton: UIBarButtonItem!
+	
+	
+	
 	lazy var searchBar = UISearchBar(frame: CGRect.zero)
 	let searchController = UISearchController(searchResultsController: nil) //TODO: Make searchResultsController later
 	
-	var currentContentMode: WKWebpagePreferences.ContentMode?
-	var contentModeToRequestForHost: [String: WKWebpagePreferences.ContentMode] = [:]
-	var estimatedProgressObservationToken: NSKeyValueObservation?
-	var canGoBackObservationToken: NSKeyValueObservation?
-	var canGoForwardObservationToken: NSKeyValueObservation?
+	
+	var urlToRequest: URL?
+	var selectedPageIndex: Array<MainWebVC?>.Index?
+	
+
 
 	
 	// MARK: - View Life Cycle
@@ -59,6 +68,8 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		for vc in self.dataSource {
 			vc?.webView.scrollView.delegate = self
 //			vc?.webView.navigationDelegate = self
+//			self.navigationController?.title = vc?.urlString //
+			
 		}
 		
 		
@@ -72,6 +83,7 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 //		self.navigationController?.navigationBar.isHidden = true
 		self.navigationController?.navigationBar.barTintColor = UIColor.white
 		
+		
 		////  searchBar customization
 		searchBar.showsBookmarkButton = true
 		let refreshImage = UIImage(systemName: "arrow.clockwise")
@@ -82,6 +94,9 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		
 		let leftBarButton = UIBarButtonItem(image: UIImage(systemName: "textformat.size"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(showPopover))
 		navigationItem.leftBarButtonItem = leftBarButton
+		
+		
+		
 		
 	}
 	
@@ -104,6 +119,13 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 	}
 	
 	
+//	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+//		self.backButton.isEnabled = self.dataSource[selectedPageIndex ?? 0]?.webView.canGoBack ?? false
+//
+//		self.forwardButton.isEnabled = self.dataSource[selectedPageIndex ?? 0]?.webView.canGoForward ?? false
+//	}
+	
+	
 	@IBAction func tabsBarButton(_ sender: UIBarButtonItem) {
 		self.safariPageController.zoomOut(animated: true, completion: nil)
 		self.navigationController?.navigationBar.isHidden = self.safariPageController.isZoomedOut ? true : false
@@ -122,6 +144,10 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 //		self.toggleZoomWithPageIndex(self.safariPageController.currentPage)
 		if self.safariPageController.isZoomedOut {
 			self.safariPageController.zoomIntoPage(at: self.safariPageController.currentPage, animated: true, completion: nil)
+			for viewController in self.dataSource {
+				viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
+				viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
+			}
 		}
 		self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true
 		
@@ -161,20 +187,31 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		self.dataSource.remove(at: Int(pageIndex))
 	}
 	
-	// MARK: SCViewControllerDelegate // MainWebVC Delegate?
+	// MARK: - SCViewControllerDelegate
 	
 	func viewControllerDidReceiveTap(_ viewController: MainWebVC) {
-		if !self.safariPageController.isZoomedOut {
-			return
-		}
-		let pageIndex = self.dataSource.firstIndex{$0 === viewController}
-		
-//		self.toggleZoomWithPageIndex(UInt(pageIndex!))
+		self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true //
 		for viewController in self.dataSource {
 			viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
 			viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
 		}
+		
+		if !self.safariPageController.isZoomedOut {
+			viewController.webView.isUserInteractionEnabled = true //
+			return
+		}
+		let pageIndex = self.dataSource.firstIndex{$0 === viewController}
+		selectedPageIndex = self.dataSource.firstIndex{$0 === viewController}
+		
+//		self.toggleZoomWithPageIndex(UInt(pageIndex!))
 		self.safariPageController.zoomIntoPage(at: UInt(pageIndex!), animated: true, completion: nil)
+	}
+	
+	func requestLoad(_ viewController: MainWebVC, urlToRequest: URL) {
+		let pageIndex = self.dataSource.firstIndex{$0 === viewController}
+		let request = URLRequest(url: urlToRequest)
+		viewController.addresslb.text = urlToRequest.absoluteString
+		self.dataSource[pageIndex!]?.webView.load(request)
 	}
 	
 	func viewControllerDidRequestDelete(_ viewController: MainWebVC) {
@@ -189,23 +226,23 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 	}
 	
 	// MARK: Private
-	fileprivate func toggleZoomWithPageIndex(_ pageIndex:UInt) {
-		if self.safariPageController.isZoomedOut {
-			self.safariPageController.zoomIntoPage(at: pageIndex, animated: true, completion: nil)
-		} else {
-			self.safariPageController.zoomOut(animated: true, completion: nil)
-		}
-		
-		for viewController in self.dataSource {
-			viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
-			viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
-		}
-		
-		UIView.animate(withDuration: 0.25) { () -> Void in
-			self.addButton.alpha = (self.safariPageController.isZoomedOut ? 1.0 : 0.0)
-		}
-		
-	}
+//	fileprivate func ZoomWithPageIndex(_ pageIndex:UInt) {
+//		if self.safariPageController.isZoomedOut {
+//			self.safariPageController.zoomIntoPage(at: pageIndex, animated: true, completion: nil)
+//		} else {
+//			self.safariPageController.zoomOut(animated: true, completion: nil)
+//		}
+//
+//		for viewController in self.dataSource {
+//			viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
+//			viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
+//		}
+//
+//		UIView.animate(withDuration: 0.25) { () -> Void in
+//			self.addButton.alpha = (self.safariPageController.isZoomedOut ? 1.0 : 0.0)
+//		}
+//
+//	}
 	
 
 	
@@ -234,6 +271,24 @@ extension ContainerVC: UISearchResultsUpdating {
 			}
 		}
 		
+		urlToRequest = URL(string: urlString)
+		
+		/// MainWebView의 protocol 중 하나인 requestLoad 는 현재 선택된 웹뷰 (selectedPageIndex) 를 가지고 그 해당 웹뷰에 URL 을 보낸다. 만약에 선택된 웹뷰탭이 없다면 0번째 웹뷰에 urlRequest를 보낸다.
+		requestLoad(self.dataSource[selectedPageIndex ?? 0] ?? MainWebVC(), urlToRequest: urlToRequest!)
+		
+//		let targetUrl = URL(string: urlString)
+//		let urlRequest = URLRequest(url: targetUrl!)
+//		print(self.safariPageController.loadedViewControllers)
+//		let pageIndex = self.dataSource.firstIndex{$0 === viewController}
+//-----------
+//		self.dataSource[UInt(self.selectedPageIndex)]
+//---------
+//		if let toppickedvc = self.dataSource.first {
+//			if let targetUrl = URL(string: urlString) {
+//				toppickedvc?.webView.load(URLRequest(url: targetUrl))
+//			}
+//		}
+//---------------
 //		if webView.url?.absoluteString == urlString {
 //			return
 //		}

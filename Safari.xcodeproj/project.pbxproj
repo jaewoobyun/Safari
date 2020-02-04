@@ -10,6 +10,8 @@
 		9B21035B4F5EF01DC5F0D1E8 /* Pods_SafariUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ADB72567865FD708C0A0D96 /* Pods_SafariUITests.framework */; };
 		ADEC2BEC631DBA25666425FD /* Pods_Safari.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 118EBEAF09E31FC912CCE38F /* Pods_Safari.framework */; };
 		DB41938B23DFFF4E002C9216 /* NavigationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB41938A23DFFF4E002C9216 /* NavigationVC.swift */; };
+		DB6F408523E94FB40018D75F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6F408423E94FB40018D75F /* Extensions.swift */; };
+		DB6F408723E95A410018D75F /* Observables.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6F408623E95A410018D75F /* Observables.swift */; };
 		DBA4B96223D6CBF600122D39 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B96123D6CBF600122D39 /* AppDelegate.swift */; };
 		DBA4B96423D6CBF600122D39 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B96323D6CBF600122D39 /* SceneDelegate.swift */; };
 		DBA4B96623D6CBF600122D39 /* ContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B96523D6CBF600122D39 /* ContainerVC.swift */; };
@@ -50,6 +52,8 @@
 		C32323A48087BD0590A444C4 /* Pods-SafariTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SafariTests.debug.xcconfig"; path = "Target Support Files/Pods-SafariTests/Pods-SafariTests.debug.xcconfig"; sourceTree = "<group>"; };
 		CB681921592B8946273CB19A /* Pods-Safari.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Safari.release.xcconfig"; path = "Target Support Files/Pods-Safari/Pods-Safari.release.xcconfig"; sourceTree = "<group>"; };
 		DB41938A23DFFF4E002C9216 /* NavigationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationVC.swift; sourceTree = "<group>"; };
+		DB6F408423E94FB40018D75F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		DB6F408623E95A410018D75F /* Observables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observables.swift; sourceTree = "<group>"; };
 		DBA4B95E23D6CBF600122D39 /* Safari.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Safari.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBA4B96123D6CBF600122D39 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBA4B96323D6CBF600122D39 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -112,6 +116,15 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		DB6F408323E94F990018D75F /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				DB6F408423E94FB40018D75F /* Extensions.swift */,
+				DB6F408623E95A410018D75F /* Observables.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
 		DBA4B95523D6CBF600122D39 = {
 			isa = PBXGroup;
 			children = (
@@ -137,6 +150,7 @@
 		DBA4B96023D6CBF600122D39 /* Safari */ = {
 			isa = PBXGroup;
 			children = (
+				DB6F408323E94F990018D75F /* Managers */,
 				DBA4B96123D6CBF600122D39 /* AppDelegate.swift */,
 				DBA4B96323D6CBF600122D39 /* SceneDelegate.swift */,
 				DBA4B96523D6CBF600122D39 /* ContainerVC.swift */,
@@ -406,8 +420,10 @@
 				DBA4B99623D6D29100122D39 /* MainWebVC.swift in Sources */,
 				DBA4B96623D6CBF600122D39 /* ContainerVC.swift in Sources */,
 				DBA4B96C23D6CBF600122D39 /* Safari.xcdatamodeld in Sources */,
+				DB6F408723E95A410018D75F /* Observables.swift in Sources */,
 				DBA4B96223D6CBF600122D39 /* AppDelegate.swift in Sources */,
 				DBA4B96423D6CBF600122D39 /* SceneDelegate.swift in Sources */,
+				DB6F408523E94FB40018D75F /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
