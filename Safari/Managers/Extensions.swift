@@ -26,3 +26,12 @@ extension UIViewController {
 		}
 	}
 }
+
+//extension UIBarButtonItem {
+//	var view: UIView? {
+//		return value(forKey: "view") as? UIView
+//	}
+//	func addGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer) {
+//		view?.addGestureRecognizer(gestureRecognizer)
+//	}
+//}

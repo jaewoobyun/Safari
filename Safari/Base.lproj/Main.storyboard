@@ -53,19 +53,19 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <toolbarItems>
-                        <barButtonItem image="chevron.left" catalog="system" id="YqH-9v-ahF"/>
+                        <barButtonItem image="chevron.left" catalog="system" id="YqH-9v-ahF" customClass="CustomBarButton" customModule="Safari" customModuleProvider="target"/>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="ht0-5I-BeF"/>
-                        <barButtonItem image="chevron.right" catalog="system" id="uFs-0W-zHI"/>
+                        <barButtonItem image="chevron.right" catalog="system" id="uFs-0W-zHI" customClass="CustomBarButton" customModule="Safari" customModuleProvider="target"/>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="DHu-19-yHw"/>
-                        <barButtonItem image="square.and.arrow.up" catalog="system" id="3PY-FO-mSw"/>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="BvB-zM-Zvp"/>
-                        <barButtonItem image="book" catalog="system" id="pyk-8e-FfU"/>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="j2R-Af-OFL"/>
-                        <barButtonItem image="square.on.square" catalog="system" id="gce-DS-ILK">
+                        <barButtonItem image="square.and.arrow.up" catalog="system" id="3PY-FO-mSw">
                             <connections>
-                                <action selector="tabsBarButton:" destination="BYZ-38-t0r" id="Yvh-BT-9FZ"/>
+                                <action selector="shareButton:" destination="BYZ-38-t0r" id="7QG-He-kkv"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="BvB-zM-Zvp"/>
+                        <barButtonItem image="book" catalog="system" id="pyk-8e-FfU" customClass="CustomBarButton" customModule="Safari" customModuleProvider="target"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="j2R-Af-OFL"/>
+                        <barButtonItem image="square.on.square" catalog="system" id="gce-DS-ILK" customClass="CustomBarButton" customModule="Safari" customModuleProvider="target"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="sZL-OQ-SOH"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>

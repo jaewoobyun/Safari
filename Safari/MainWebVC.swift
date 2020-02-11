@@ -54,7 +54,7 @@ class MainWebVC: UIViewController{
 		let tapGesture = UITapGestureRecognizer(target: self, action: #selector(MainWebVC.onBackgroundTap(_:)))
 		self.view.addGestureRecognizer(tapGesture)
 		
-		setUpObservation()
+		setUpProgressObservation()
 		
 	}
 	
@@ -107,7 +107,7 @@ class MainWebVC: UIViewController{
 		
 	}
 	
-	func setUpObservation() {
+	func setUpProgressObservation() {
 		Observables.shared.estimatedProgressObservationToken = webView.observe(\.estimatedProgress) { (object, change) in
 			let estimatedProgress = self.webView.estimatedProgress
 			self.progressView.alpha = 1
@@ -116,18 +116,6 @@ class MainWebVC: UIViewController{
 				self.progressView.alpha = 0
 			}
 		}
-		
-//		Observables.shared.canGoBackObservationToken = webView.observe(\.canGoBack) { (object, change) in
-////			self.backButton.isEnabled = self.webView.canGoBack
-//
-//		}
-//
-//		Observables.shared.canGoForwardObservationToken = webView.observe(\.canGoForward) { (object, change) in
-////			self.forwardButton.isEnabled = self.webView.canGoForward
-//
-//		}
-		
-		
 	}
 	
 }

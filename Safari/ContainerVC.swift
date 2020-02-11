@@ -10,6 +10,8 @@ import UIKit
 import WebKit
 import SCSafariPageController
 
+let hostNameForLocalFile = ""
+
 class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariPageControllerDelegate, ViewControllerDelegate {
 
 	let kDefaultNumberOfPages = 2
@@ -24,11 +26,11 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 	
 	
 	
-	@IBOutlet weak var backButton: UIBarButtonItem!
-	@IBOutlet weak var forwardButton: UIBarButtonItem!
+	@IBOutlet weak var backButton: CustomBarButton!
+	@IBOutlet weak var forwardButton: CustomBarButton!
 	@IBOutlet weak var shareButton: UIBarButtonItem!
-	@IBOutlet weak var bookmarksButton: UIBarButtonItem!
-	@IBOutlet weak var tabsButton: UIBarButtonItem!
+	@IBOutlet weak var bookmarksButton: CustomBarButton!
+	@IBOutlet weak var tabsButton: CustomBarButton!
 	
 	
 	
@@ -38,9 +40,6 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 	
 	var urlToRequest: URL?
 	var selectedPageIndex: Array<MainWebVC?>.Index?
-	
-
-
 	
 	// MARK: - View Life Cycle
 	override func viewDidLoad() {
@@ -58,7 +57,6 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		self.view.insertSubview(self.safariPageController.view, at: 0)
 		self.safariPageController.didMove(toParent: self)
 		
-		
 		searchController.delegate = self
 		searchController.searchResultsUpdater = self
 		searchController.searchBar.delegate = self
@@ -69,7 +67,7 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 			vc?.webView.scrollView.delegate = self
 //			vc?.webView.navigationDelegate = self
 //			self.navigationController?.title = vc?.urlString //
-			
+
 		}
 		
 		
@@ -95,18 +93,36 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		let leftBarButton = UIBarButtonItem(image: UIImage(systemName: "textformat.size"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(showPopover))
 		navigationItem.leftBarButtonItem = leftBarButton
 		
+		setupBackForwardObservation()
+//		setupLongPressObservation()
 		
-		
-		
+		setupCustomButtons()
 	}
+	
+//	func setupLongPressObservation() {
+//		let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.didLongpressBarButtonItem(recognizer:)))
+//		self.tabsButton.addGestureRecognizer(recognizer)
+//	}
+//
+//	@objc func didLongpressBarButtonItem(recognizer: UILongPressGestureRecognizer) {
+//		print("Long Press!")
+//	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+//		self.safariPageController.dataSource = self
+//		self.safariPageController.delegate = self
+//		for vc in self.dataSource {
+//			vc?.webView.scrollView.delegate = self
+////			vc?.webView.navigationDelegate = self
+////			self.navigationController?.title = vc?.urlString //
+//		}
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated);
 		self.tabsBarView.isHidden = true
+		
 //		self.safariPageController.zoomOut(animated: true, completion: nil)
 	}
 	
@@ -118,27 +134,154 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		super.viewDidDisappear(animated)
 	}
 	
-	
-//	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-//		self.backButton.isEnabled = self.dataSource[selectedPageIndex ?? 0]?.webView.canGoBack ?? false
-//
-//		self.forwardButton.isEnabled = self.dataSource[selectedPageIndex ?? 0]?.webView.canGoForward ?? false
-//	}
-	
-	
-	@IBAction func tabsBarButton(_ sender: UIBarButtonItem) {
-		self.safariPageController.zoomOut(animated: true, completion: nil)
-		self.navigationController?.navigationBar.isHidden = self.safariPageController.isZoomedOut ? true : false
-		self.navigationController?.isToolbarHidden = self.safariPageController.isZoomedOut ? true : false
-		self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true
+	func setupBackForwardObservation() {
+		if let topWebVC = self.dataSource[selectedPageIndex ?? 0] {
+			Observables.shared.canGoBackObservationToken = topWebVC.webView.observe(\.canGoBack) { (object, change) in
+				self.backButton.isEnabled = topWebVC.webView.canGoBack
+			}
+			
+		}
 		
-		for viewController in self.dataSource {
-			viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
-			viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
+		if let topWebVC = self.dataSource[selectedPageIndex ?? 0] {
+			Observables.shared.canGoForwardObservationToken = topWebVC.webView.observe(\.canGoForward) { (object, change) in
+				self.forwardButton.isEnabled = topWebVC.webView.canGoForward
+			}
+		}
+
+	}
+	
+	func setupCustomButtons() {
+		// MARK: BackButton
+		backButton.tapEvent = {
+			print("<- Back")
+			self.dataSource[self.selectedPageIndex ?? 0]?.webView.goBack()
+		}
+		
+		backButton.longEvent = {
+			print("Back long")
+			//TODO: implement later
+		}
+		
+		// MARK: ForwardButton
+		forwardButton.tapEvent = {
+			print("-> Forward")
+			self.dataSource[self.selectedPageIndex ?? 0]?.webView.goForward()
+		}
+		
+		forwardButton.longEvent = {
+			print("-> Forward long")
+			//TODO: implement later
+		}
+		
+		// MARK: BookmarksButton
+		bookmarksButton.tapEvent = {
+			//TODO: implement later
+			print("bookmarks")
+		}
+		
+		bookmarksButton.longEvent = {
+			//TODO: implement later
+			print("bookmarks long")
+			Alerts.shared.makeBookmarkAlert(viewController: self, addBookmarkHandler: { (addbookmarkAction) in
+				print("Add Bookmark")
+			}) { (addReadingListAction) in
+				print("Add ReadingList")
+			}
+		}
+		
+		// MARK: TabsButton
+		tabsButton.tapEvent = {
+			self.safariPageController.zoomOut(animated: true, completion: nil)
+			self.navigationController?.navigationBar.isHidden = self.safariPageController.isZoomedOut ? true : false
+			self.navigationController?.isToolbarHidden = self.safariPageController.isZoomedOut ? true : false
+			self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true
+
+			for viewController in self.dataSource {
+				viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
+				viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
+			}
+
+		}
+		
+		tabsButton.longEvent = {
+			print("Tabs Long")
+			Alerts.shared.makeTabAlert(viewController: self, closeThisTabHandler: { (closeAction) in
+				print("close????")
+				self.viewControllerDidRequestDelete(self.dataSource[self.selectedPageIndex ?? 0] ?? MainWebVC())
+			}, closeAllTabsHandler: { (closeAllAction) in
+				print("Close All??")
+				
+			}) { (newTabAction) in
+				print("newTab ?????")
+				
+				//TODO: need to zoom out -> zoom into new tab first.
+				self.dataSource.insert(nil, at: Int(self.safariPageController.numberOfPages))
+						self.safariPageController.insertPages(at: IndexSet(integer: Int(self.safariPageController.numberOfPages)), animated: true) { () -> Void in
+				//			self.toggleZoomWithPageIndex(self.safariPageController.numberOfPages - 1)
+							self.safariPageController.zoomIntoPage(at: self.safariPageController.numberOfPages - 1, animated: true, completion: nil)
+						}
+						self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? true : false
+			}
+			
+			
 		}
 		
 		
 	}
+	
+//// Delete later
+//	@IBAction func backButton(_ sender: UIBarButtonItem) {
+//		self.dataSource[selectedPageIndex ?? 0]?.webView.goBack()
+//	}
+//
+//	@IBAction func forwardButton(_ sender: UIBarButtonItem) {
+//		self.dataSource[selectedPageIndex ?? 0]?.webView.goForward()
+//	}
+	
+	@IBAction func shareButton(_ sender: UIBarButtonItem) {
+		if let link = NSURL(string: self.searchBar.text!) {
+			let objectsToShare = [link] as [Any]
+			let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+			activityVC.excludedActivityTypes = []
+			self.present(activityVC, animated: true, completion: nil)
+		}
+	}
+	
+//// DeleteLater
+//	@IBAction func tabsBarButton(_ sender: UIBarButtonItem) {
+//		self.safariPageController.zoomOut(animated: true, completion: nil)
+//		self.navigationController?.navigationBar.isHidden = self.safariPageController.isZoomedOut ? true : false
+//		self.navigationController?.isToolbarHidden = self.safariPageController.isZoomedOut ? true : false
+//		self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true
+//
+//		for viewController in self.dataSource {
+//			viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
+//			viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
+//		}
+//
+//
+////		guard let touch = event.allTouches?.first else {
+////			return
+////		}
+////
+////		if touch.tapCount == 1 {
+////			self.safariPageController.zoomOut(animated: true, completion: nil)
+////			self.navigationController?.navigationBar.isHidden = self.safariPageController.isZoomedOut ? true : false
+////			self.navigationController?.isToolbarHidden = self.safariPageController.isZoomedOut ? true : false
+////			self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true
+////
+////			for viewController in self.dataSource {
+////				viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
+////				viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
+////			}
+////		}
+////		else if touch.tapCount == 0 {
+////			print("Tab Long touch??")
+////		}
+//
+//	}
+	
+	
 	
 	@IBAction func doneButtonTap(_ sender: UIButton) {
 //		self.toggleZoomWithPageIndex(self.safariPageController.currentPage)
@@ -160,6 +303,7 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 			self.safariPageController.zoomIntoPage(at: self.safariPageController.numberOfPages - 1, animated: true, completion: nil)
 		}
 		self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? true : false
+		
 	}
 	
 	
@@ -190,21 +334,45 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 	// MARK: - SCViewControllerDelegate
 	
 	func viewControllerDidReceiveTap(_ viewController: MainWebVC) {
-		self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true //
-		for viewController in self.dataSource {
-			viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
-			viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
-		}
+//
+//		if !self.safariPageController.isZoomedOut {
+//			viewController.webView.isUserInteractionEnabled = true //
+//			return
+//		}
+//		let pageIndex = self.dataSource.firstIndex{$0 === viewController}
+//		selectedPageIndex = self.dataSource.firstIndex{$0 === viewController}
+//
+//		self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true //
+//		for viewController in self.dataSource {
+//			viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
+//			viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
+//		}
 		
-		if !self.safariPageController.isZoomedOut {
-			viewController.webView.isUserInteractionEnabled = true //
-			return
+		if self.safariPageController.isZoomedOut { //zoomed out
+			let pageIndex = self.dataSource.firstIndex{$0 === viewController}
+			selectedPageIndex = self.dataSource.firstIndex{$0 === viewController}
+//			self.safariPageController.zoomIntoPage(at: UInt(pageIndex!), animated: true, completion: nil)
+			self.safariPageController.zoomIntoPage(at: UInt(pageIndex!), animated: true) {
+				self.tabsBarView.isHidden = true
+				viewController.webView.isUserInteractionEnabled = true
+			}
+			
+			
+//			self.safariPageController.zoomIntoPage(at: UInt(selectedPageIndex!), animated: true) {
+//				self.tabsBarView.isHidden = true
+//				viewController.webView.isUserInteractionEnabled = true
+//			}
+			
+			
+			
 		}
-		let pageIndex = self.dataSource.firstIndex{$0 === viewController}
-		selectedPageIndex = self.dataSource.firstIndex{$0 === viewController}
+		else { //zoomed in
+			viewController.webView.isUserInteractionEnabled = true
+			self.tabsBarView.isHidden = false
+		}
 		
 //		self.toggleZoomWithPageIndex(UInt(pageIndex!))
-		self.safariPageController.zoomIntoPage(at: UInt(pageIndex!), animated: true, completion: nil)
+//		self.safariPageController.zoomIntoPage(at: UInt(pageIndex!), animated: true, completion: nil)
 	}
 	
 	func requestLoad(_ viewController: MainWebVC, urlToRequest: URL) {
@@ -223,7 +391,85 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 	
 	@objc func showPopover() {
 		print("show Popover")
+		presentPopoverWithActions(actions: [
+			addToFavoritesAction(),
+			shareAction(),
+			toggleContentAction(),
+			loadStartPageAction(),
+			cancelAction()
+		])
 	}
+	
+	
+	func presentPopoverWithActions(actions: [UIAlertAction]) {
+		let alertController = UIAlertController(title: nil, message: nil
+			, preferredStyle: UIAlertController.Style.actionSheet)
+		for action in actions {
+			alertController.addAction(action)
+		}
+		if let popoverController = alertController.popoverPresentationController {
+			if let leftBarButtonItem = navigationItem.leftBarButtonItem {
+				popoverController.sourceRect = leftBarButtonItem.accessibilityFrame
+			}
+			
+			//			popoverController.sourceRect = navigationItem.leftBarButtonItem?.accessibilityFrame!
+			popoverController.sourceView = self.view
+			popoverController.permittedArrowDirections = .up
+		}
+		self.present(alertController, animated: true, completion: nil)
+		
+	}
+	
+	func addToFavoritesAction() -> UIAlertAction {
+		return Alerts.ActionType.addToFavorites.makeAlertActions { (action) -> (Void) in
+			print("Add To Favorites?")
+			//TODO: add to favorites
+		}
+	}
+	
+	func shareAction() -> UIAlertAction {
+		return Alerts.ActionType.share.makeAlertActions { (action) -> (Void) in
+			if let link = NSURL(string: self.searchBar.text!) {
+				let objectsToShare = [link] as [Any]
+				let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+				activityVC.excludedActivityTypes = []
+				self.present(activityVC, animated: true, completion: nil)
+			}
+		}
+	}
+	
+	func toggleContentAction() -> UIAlertAction {
+		//FIXME: not working properly
+		let requestMobileSite = Observables.shared.currentContentMode == .desktop
+		let title = requestMobileSite ? "Request Mobile Site" : "Request Desktop Site"
+		return UIAlertAction(title: title, style: UIAlertAction.Style.default) { (alert: UIAlertAction!) -> Void in
+			if let url = self.dataSource[self.selectedPageIndex ?? 0]?.webView.url {
+				let requestContentMode = requestMobileSite ? WKWebpagePreferences.ContentMode.mobile : WKWebpagePreferences.ContentMode.desktop
+				if url.scheme != "file" {
+					if let hostName = url.host {
+						Observables.shared.contentModeToRequestForHost[hostName] = requestContentMode
+					}
+				} else {
+					Observables.shared.contentModeToRequestForHost[hostNameForLocalFile] = requestContentMode
+				}
+				self.dataSource[self.selectedPageIndex ?? 0]?.webView.reloadFromOrigin()
+			}
+		}
+		
+	}
+	
+	func loadStartPageAction() -> UIAlertAction {
+		return Alerts.ActionType.loadStartPage.makeAlertActions { (action) -> (Void) in
+			print("load start page")
+		}
+	}
+	
+	func cancelAction() -> UIAlertAction {
+		return Alerts.ActionType.cancel.makeAlertActions { (action) -> (Void) in
+			print("Canceled")
+		}
+	}
+	
 	
 	// MARK: Private
 //	fileprivate func ZoomWithPageIndex(_ pageIndex:UInt) {
@@ -245,6 +491,7 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 //	}
 	
 
+	
 	
 
 }
