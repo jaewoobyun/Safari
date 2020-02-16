@@ -14,7 +14,7 @@ let hostNameForLocalFile = ""
 
 class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariPageControllerDelegate, ViewControllerDelegate {
 
-	let kDefaultNumberOfPages = 2
+	let kDefaultNumberOfPages = 1
 	var dataSource = Array<MainWebVC?>()
 	let safariPageController: SCSafariPageController = SCSafariPageController()
 	
@@ -175,8 +175,16 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		
 		// MARK: BookmarksButton
 		bookmarksButton.tapEvent = {
-			//TODO: implement later
 			print("bookmarks")
+			let storyboard = UIStoryboard(name: "Main", bundle: nil)
+			let bookmarkNav = storyboard.instantiateViewController(identifier: "BookmarkNav") as UINavigationController
+			self.navigationController?.present(bookmarkNav, animated: true, completion: nil)
+			
+			if let segmentVC = bookmarkNav.children[0] as? SegmentControlVC {
+				segmentVC.selectedBookmarkHandler = { urlString in
+					//TODO: self.loadWebViewFromBookmarksURL(urlString: urlString)
+				}
+			}
 		}
 		
 		bookmarksButton.longEvent = {
@@ -496,10 +504,12 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 
 }
 
+// MARK: - UISearchControllerDelegate
 extension ContainerVC: UISearchControllerDelegate {
 	
 }
 
+// MARK: - UISearchResultsUpdating
 extension ContainerVC: UISearchResultsUpdating {
 	func updateSearchResults(for searchController: UISearchController) {
 		searchBar = searchController.searchBar
@@ -561,6 +571,7 @@ extension ContainerVC: UISearchResultsUpdating {
 	
 }
 
+// MARK: - UISearchBarDelegate
 extension ContainerVC: UISearchBarDelegate {
 	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 		print("textDidChange")
@@ -580,6 +591,7 @@ extension ContainerVC: UISearchBarDelegate {
 	}
 }
 
+// MARK: - UIScrollViewDelegate
 extension ContainerVC: UIScrollViewDelegate {
 	/// 웹뷰를 스크롤 할 때 상위의 navigation bar (search bar) 와 하단의 toolbar 가 위 아래로 사라지기 위해 사용
 	func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
@@ -606,6 +618,7 @@ extension ContainerVC: UIScrollViewDelegate {
 	
 }
 
+// MARK: - UIToolbarDelegate
 extension ContainerVC: UIToolbarDelegate {
 	func position(for bar: UIBarPositioning) -> UIBarPosition {
 		return UIBarPosition.bottom

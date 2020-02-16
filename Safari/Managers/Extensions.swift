@@ -35,3 +35,25 @@ extension UIViewController {
 //		view?.addGestureRecognizer(gestureRecognizer)
 //	}
 //}
+
+
+extension UIColor {
+	public static var random: UIColor {
+		let max = CGFloat(UInt32.max)
+		let red = CGFloat(arc4random()) / max
+		let green = CGFloat(arc4random()) / max
+		let blue = CGFloat(arc4random()) / max
+		
+		return UIColor(red: red, green: green, blue: blue, alpha: 0.7)
+	}
+	
+	/// rgb 만 들어와야함. 0x FF FF FF
+	convenience init(rgb: UInt) {
+		 self.init(
+			  red: CGFloat((rgb & 0xFF0000) >> 16) / 255.0,
+			  green: CGFloat((rgb & 0x00FF00) >> 8) / 255.0,
+			  blue: CGFloat(rgb & 0x0000FF) / 255.0,
+			  alpha: CGFloat(1.0)
+		 )
+	}
+}

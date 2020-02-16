@@ -44,17 +44,34 @@ class MainWebVC: UIViewController{
 		
 		//-------------------
 //		let urlString = "https://www.google.com"
-		let url = URL(string: urlString)
-		let urlRequest = URLRequest(url: url!)
-		webView.load(urlRequest)
+//		let url = URL(string: urlString)
+//		let urlRequest = URLRequest(url: url!)
+//		webView.load(urlRequest)
+		
+		var loadedExistingURL = false
+		if let lastCommittedURLStringString = UserDefaults.standard.object(forKey: "LastCommittedURLString") as? String {
+			if let url = URL(string: lastCommittedURLStringString) {
+				//searchBar.text = lastCommittedURLStringString
+				webView.load(URLRequest(url: url))
+				loadedExistingURL = true
+			}
+		}
+		
+		if !loadedExistingURL {
+			loadStartPage()
+		}
 		
 		self.addresslb.text = urlString
 		//---------------------r
+		
+		self.webView.navigationDelegate = self
+		
 		
 		let tapGesture = UITapGestureRecognizer(target: self, action: #selector(MainWebVC.onBackgroundTap(_:)))
 		self.view.addGestureRecognizer(tapGesture)
 		
 		setUpProgressObservation()
+		registerObserverToNotifiationGroup()
 		
 	}
 	
@@ -76,6 +93,7 @@ class MainWebVC: UIViewController{
 	
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
+		NotificationGroup.shared.removeAllObserver(vc: self)
 	}
 	
 	// MARK: - UI Related methods
@@ -118,9 +136,74 @@ class MainWebVC: UIViewController{
 		}
 	}
 	
+	func registerObserverToNotifiationGroup() {
+		UserDefaultsManager.shared.initDatas()
+		///Registering bookmark observer
+		NotificationGroup.shared.registerObserver(type: .bookmarkURLName, vc: self, selector: #selector(onBookmarkNotification(notification:)))
+		
+		///Registering history observer
+		NotificationGroup.shared.registerObserver(type: .historyURLName, vc: self, selector: #selector(onHistoryNotification(notification:)))
+		
+		///Registering ReadingList Observer
+		NotificationGroup.shared.registerObserver(type: .readinglistURLName, vc: self, selector: #selector(onReadingListNotification(notification:)))
+		
+	}
+	
+	@objc func onBookmarkNotification(notification: Notification) {
+		if let url = notification.userInfo?["selectedBookmarkURL"] as? String {
+			loadWebViewFromURL(urlString: url)
+		}
+	}
+	
+	@objc func onHistoryNotification(notification: Notification) {
+		if let url = notification.userInfo?["selectedHistoryURL"] as? String {
+			loadWebViewFromURL(urlString: url)
+		}
+	}
+	
+	@objc func onReadingListNotification(notification: Notification) {
+		if let url = notification.userInfo?["selectedReadingListURL"] as? String {
+			loadWebViewFromURL(urlString: url)
+		}
+	}
+	
+	func loadStartPage() {
+		if let bookmarksURL = Bundle.main.url(forResource: "bookmarks_11_19_19", withExtension: "html") {
+			//searchBar.text = "bookmarks_11_19_19.html"
+			webView.loadFileURL(bookmarksURL, allowingReadAccessTo: Bundle.main.bundleURL)
+		}
+	}
+	
+	func loadWebViewFromURL(urlString: String?) {
+		///http://AAA.com
+		guard var urlString = urlString?.lowercased() else { return }
+		guard let url: URL = URL.init(string: urlString) else {
+			return
+		}
+		if UIApplication.shared.canOpenURL(url) {
+			//TODO: - Not sure
+			self.webView.load(URLRequest(url: url))
+		}
+		
+		if !urlString.contains("://") {
+			if urlString.contains("localhost") || urlString.contains("127.0.0.1") {
+				urlString = "http://" + urlString
+			} else {
+				urlString = "https://" + urlString
+			}
+		}
+		if webView.url?.absoluteString == urlString {
+			return
+		}
+		if let targetURL = URL(string: urlString) {
+			webView.load(URLRequest(url: targetURL))
+		}
+		
+	}
+	
+	
+	
 }
-
-
 
 class MainWebView: UIView {
 	override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -132,4 +215,59 @@ class MainWebView: UIView {
 		
 		return hitView
 	}
+}
+
+
+extension MainWebVC: WKNavigationDelegate {
+	func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+		print("didStartProvisionalNavigation")
+	}
+	
+	func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+		print("WebView didCommit")
+		if let url = webView.url {
+			if url.scheme != "file" {
+				if let urlString = webView.url?.absoluteString {
+					UserDefaults.standard.set(urlString, forKey: "LastCommittedURLString")
+					//searchBar.text = urlString
+				}
+			}
+			else {
+				UserDefaults.standard.removeObject(forKey: "LastCommittedURLString")
+				//searchBar.text = url.lastPathComponent
+			}
+		}
+		Observables.shared.currentContentMode = navigation.effectiveContentMode
+	}
+	
+	func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+		print("didFinish")
+		
+		let backForwardList = self.webView.backForwardList.self
+		guard let currentItemUrl = backForwardList.currentItem?.url else { return }
+		guard let currentItemInitialUrl = backForwardList.currentItem?.initialURL else { return }
+		guard let currentItemTitle = backForwardList.currentItem?.title else { return }
+		guard let currentItemUrlString = backForwardList.currentItem?.url.absoluteString else { return }
+		let now = Date()
+		
+		let historyDataInstance = HistoryData(url: currentItemUrl, initialUrl: currentItemInitialUrl, title: currentItemTitle, urlString: currentItemUrlString, date: now)
+		
+		UserDefaultsManager.shared.insertCurrentPage(historyData: historyDataInstance)
+		
+	}
+	
+	func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences, decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
+		if let hostName = navigationAction.request.url?.host {
+			if let preferredContentMode = Observables.shared.contentModeToRequestForHost[hostName] {
+				preferences.preferredContentMode = preferredContentMode
+			}
+		} else if navigationAction.request.url?.scheme == "file" {
+			if let preferredContentMode = Observables.shared.contentModeToRequestForHost[hostNameForLocalFile] {
+				preferences.preferredContentMode = preferredContentMode
+			}
+		}
+		decisionHandler(.allow, preferences)
+	}
+	
+	
 }

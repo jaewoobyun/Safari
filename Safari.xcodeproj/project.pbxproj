@@ -10,6 +10,20 @@
 		9B21035B4F5EF01DC5F0D1E8 /* Pods_SafariUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ADB72567865FD708C0A0D96 /* Pods_SafariUITests.framework */; };
 		ADEC2BEC631DBA25666425FD /* Pods_Safari.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 118EBEAF09E31FC912CCE38F /* Pods_Safari.framework */; };
 		DB104E6E23F25CBB002A8F5B /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB104E6D23F25CBB002A8F5B /* Alerts.swift */; };
+		DB104E7323F3A726002A8F5B /* HistoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB104E7223F3A726002A8F5B /* HistoryVC.swift */; };
+		DB104E7623F3A79C002A8F5B /* HistoryData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB104E7523F3A79C002A8F5B /* HistoryData.swift */; };
+		DB104E7823F3A7D4002A8F5B /* BookmarkData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB104E7723F3A7D4002A8F5B /* BookmarkData.swift */; };
+		DB104E7A23F3A97F002A8F5B /* ReadingListData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB104E7923F3A97F002A8F5B /* ReadingListData.swift */; };
+		DB104E7E23F3BB41002A8F5B /* ReadingListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB104E7C23F3BB41002A8F5B /* ReadingListCell.swift */; };
+		DB104E7F23F3BB41002A8F5B /* ReadingListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DB104E7D23F3BB41002A8F5B /* ReadingListCell.xib */; };
+		DB104E8223F3BD68002A8F5B /* FolderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DB104E8023F3BD68002A8F5B /* FolderCell.xib */; };
+		DB104E8323F3BD68002A8F5B /* FolderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB104E8123F3BD68002A8F5B /* FolderCell.swift */; };
+		DB104E8523F3BDD3002A8F5B /* ReadingListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB104E8423F3BDD3002A8F5B /* ReadingListVC.swift */; };
+		DB104E8723F3BEF1002A8F5B /* NotificationGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB104E8623F3BEF1002A8F5B /* NotificationGroup.swift */; };
+		DB104E8923F3BF35002A8F5B /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB104E8823F3BF35002A8F5B /* UserDefaultsManager.swift */; };
+		DB104E8B23F3BFBD002A8F5B /* SegmentControlVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB104E8A23F3BFBD002A8F5B /* SegmentControlVC.swift */; };
+		DB104E8D23F50730002A8F5B /* BookmarkVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB104E8C23F50730002A8F5B /* BookmarkVC.swift */; };
+		DB3D8C1423F90D0D00AD72D7 /* bookmarks_11_19_19.html in Resources */ = {isa = PBXBuildFile; fileRef = DB3D8C1323F90D0C00AD72D7 /* bookmarks_11_19_19.html */; };
 		DB41938B23DFFF4E002C9216 /* NavigationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB41938A23DFFF4E002C9216 /* NavigationVC.swift */; };
 		DB6F408523E94FB40018D75F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6F408423E94FB40018D75F /* Extensions.swift */; };
 		DB6F408723E95A410018D75F /* Observables.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6F408623E95A410018D75F /* Observables.swift */; };
@@ -55,6 +69,20 @@
 		C32323A48087BD0590A444C4 /* Pods-SafariTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SafariTests.debug.xcconfig"; path = "Target Support Files/Pods-SafariTests/Pods-SafariTests.debug.xcconfig"; sourceTree = "<group>"; };
 		CB681921592B8946273CB19A /* Pods-Safari.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Safari.release.xcconfig"; path = "Target Support Files/Pods-Safari/Pods-Safari.release.xcconfig"; sourceTree = "<group>"; };
 		DB104E6D23F25CBB002A8F5B /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
+		DB104E7223F3A726002A8F5B /* HistoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryVC.swift; sourceTree = "<group>"; };
+		DB104E7523F3A79C002A8F5B /* HistoryData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryData.swift; sourceTree = "<group>"; };
+		DB104E7723F3A7D4002A8F5B /* BookmarkData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkData.swift; sourceTree = "<group>"; };
+		DB104E7923F3A97F002A8F5B /* ReadingListData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingListData.swift; sourceTree = "<group>"; };
+		DB104E7C23F3BB41002A8F5B /* ReadingListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingListCell.swift; sourceTree = "<group>"; };
+		DB104E7D23F3BB41002A8F5B /* ReadingListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReadingListCell.xib; sourceTree = "<group>"; };
+		DB104E8023F3BD68002A8F5B /* FolderCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FolderCell.xib; sourceTree = "<group>"; };
+		DB104E8123F3BD68002A8F5B /* FolderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderCell.swift; sourceTree = "<group>"; };
+		DB104E8423F3BDD3002A8F5B /* ReadingListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingListVC.swift; sourceTree = "<group>"; };
+		DB104E8623F3BEF1002A8F5B /* NotificationGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationGroup.swift; sourceTree = "<group>"; };
+		DB104E8823F3BF35002A8F5B /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
+		DB104E8A23F3BFBD002A8F5B /* SegmentControlVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentControlVC.swift; sourceTree = "<group>"; };
+		DB104E8C23F50730002A8F5B /* BookmarkVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkVC.swift; sourceTree = "<group>"; };
+		DB3D8C1323F90D0C00AD72D7 /* bookmarks_11_19_19.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = bookmarks_11_19_19.html; sourceTree = "<group>"; };
 		DB41938A23DFFF4E002C9216 /* NavigationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationVC.swift; sourceTree = "<group>"; };
 		DB6F408423E94FB40018D75F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		DB6F408623E95A410018D75F /* Observables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observables.swift; sourceTree = "<group>"; };
@@ -122,11 +150,46 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		DB104E7123F3A6E8002A8F5B /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				DB104E8A23F3BFBD002A8F5B /* SegmentControlVC.swift */,
+				DB104E8C23F50730002A8F5B /* BookmarkVC.swift */,
+				DB104E7223F3A726002A8F5B /* HistoryVC.swift */,
+				DB104E8423F3BDD3002A8F5B /* ReadingListVC.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		DB104E7423F3A782002A8F5B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				DB104E7523F3A79C002A8F5B /* HistoryData.swift */,
+				DB104E7723F3A7D4002A8F5B /* BookmarkData.swift */,
+				DB104E7923F3A97F002A8F5B /* ReadingListData.swift */,
+				DB3D8C1323F90D0C00AD72D7 /* bookmarks_11_19_19.html */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		DB104E7B23F3BAF8002A8F5B /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				DB104E7C23F3BB41002A8F5B /* ReadingListCell.swift */,
+				DB104E7D23F3BB41002A8F5B /* ReadingListCell.xib */,
+				DB104E8123F3BD68002A8F5B /* FolderCell.swift */,
+				DB104E8023F3BD68002A8F5B /* FolderCell.xib */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		DB6F408323E94F990018D75F /* Managers */ = {
 			isa = PBXGroup;
 			children = (
 				DB6F408423E94FB40018D75F /* Extensions.swift */,
 				DB6F408623E95A410018D75F /* Observables.swift */,
+				DB104E8623F3BEF1002A8F5B /* NotificationGroup.swift */,
+				DB104E8823F3BF35002A8F5B /* UserDefaultsManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -166,15 +229,18 @@
 		DBA4B96023D6CBF600122D39 /* Safari */ = {
 			isa = PBXGroup;
 			children = (
-				DB6F408823ED14450018D75F /* Views */,
-				DB6F408323E94F990018D75F /* Managers */,
 				DBA4B96123D6CBF600122D39 /* AppDelegate.swift */,
 				DBA4B96323D6CBF600122D39 /* SceneDelegate.swift */,
+				DBA4B96723D6CBF600122D39 /* Main.storyboard */,
+				DB104E7423F3A782002A8F5B /* Model */,
+				DB104E7123F3A6E8002A8F5B /* Controllers */,
+				DB6F408823ED14450018D75F /* Views */,
+				DB104E7B23F3BAF8002A8F5B /* Cells */,
+				DB6F408323E94F990018D75F /* Managers */,
 				DBA4B96523D6CBF600122D39 /* ContainerVC.swift */,
 				DB41938A23DFFF4E002C9216 /* NavigationVC.swift */,
 				DBA4B99423D6D29100122D39 /* MainWebVC.swift */,
 				DBA4B99523D6D29100122D39 /* MainWebVC.xib */,
-				DBA4B96723D6CBF600122D39 /* Main.storyboard */,
 				DBA4B96D23D6CBF900122D39 /* Assets.xcassets */,
 				DBA4B96F23D6CBF900122D39 /* LaunchScreen.storyboard */,
 				DBA4B97223D6CBF900122D39 /* Info.plist */,
@@ -319,8 +385,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB3D8C1423F90D0D00AD72D7 /* bookmarks_11_19_19.html in Resources */,
 				DBA4B97123D6CBF900122D39 /* LaunchScreen.storyboard in Resources */,
+				DB104E8223F3BD68002A8F5B /* FolderCell.xib in Resources */,
 				DBA4B96E23D6CBF900122D39 /* Assets.xcassets in Resources */,
+				DB104E7F23F3BB41002A8F5B /* ReadingListCell.xib in Resources */,
 				DBA4B99723D6D29100122D39 /* MainWebVC.xib in Resources */,
 				DBA4B96923D6CBF600122D39 /* Main.storyboard in Resources */,
 			);
@@ -433,16 +502,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB104E7A23F3A97F002A8F5B /* ReadingListData.swift in Sources */,
 				DB41938B23DFFF4E002C9216 /* NavigationVC.swift in Sources */,
 				DBA4B99623D6D29100122D39 /* MainWebVC.swift in Sources */,
 				DBA4B96623D6CBF600122D39 /* ContainerVC.swift in Sources */,
+				DB104E7E23F3BB41002A8F5B /* ReadingListCell.swift in Sources */,
 				DBA4B96C23D6CBF600122D39 /* Safari.xcdatamodeld in Sources */,
+				DB104E7623F3A79C002A8F5B /* HistoryData.swift in Sources */,
 				DB6F408C23ED45D60018D75F /* CustomBarButton.swift in Sources */,
 				DB6F408723E95A410018D75F /* Observables.swift in Sources */,
+				DB104E7823F3A7D4002A8F5B /* BookmarkData.swift in Sources */,
+				DB104E8D23F50730002A8F5B /* BookmarkVC.swift in Sources */,
+				DB104E8323F3BD68002A8F5B /* FolderCell.swift in Sources */,
+				DB104E8523F3BDD3002A8F5B /* ReadingListVC.swift in Sources */,
 				DBA4B96223D6CBF600122D39 /* AppDelegate.swift in Sources */,
+				DB104E8B23F3BFBD002A8F5B /* SegmentControlVC.swift in Sources */,
+				DB104E8723F3BEF1002A8F5B /* NotificationGroup.swift in Sources */,
 				DBA4B96423D6CBF600122D39 /* SceneDelegate.swift in Sources */,
 				DB6F408523E94FB40018D75F /* Extensions.swift in Sources */,
+				DB104E8923F3BF35002A8F5B /* UserDefaultsManager.swift in Sources */,
 				DB104E6E23F25CBB002A8F5B /* Alerts.swift in Sources */,
+				DB104E7323F3A726002A8F5B /* HistoryVC.swift in Sources */,
 				DB6F408A23ED14870018D75F /* Menus.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
