@@ -35,7 +35,7 @@ class HistoryVC: UITableViewController {
 		tableView.dataSource = self
 		tableView.tableHeaderView = searchController.searchBar
 		
-		tableView.register(UITableViewCell.self, forCellReuseIdentifier: "historyCell")
+//		tableView.register(UITableViewCell.self, forCellReuseIdentifier: "historycellsample")
 		
 	}
 	
@@ -88,17 +88,40 @@ class HistoryVC: UITableViewController {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		//TODO: UserDefaultsManager
+//		self.navigationController?.navigationBar.isHidden = false
+		UserDefaultsManager.shared.registerHistoryDataObserver(vc: self, selector: #selector(updateHistoryData))
+		UserDefaultsManager.shared.loadUserHistoryData()
 	}
 	
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
-		//TODO: UserDefaultsManager
+		UserDefaultsManager.shared.removeHistoryDataObserver()
 	}
 	
+	@objc func updateHistoryData() {
+		//데이터가 업데이트 되었다.
+		print("historyVC updateHistoryData")
+		historyData.removeAll()
+		historyData = UserDefaultsManager.shared.visitedWebSiteHistoryRecords
+		
+		sectionize()
+		tableView.isUserInteractionEnabled = true
+		tableView.reloadData()
+	}
 	
+	@IBAction func clearButton(_ sender: UIBarButtonItem) {
+		Alerts.shared.makeClearHistoryAlert(viewController: self, lastHourHandler: { (action) in
+			UserDefaultsManager.shared.removeHistoryDataAtLastHour(1)
+		}, todayHandler: { (action) in
+			UserDefaultsManager.shared.removeHistoryDataAtLastHour(24)
+		}, todayAndYesterdayHandler: { (action) in
+			UserDefaultsManager.shared.removeHistoryDataAtLastHour(48)
+		}) { (action) in
+			UserDefaultsManager.shared.removeAllHistoryData()
+		}
+			
+	}
 	
-	//TODO: clearButton
 	
 	override func numberOfSections(in tableView: UITableView) -> Int {
 		return sections.count
@@ -117,7 +140,7 @@ class HistoryVC: UITableViewController {
 	}
 	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "historyCell", for: indexPath) // MARK: ?? "prototype"
+		let cell = tableView.dequeueReusableCell(withIdentifier: "historyCell", for: indexPath)
 		cell.detailTextLabel?.textColor = UIColor.gray
 		
 		if let titleString = sections[indexPath.section].cells[indexPath.row].title {
@@ -139,8 +162,7 @@ class HistoryVC: UITableViewController {
 		print("didSelectRowAt \(indexPath)")
 		let urlString = sections[indexPath.section].cells[indexPath.row].urlString
 		
-		//TODO: NotificationGroup
-		
+		NotificationGroup.shared.post(type: .historyURLName, userInfo: ["selectedHistoryURL": urlString])
 		self.dismiss(animated: true, completion: nil)
 	}
 	
@@ -155,14 +177,17 @@ class HistoryVC: UITableViewController {
 	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
 			/// 아이디는 먼저 빼돌린다.
-			let selectedItemUUID = sections[indexPath.section].cells.remove(at: indexPath.row)
+			let selectedItemUUID = sections[indexPath.section].cells[indexPath.row].uuid
+			
+			// 디스플레이 데이터를 기반으로 애니메이션 실행.
+			self.sections[indexPath.section].cells.remove(at: indexPath.row)
 			tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
 			
 			tableView.isUserInteractionEnabled = false
 			
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
 				// 실물 데이터에서 삭제 요청.
-				//TODO: UserDefaultsManager.shared.removeHistoryItemAtUUID(selectedItemUUID)
+				UserDefaultsManager.shared.removeHistoryItemAtUUID(selectedItemUUID)
 			}
 			
 		}
@@ -170,10 +195,10 @@ class HistoryVC: UITableViewController {
 	
 	override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
 		return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { (actions) -> UIMenu? in
-			let deleteCancel = Menus.MenuType.deleteCancel.createButtonAction { (action) in
+			let deleteCancel = Menus.MenuActions.cancel.createButtonAction { (action) in
 				print("cancel")
 			}
-			let deleteConfirmation = Menus.MenuType.deleteConfirmation.createButtonAction { (action) in
+			let deleteConfirmation = Menus.MenuActions.delete.createDeleteConfirmationMenu { (action) in
 				/// 아이디는 먼저 빼돌린다.
 				let selectedItemUUID = self.sections[indexPath.section].cells[indexPath.row].uuid
 				// 디스플레이 데이터를 기반으로 애니메이션 실행.
@@ -183,7 +208,7 @@ class HistoryVC: UITableViewController {
 				
 				DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
 					// 실물 데이터에서 삭제 요청
-					//UserDefaultsManager.shared.removeHistoryItemAtUUID(selectedItemUUID)
+					UserDefaultsManager.shared.removeHistoryItemAtUUID(selectedItemUUID)
 				}
 				
 			}
@@ -193,14 +218,14 @@ class HistoryVC: UITableViewController {
 			
 			return UIMenu(title: "Menu", image: nil, identifier: nil, options: UIMenu.Options.init(), children: [
 				///Copy
-				Menus.MenuType.copy.createButtonAction({ (action) in
+				Menus.MenuActions.copy.createButtonAction({ (action) in
 					print("Copying", self.historyData[indexPath.row].urlString as Any)
 					if let historyUrlString = self.historyData[indexPath.row].urlString {
 						UIPasteboard.general.string = historyUrlString
 					}
 				}),
 				///Open In New Tab
-				Menus.MenuType.openInNewTab.createButtonAction({ (action) in
+				Menus.MenuActions.openInNewTab.createButtonAction({ (action) in
 					print("open In new tab action", action)
 				}),
 				///Delete [deleteConfirmation, delete cancel]
@@ -224,8 +249,4 @@ extension HistoryVC: UISearchResultsUpdating {
 }
 
 
-class HistoryCell: UITableViewCell {
-	override func awakeFromNib() {
-		super.awakeFromNib()
-	}
-}
+

@@ -70,3 +70,54 @@ class BookmarkData: Codable {
 	
 	
 }
+
+
+class BookmarksDataModel {
+	static var mockDataArray = ["www.google.com", "www.m.naver.com", "www.apple.com", "www.github.com", "www.facebook.com"]
+	
+	static var bookMarkDatas: [BookmarkData] = []
+	
+	static func createSampleData() {
+		
+		var temp: [BookmarkData] = []
+		
+		for folderIndex in 0..<10 {
+			//append 10 folders
+			var child: [BookmarkData] = []
+			
+			for bookmarkIndex in 0..<5 {
+				//append 5 folders for each top folder
+				
+				let dataIndex:[Int] = [0, folderIndex, bookmarkIndex]
+				let childItem = BookmarkData.init(urlString: "http://\(mockDataArray[bookmarkIndex])", titleString: "\(mockDataArray[bookmarkIndex])", indexPath: dataIndex)
+				child.append(childItem)
+			}
+			
+//			let grandchild = BookmarksData.init(urlString: "bookmark", titleString: "Grandchild Bookmark")
+//			let bookmarkChildItem = BookmarksData.init(titleString: "folder 5", child: [grandchild])
+//			child.append(bookmarkChildItem)
+			
+			let dataIndex:[Int] = [0, folderIndex]
+			let folderData = BookmarkData.init(titleString: "folder_ \(folderIndex)", child: child, indexPath: dataIndex)
+			temp.append(folderData)
+		}
+		
+		let dataIndex:[Int] = [0, temp.count]
+		let tempBookmark = BookmarkData.init(urlString: "http://???.com", titleString: "This is a bookmark", indexPath: dataIndex)
+//		bookMarkDatas.append(tempBookmark)
+		temp.append(tempBookmark)
+//		print(temp)
+		
+		bookMarkDatas.removeAll()
+//		bookMarkDatas.append(contentsOf: temp)
+		//
+		
+		let firstdataIndex:[Int] = [0]
+		let favorites = BookmarkData.init(titleString: "Favorites", child: temp, indexPath: firstdataIndex)
+		bookMarkDatas.append(favorites)
+		
+		
+		
+	}
+	
+}

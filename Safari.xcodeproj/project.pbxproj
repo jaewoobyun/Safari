@@ -24,6 +24,8 @@
 		DB104E8B23F3BFBD002A8F5B /* SegmentControlVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB104E8A23F3BFBD002A8F5B /* SegmentControlVC.swift */; };
 		DB104E8D23F50730002A8F5B /* BookmarkVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB104E8C23F50730002A8F5B /* BookmarkVC.swift */; };
 		DB3D8C1423F90D0D00AD72D7 /* bookmarks_11_19_19.html in Resources */ = {isa = PBXBuildFile; fileRef = DB3D8C1323F90D0C00AD72D7 /* bookmarks_11_19_19.html */; };
+		DB3D8C1623F95C5700AD72D7 /* HistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3D8C1523F95C5700AD72D7 /* HistoryCell.swift */; };
+		DB3D8C1823F98FFE00AD72D7 /* EditBookmarkVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3D8C1723F98FFE00AD72D7 /* EditBookmarkVC.swift */; };
 		DB41938B23DFFF4E002C9216 /* NavigationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB41938A23DFFF4E002C9216 /* NavigationVC.swift */; };
 		DB6F408523E94FB40018D75F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6F408423E94FB40018D75F /* Extensions.swift */; };
 		DB6F408723E95A410018D75F /* Observables.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6F408623E95A410018D75F /* Observables.swift */; };
@@ -40,6 +42,7 @@
 		DBA4B98723D6CBFA00122D39 /* SafariUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B98623D6CBFA00122D39 /* SafariUITests.swift */; };
 		DBA4B99623D6D29100122D39 /* MainWebVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B99423D6D29100122D39 /* MainWebVC.swift */; };
 		DBA4B99723D6D29100122D39 /* MainWebVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = DBA4B99523D6D29100122D39 /* MainWebVC.xib */; };
+		DBE3C2CF23F992F9008986C0 /* EditFolderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBE3C2CE23F992F9008986C0 /* EditFolderVC.swift */; };
 		F6D7BB6F5D818B6ECF7A8A41 /* Pods_SafariTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 126AC6A83B1F3FD52C8B880D /* Pods_SafariTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -83,6 +86,8 @@
 		DB104E8A23F3BFBD002A8F5B /* SegmentControlVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentControlVC.swift; sourceTree = "<group>"; };
 		DB104E8C23F50730002A8F5B /* BookmarkVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkVC.swift; sourceTree = "<group>"; };
 		DB3D8C1323F90D0C00AD72D7 /* bookmarks_11_19_19.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = bookmarks_11_19_19.html; sourceTree = "<group>"; };
+		DB3D8C1523F95C5700AD72D7 /* HistoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryCell.swift; sourceTree = "<group>"; };
+		DB3D8C1723F98FFE00AD72D7 /* EditBookmarkVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBookmarkVC.swift; sourceTree = "<group>"; };
 		DB41938A23DFFF4E002C9216 /* NavigationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationVC.swift; sourceTree = "<group>"; };
 		DB6F408423E94FB40018D75F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		DB6F408623E95A410018D75F /* Observables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observables.swift; sourceTree = "<group>"; };
@@ -105,6 +110,7 @@
 		DBA4B98823D6CBFA00122D39 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DBA4B99423D6D29100122D39 /* MainWebVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWebVC.swift; sourceTree = "<group>"; };
 		DBA4B99523D6D29100122D39 /* MainWebVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWebVC.xib; sourceTree = "<group>"; };
+		DBE3C2CE23F992F9008986C0 /* EditFolderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFolderVC.swift; sourceTree = "<group>"; };
 		ECEA09382295F7242CFB3081 /* Pods-SafariUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SafariUITests.debug.xcconfig"; path = "Target Support Files/Pods-SafariUITests/Pods-SafariUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED32E9907F9188BF032D94E4 /* Pods-Safari.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Safari.debug.xcconfig"; path = "Target Support Files/Pods-Safari/Pods-Safari.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -157,6 +163,8 @@
 				DB104E8C23F50730002A8F5B /* BookmarkVC.swift */,
 				DB104E7223F3A726002A8F5B /* HistoryVC.swift */,
 				DB104E8423F3BDD3002A8F5B /* ReadingListVC.swift */,
+				DB3D8C1723F98FFE00AD72D7 /* EditBookmarkVC.swift */,
+				DBE3C2CE23F992F9008986C0 /* EditFolderVC.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -179,6 +187,7 @@
 				DB104E7D23F3BB41002A8F5B /* ReadingListCell.xib */,
 				DB104E8123F3BD68002A8F5B /* FolderCell.swift */,
 				DB104E8023F3BD68002A8F5B /* FolderCell.xib */,
+				DB3D8C1523F95C5700AD72D7 /* HistoryCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -517,11 +526,14 @@
 				DB104E8523F3BDD3002A8F5B /* ReadingListVC.swift in Sources */,
 				DBA4B96223D6CBF600122D39 /* AppDelegate.swift in Sources */,
 				DB104E8B23F3BFBD002A8F5B /* SegmentControlVC.swift in Sources */,
+				DB3D8C1623F95C5700AD72D7 /* HistoryCell.swift in Sources */,
 				DB104E8723F3BEF1002A8F5B /* NotificationGroup.swift in Sources */,
 				DBA4B96423D6CBF600122D39 /* SceneDelegate.swift in Sources */,
 				DB6F408523E94FB40018D75F /* Extensions.swift in Sources */,
 				DB104E8923F3BF35002A8F5B /* UserDefaultsManager.swift in Sources */,
+				DB3D8C1823F98FFE00AD72D7 /* EditBookmarkVC.swift in Sources */,
 				DB104E6E23F25CBB002A8F5B /* Alerts.swift in Sources */,
+				DBE3C2CF23F992F9008986C0 /* EditFolderVC.swift in Sources */,
 				DB104E7323F3A726002A8F5B /* HistoryVC.swift in Sources */,
 				DB6F408A23ED14870018D75F /* Menus.swift in Sources */,
 			);

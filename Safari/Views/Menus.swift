@@ -14,7 +14,7 @@ class Menus {
 	
 	var delegate: Menus?
 	
-	public enum MenuType {
+	public enum MenuActions {
 		///Copy
 		case copy
 		///Copy Contents
@@ -26,34 +26,45 @@ class Menus {
 		/// Edit
 		case edit
 		/// Delete cancel
-		case deleteCancel
+		case cancel
 		/// DeleteConfirmation
-		case deleteConfirmation
+		case delete
+		
+		func getTitle() -> String {
+			switch self {
+			case .copy: return "Copy"
+			case .copyContents: return "Copy Contents"
+			case .openInNewTab: return "Open in New Tab"
+			case .openInNewTabs: return "Open in New Tabs"
+			case .edit: return "Edit"
+			case .cancel: return "Cancel"
+			case .delete: return "Delete"
+			}
+		}
 		
 		func createButtonAction(_ baseHandle: @escaping UIActionHandler) -> UIAction {
 			switch self {
 			case .copy:
-				return UIAction(title: "Copy", image: UIImage(systemName: "doc.on.doc"), identifier: nil, discoverabilityTitle: nil, state: UIMenuElement.State.off, handler: baseHandle)
+				return UIAction(title: self.getTitle(), image: UIImage(systemName: "doc.on.doc"), identifier: nil, discoverabilityTitle: nil, state: UIMenuElement.State.off, handler: baseHandle)
 			case .copyContents:
-				return UIAction(title: "Copy Contents", image: UIImage(systemName: "doc.on.doc"), identifier: nil, discoverabilityTitle: nil, state: UIMenuElement.State.off, handler: baseHandle)
+				return UIAction(title: self.getTitle(), image: UIImage(systemName: "doc.on.doc"), identifier: nil, discoverabilityTitle: nil, state: UIMenuElement.State.off, handler: baseHandle)
 			case .openInNewTab:
-				return UIAction(title: "Open in New Tab", image: UIImage(systemName: "plus.rectangle.on.rectangle"), identifier: nil, discoverabilityTitle: nil, attributes: UIMenuElement.Attributes.init(), state: UIMenuElement.State.off, handler: baseHandle)
+				return UIAction(title: self.getTitle(), image: UIImage(systemName: "plus.rectangle.on.rectangle"), identifier: nil, discoverabilityTitle: nil, attributes: UIMenuElement.Attributes.init(), state: UIMenuElement.State.off, handler: baseHandle)
 			case .openInNewTabs:
-				return UIAction(title: "Open in New Tabs", image: UIImage(systemName: "plus.rectangle.on.rectangle"), identifier: nil, discoverabilityTitle: nil, attributes: UIMenuElement.Attributes.init(), state: UIMenuElement.State.off, handler: baseHandle)
+				return UIAction(title: self.getTitle(), image: UIImage(systemName: "plus.rectangle.on.rectangle"), identifier: nil, discoverabilityTitle: nil, attributes: UIMenuElement.Attributes.init(), state: UIMenuElement.State.off, handler: baseHandle)
 			case .edit:
-				return UIAction(title: "Edit", image: UIImage(systemName: "square.and.pencil"), identifier: nil, discoverabilityTitle: nil, attributes: UIMenuElement.Attributes.init(), state: UIMenuElement.State.off, handler: baseHandle)
-			case .deleteCancel:
-				return UIAction(title: "Cancel", image: UIImage(systemName: "xmark"), handler: baseHandle)
-			case .deleteConfirmation:
-				return UIAction(title: "Delete", image: UIImage(systemName: "checkmark"), identifier: nil, discoverabilityTitle: nil, attributes: UIMenuElement.Attributes.destructive, state: UIMenuElement.State.off, handler: baseHandle)
+				return UIAction(title: self.getTitle(), image: UIImage(systemName: "square.and.pencil"), identifier: nil, discoverabilityTitle: nil, attributes: UIMenuElement.Attributes.init(), state: UIMenuElement.State.off, handler: baseHandle)
+			case .cancel:
+				return UIAction(title: self.getTitle(), image: UIImage(systemName: "xmark"), handler: baseHandle)
+			case .delete:
+				return UIAction(title: self.getTitle(), image: UIImage(systemName: "checkmark"), identifier: nil, discoverabilityTitle: nil, attributes: UIMenuElement.Attributes.destructive, state: UIMenuElement.State.off, handler: baseHandle)
 			}
 		}
 		
 		func createDeleteConfirmationMenu(_baseHandle: @escaping UIActionHandler) -> UIMenu {
 			return UIMenu(title: "Delete", image: UIImage(systemName: "trash"), identifier: nil, options: UIMenu.Options.destructive, children: [
-				MenuType.deleteCancel.createButtonAction(_baseHandle),
-				MenuType.deleteConfirmation.createButtonAction(_baseHandle)
-			
+				MenuActions.cancel.createButtonAction(_baseHandle),
+				MenuActions.delete.createButtonAction(_baseHandle)
 			])
 		}
 	}
@@ -62,49 +73,95 @@ class Menus {
 		case emptyFolder
 		case folder
 		case bookmark
-//		case readingList
-//		case history
+		case readingList
+		case history
 		
-		func createMenu(_ baseHandle:@escaping UIActionHandler) -> UIMenu {
-			return UIMenu(title: "Menu", image: nil, identifier: nil, options: UIMenu.Options.init(), children: self.getMenuButtons(baseHandle))
-		}
+//		func createMenu(_ baseHandle:@escaping UIActionHandler) -> UIMenu {
+//			return UIMenu(title: "Menu", image: nil, identifier: nil, options: UIMenu.Options.init(), children: self.getMenuButtons(baseHandle))
+//		}
 
 		func getMenuButtons(_ baseHandle:@escaping UIActionHandler) -> [UIAction] {
 			switch self {
 			case .emptyFolder:
 				return [
-					MenuType.edit.createButtonAction(baseHandle),
-					MenuType.deleteConfirmation.createButtonAction(baseHandle)
-					
+					MenuActions.edit.createButtonAction(baseHandle),
+					MenuActions.delete.createButtonAction(baseHandle)
+
 				]
 			case .folder:
 				return [
-					MenuType.copyContents.createButtonAction(baseHandle),
-					MenuType.openInNewTabs.createButtonAction(baseHandle),
-					MenuType.edit.createButtonAction(baseHandle),
-					MenuType.deleteConfirmation.createButtonAction(baseHandle)
+					MenuActions.copyContents.createButtonAction(baseHandle),
+					MenuActions.openInNewTabs.createButtonAction(baseHandle),
+					MenuActions.edit.createButtonAction(baseHandle),
+					MenuActions.delete.createButtonAction(baseHandle)
 				]
 			case .bookmark:
 				return [
-					MenuType.copy.createButtonAction(baseHandle),
-					MenuType.openInNewTab.createButtonAction(baseHandle),
-					MenuType.edit.createButtonAction(baseHandle),
-					MenuType.deleteConfirmation.createButtonAction(baseHandle)
+					MenuActions.copy.createButtonAction(baseHandle),
+					MenuActions.openInNewTab.createButtonAction(baseHandle),
+					MenuActions.edit.createButtonAction(baseHandle),
+					MenuActions.delete.createButtonAction(baseHandle)
+				]
+			case .readingList:
+				return [
+					MenuActions.copy.createButtonAction(baseHandle),
+					MenuActions.openInNewTab.createButtonAction(baseHandle),
+					MenuActions.delete.createButtonAction(baseHandle)
+				]
+			case .history:
+				return [
+					MenuActions.copy.createButtonAction(baseHandle),
+					MenuActions.openInNewTab.createButtonAction(baseHandle),
+					MenuActions.delete.createButtonAction(baseHandle)
 				]
 			}
 		}
 		
+//		func makeMenu(menuStyle: MenuStyle, editHandler: @escaping UIActionHandler, deleteHandler: @escaping UIActionHandler) -> UIMenu {
+//
+//			let edit = MenuActions.edit.createButtonAction(editHandler)
+//			let delete = MenuActions.delete.createButtonAction(deleteHandler)
+//
+//			return UIMenu(title: "", image: nil, identifier: nil, options: UIMenu.Options.init(), children: [edit, delete])
+//		}
+		
+		
+		
 	}
 	
-	func makeMenu(menuStyle: MenuStyle, prevVC: UIViewController) {
-		let menu = menuStyle.createMenu { (action) in
-			print("action.title : \(action.title)")
-		}
-		
-		UIContextMenuConfiguration(identifier: nil, previewProvider: {return prevVC}) { (actions) -> UIMenu? in
-			return menu
-		}
-	}
+//	func makeContextMenu(menuStyle: MenuStyle, previewProvider: UIViewController, handler: @escaping UIActionHandler) -> UIMenu {
+//
+//
+//	}
+	
+//	func makeMenu(menuStyle: MenuStyle, handler: @escaping UIActionHandler, prevVC: UIViewController) -> UIMenu {
+////		let menu = UIMenu(title: "", image: nil, identifier: nil, options: UIMenu.Options.init(), children: [])
+//		
+//		switch menuStyle {
+//		case .emptyFolder:
+//			let menu = UIMenu(title: "", image: nil, identifier: nil, options: UIMenu.Options.init(), children: [menuStyle.getMenuButtons(handler)])
+//		case .folder:
+//
+//		case .bookmark:
+//
+//		case .readingList:
+//
+//		case .history:
+//
+//		}
+//		
+//		return menu/
+//	}
+	
+//	func makeMenu(menuStyle: MenuStyle, prevVC: UIViewController) {
+//		let menu = menuStyle.createMenu { (action) in
+//			print("action.title : \(action.title)")
+//		}
+//
+//		UIContextMenuConfiguration(identifier: nil, previewProvider: {return prevVC}) { (actions) -> UIMenu? in
+//			return menu
+//		}
+//	}
 	
 	
 	

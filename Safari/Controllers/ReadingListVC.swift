@@ -83,19 +83,19 @@ class ReadingListVC: UIViewController {
 		//		} else {
 		//			self.tableView.isHidden = false
 		//		}
-//		UserDefaultsManager.shared.registerReadingListDataObserver(vc: self, selector: #selector(updateReadingListDatas))
-//		UserDefaultsManager.shared.loadUserReadingListData()
+		UserDefaultsManager.shared.registerReadingListDataObserver(vc: self, selector: #selector(updateReadingListDatas))
+		UserDefaultsManager.shared.loadUserReadingListData()
 	}
 	
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
-//		UserDefaultsManager.shared.removeReadingListDataObserver()
+		UserDefaultsManager.shared.removeReadingListDataObserver()
 	}
 	
 	@objc func updateReadingListDatas() {
 		print("readinglistVC updateReadinglistDatas")
 		self.readingListDatas.removeAll()
-//		readingListDatas = UserDefaultsManager.shared.readingListDataSave
+		readingListDatas = UserDefaultsManager.shared.readingListDataSave
 		
 		tableView.reloadData()
 	}
@@ -184,7 +184,7 @@ class ReadingListVC: UIViewController {
 			tableView.endUpdates()
 			
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-//				UserDefaultsManager.shared.removeReadingListItemWithUUID(uuids: uuids)
+				UserDefaultsManager.shared.removeReadingListItemWithUUID(uuids: uuids)
 			}
 			
 		}
@@ -238,7 +238,7 @@ extension ReadingListVC : UITableViewDelegate, UITableViewDataSource {
 			
 		}
 		else {
-//			NotificationGroup.shared.post(type: .readinglistURLName, userInfo: ["selectedReadinglistURL": urlString])
+			NotificationGroup.shared.post(type: .readinglistURLName, userInfo: ["selectedReadinglistURL": urlString])
 			self.dismiss(animated: true, completion: nil)
 		}
 		
@@ -256,7 +256,7 @@ extension ReadingListVC : UITableViewDelegate, UITableViewDataSource {
 		if editingStyle == .delete {
 			tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-//				UserDefaultsManager.shared.removeReadingListItemAtIndexPath(indexPath: indexPath)
+				UserDefaultsManager.shared.removeReadingListItemAtIndexPath(indexPath: indexPath)
 			}
 		}
 		
@@ -265,27 +265,27 @@ extension ReadingListVC : UITableViewDelegate, UITableViewDataSource {
 	func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
 		return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { (actions) -> UIMenu? in
 			
-			let deleteCancel = Menus.MenuType.deleteCancel.createButtonAction({ (action) in
+			let deleteCancel = Menus.MenuActions.cancel.createButtonAction({ (action) in
 				print("cancel")
 			})
-			let deleteConfirmation = Menus.MenuType.deleteConfirmation.createButtonAction({ (action) in
+			let deleteConfirmation = Menus.MenuActions.delete.createButtonAction({ (action) in
 				//				self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
 				DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-//					UserDefaultsManager.shared.removeReadingListItemAtIndexPath(indexPath: indexPath)
+					UserDefaultsManager.shared.removeReadingListItemAtIndexPath(indexPath: indexPath)
 				}
 				self.tableView.reloadData()
 			})
 			let deleteAction = UIMenu(title: "Delete", image: UIImage(systemName: "trash"), options: .destructive, children: [deleteCancel, deleteConfirmation])
 			
 			return UIMenu(title: "Menu", image: nil, identifier: nil, options: UIMenu.Options.init(), children: [
-				Menus.MenuType.copy.createButtonAction({ (action) in
+				Menus.MenuActions.copy.createButtonAction({ (action) in
 					print("Copying", self.readingListDatas[indexPath.row].urlString!)
 					if let urlString = self.readingListDatas[indexPath.row].urlString {
 						UIPasteboard.general.string = urlString
 						
 					}
 				}),
-				Menus.MenuType.openInNewTab.createButtonAction({ (action) in
+				Menus.MenuActions.openInNewTab.createButtonAction({ (action) in
 					//TODO: - need to implement this
 					print("open in New Tabs!", action)
 				}),
@@ -328,7 +328,7 @@ extension ReadingListVC : UITableViewDelegate, UITableViewDataSource {
 	func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		let deleteAction = UIContextualAction(style: UIContextualAction.Style.destructive, title: "Delete") { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
 			// Call edit action
-//			UserDefaultsManager.shared.removeReadingListItemAtIndexPath(indexPath: indexPath)
+			UserDefaultsManager.shared.removeReadingListItemAtIndexPath(indexPath: indexPath)
 			//Reset state
 			
 			success(true)
@@ -418,7 +418,7 @@ extension ReadingListVC {
 				
 			case LAError.touchIDNotAvailable.rawValue:
 				message = "TouchID is not available on the device"
-				
+					
 			case LAError.touchIDNotEnrolled.rawValue:
 				message = "TouchID is not enrolled on the device"
 				

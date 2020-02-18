@@ -134,6 +134,10 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		super.viewDidDisappear(animated)
 	}
 	
+	@objc func cancelAddBookmark() {
+		self.dismiss(animated: true, completion: nil)
+	}
+	
 	func setupBackForwardObservation() {
 		if let topWebVC = self.dataSource[selectedPageIndex ?? 0] {
 			Observables.shared.canGoBackObservationToken = topWebVC.webView.observe(\.canGoBack) { (object, change) in
@@ -188,12 +192,38 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		}
 		
 		bookmarksButton.longEvent = {
-			//TODO: implement later
 			print("bookmarks long")
 			Alerts.shared.makeBookmarkAlert(viewController: self, addBookmarkHandler: { (addbookmarkAction) in
 				print("Add Bookmark")
+				let urlString = self.dataSource[self.selectedPageIndex ?? 0]?.webView.url?.absoluteString ?? ""
+				var title = self.dataSource[self.selectedPageIndex ?? 0]?.webView.backForwardList.currentItem?.title ?? ""
+				if title.isEmpty {
+					title = urlString
+				}
+				
+				let storyboard = UIStoryboard(name: "Main", bundle: nil)
+				let editBookmarkVC = storyboard.instantiateViewController(identifier: "EditBookmarkVC") as! EditBookmarkVC
+				let navController = UINavigationController(rootViewController: editBookmarkVC)
+				
+				editBookmarkVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.cancelAddBookmark))
+				editBookmarkVC.caseType = .AddNewBookmark
+				editBookmarkVC.bookmarkTitle = title
+				editBookmarkVC.address = urlString
+				self.present(navController, animated: true, completion: nil)
+				
 			}) { (addReadingListAction) in
 				print("Add ReadingList")
+				let backForwardList = self.dataSource[self.selectedPageIndex ?? 0]?.webView.backForwardList.self
+				guard let currentItemUrl = backForwardList?.currentItem?.url else { return }
+				guard let currentItemInitialUrl = backForwardList?.currentItem?.initialURL else { return }
+				guard let currentItemTitle = backForwardList?.currentItem?.title else { return }
+				guard let currentItemUrlString = backForwardList?.currentItem?.url.absoluteString else { return }
+				let now = Date()
+				
+				let readingListDataInstance = ReadingListData(url: currentItemUrl, initialUrl: currentItemInitialUrl, title: currentItemTitle, urlString: currentItemUrlString, date: now)
+				
+				UserDefaultsManager.shared.insertCurrentItemToReadingList(readingListData: readingListDataInstance)
+				
 			}
 		}
 		

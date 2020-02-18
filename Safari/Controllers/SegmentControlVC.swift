@@ -55,6 +55,11 @@ class SegmentControlVC: UIViewController {
 	lazy var historyViewController: HistoryVC = {
 		//Load Storyboard
 		let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+//		let historyNav = storyboard.instantiateViewController(identifier: "HistoryNavigationController")
+//
+//		self.add(asChildViewController: historyNav)
+		
+		
 		//Instantiate VC
 		var viewController = storyboard.instantiateViewController(identifier: "HistoryVC") as! HistoryVC
 		// Add VC as ChildVC
@@ -66,7 +71,7 @@ class SegmentControlVC: UIViewController {
 		super.viewDidLoad()
 		self.title = "Bookmarks"
 		///
-		self.navigationController?.navigationBar.barTintColor = UIColor.blue
+//		self.navigationController?.navigationBar.barTintColor = UIColor.blue
 		self.navigationController?.isNavigationBarHidden = false
 		self.navigationController?.navigationBar.isHidden = false
 		
