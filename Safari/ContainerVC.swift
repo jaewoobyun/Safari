@@ -44,6 +44,7 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 	// MARK: - View Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		print("CONTAINERVC!!!!!!!!!!!!", self)
 		
 		for _ in 1...kDefaultNumberOfPages {
 			self.dataSource.append(nil)
@@ -81,6 +82,10 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 //		self.navigationController?.navigationBar.isHidden = true
 		self.navigationController?.navigationBar.barTintColor = UIColor.white
 		
+		var loadedExistingURL = false //???????
+		if let lastCommittedURLStringString = UserDefaults.standard.object(forKey: "LastCommittedURLString") as? String {
+			self.searchBar.text = lastCommittedURLStringString
+		}
 		
 		////  searchBar customization
 		searchBar.showsBookmarkButton = true
@@ -93,10 +98,53 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		let leftBarButton = UIBarButtonItem(image: UIImage(systemName: "textformat.size"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(showPopover))
 		navigationItem.leftBarButtonItem = leftBarButton
 		
+		
+		registerNewTabObserver()
 		setupBackForwardObservation()
 //		setupLongPressObservation()
 		
 		setupCustomButtons()
+	}
+	
+	func registerNewTabObserver() {
+		NotificationGroup.shared.registerObserver(type: NotificationGroup.NotiType.bookmarkURLName, vc: self, selector: #selector(onNewTabBookmarkNotification(notification:)))
+		
+		NotificationGroup.shared.registerObserver(type: NotificationGroup.NotiType.newTabsListDataUpdate, vc: self, selector: #selector(openNewTabsNotification(notification:)))
+	}
+	
+	@objc func openNewTabsNotification(notification: Notification) {
+		self.safariPageController.zoomOut(animated: true, completion: nil)
+		if let urlStringArray = notification.userInfo?["newTabsURLs"] as? [String] {
+			urlStringArray.forEach { (urlString) in
+				let url = URL(string: urlString)
+				let newTab = MainWebVC()
+				
+				self.dataSource.insert(newTab, at: Int(self.safariPageController.numberOfPages))
+				self.safariPageController.insertPages(at: IndexSet(integer: Int(self.safariPageController.numberOfPages)), animated: true) { () -> Void in
+					self.safariPageController.zoomIntoPage(at: self.safariPageController.numberOfPages - 1, animated: true, completion: nil)
+					self.requestLoad(newTab, urlToRequest: url!)
+				}
+				self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? true : false
+				
+			}
+			
+		}
+	}
+	
+	@objc func onNewTabBookmarkNotification(notification: Notification) {
+		self.safariPageController.zoomOut(animated: true, completion: nil)
+		if let urlString = notification.userInfo?["newTabBookmarkURL"] as? String {
+			let newTab: MainWebVC = MainWebVC()
+			let url = URL(string: urlString)
+			
+			
+			self.dataSource.insert(newTab, at: Int(self.safariPageController.numberOfPages))
+			self.safariPageController.insertPages(at: IndexSet(integer: Int(self.safariPageController.numberOfPages)), animated: true) { () -> Void in
+				self.safariPageController.zoomIntoPage(at: self.safariPageController.numberOfPages - 1, animated: true, completion: nil)
+				self.requestLoad(newTab, urlToRequest: url!)
+			}
+			self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? true : false
+		}
 	}
 	
 //	func setupLongPressObservation() {
@@ -132,6 +180,7 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 	
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
+		NotificationGroup.shared.removeAllObserver(vc: self) //?????
 	}
 	
 	@objc func cancelAddBookmark() {
@@ -142,6 +191,9 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		if let topWebVC = self.dataSource[selectedPageIndex ?? 0] {
 			Observables.shared.canGoBackObservationToken = topWebVC.webView.observe(\.canGoBack) { (object, change) in
 				self.backButton.isEnabled = topWebVC.webView.canGoBack
+				
+//				self.backButton.touchView.isUserInteractionEnabled = topWebVC.webView.canGoBack
+//				self.backButton.imageView.isUserInteractionEnabled = topWebVC.webView.canGoBack
 			}
 			
 		}
@@ -149,6 +201,9 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		if let topWebVC = self.dataSource[selectedPageIndex ?? 0] {
 			Observables.shared.canGoForwardObservationToken = topWebVC.webView.observe(\.canGoForward) { (object, change) in
 				self.forwardButton.isEnabled = topWebVC.webView.canGoForward
+	
+//				self.forwardButton.touchView.isUserInteractionEnabled = topWebVC.webView.canGoForward
+//				self.forwardButton.imageView.isUserInteractionEnabled = topWebVC.webView.canGoForward
 			}
 		}
 
@@ -163,7 +218,11 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		
 		backButton.longEvent = {
 			print("Back long")
-			//TODO: implement later
+			//TODO: - set the datasource to back list
+			let storyboard = UIStoryboard(name: "Main", bundle: nil)
+			//			let history = storyboard.instantiateViewController(identifier: "History") as! History
+			let history = storyboard.instantiateViewController(identifier: "HistoryNavigationController") as UINavigationController
+			self.navigationController?.present(history, animated: true, completion: nil)
 		}
 		
 		// MARK: ForwardButton
@@ -174,7 +233,10 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		
 		forwardButton.longEvent = {
 			print("-> Forward long")
-			//TODO: implement later
+			//TODO: - set the datasource to forward list
+			let storyboard = UIStoryboard(name: "Main", bundle: nil)
+			let history = storyboard.instantiateViewController(identifier: "HistoryNavigationController") as UINavigationController
+			self.navigationController?.present(history, animated: true, completion: nil)
 		}
 		
 		// MARK: BookmarksButton
@@ -244,18 +306,19 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		tabsButton.longEvent = {
 			print("Tabs Long")
 			Alerts.shared.makeTabAlert(viewController: self, closeThisTabHandler: { (closeAction) in
-				print("close????")
+				print("Close Tab")
 				self.viewControllerDidRequestDelete(self.dataSource[self.selectedPageIndex ?? 0] ?? MainWebVC())
 			}, closeAllTabsHandler: { (closeAllAction) in
-				print("Close All??")
-				
+				print("Close All Tabs")
+				for allVCs in self.dataSource {
+					self.viewControllerDidRequestDelete(allVCs ?? MainWebVC())
+				}
 			}) { (newTabAction) in
-				print("newTab ?????")
-				
+				print("New Tab")
 				//TODO: need to zoom out -> zoom into new tab first.
+				self.safariPageController.zoomOut(animated: true, completion: nil)
 				self.dataSource.insert(nil, at: Int(self.safariPageController.numberOfPages))
 						self.safariPageController.insertPages(at: IndexSet(integer: Int(self.safariPageController.numberOfPages)), animated: true) { () -> Void in
-				//			self.toggleZoomWithPageIndex(self.safariPageController.numberOfPages - 1)
 							self.safariPageController.zoomIntoPage(at: self.safariPageController.numberOfPages - 1, animated: true, completion: nil)
 						}
 						self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? true : false
@@ -331,7 +394,6 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 			}
 		}
 		self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true
-		
 	}
 	
 	@IBAction func addButtonTap(_ sender: UIButton) {

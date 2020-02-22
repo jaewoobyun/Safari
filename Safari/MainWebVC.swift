@@ -28,7 +28,16 @@ class MainWebVC: UIViewController{
 	
 	var headerVisible:Bool = false
 	
-	var urlString: String = "https://www.google.com"
+	var urlString: String?
+	
+//	init(urlString: String?) {
+//		super.init()
+//		self.urlString = urlString
+//	}
+//
+//	required init?(coder: NSCoder) {
+//		fatalError("init(coder:) has not been implemented")
+//	}
 	
 //	var currentContentMode: WKWebpagePreferences.ContentMode?
 //	var contentModeToRequestForHost: [String: WKWebpagePreferences.ContentMode] = [:]
@@ -50,6 +59,7 @@ class MainWebVC: UIViewController{
 		
 		var loadedExistingURL = false
 		if let lastCommittedURLStringString = UserDefaults.standard.object(forKey: "LastCommittedURLString") as? String {
+			self.urlString = lastCommittedURLStringString
 			if let url = URL(string: lastCommittedURLStringString) {
 				//searchBar.text = lastCommittedURLStringString
 				webView.load(URLRequest(url: url))

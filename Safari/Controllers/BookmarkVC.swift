@@ -35,7 +35,7 @@ class BookmarkVC: UIViewController {
 		let library_path = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
 		print("library path is \(library_path)")
 		
-//		bookmarkData = [BookmarkData(titleString: "Favorites", child: [], indexPath: [0])]
+		//		bookmarkData = [BookmarkData(titleString: "Favorites", child: [], indexPath: [0])]
 		
 		self.editButton = self.editButtonItem
 		tableView.delegate = self
@@ -68,9 +68,9 @@ class BookmarkVC: UIViewController {
 		
 		if bookmarkData.count == 0, !isDepthViewController {
 			self.title = "Bookmarks"
-//			BookmarksDataModel.createSampleData()
-//			let bookmarksArray = BookmarksDataModel.bookMarkDatas
-//			bookmarkData = bookmarksArray
+			//			BookmarksDataModel.createSampleData()
+			//			let bookmarksArray = BookmarksDataModel.bookMarkDatas
+			//			bookmarkData = bookmarksArray
 			
 			
 			bookmarkData = UserDefaultsManager.shared.loadUserBookMarkListData()
@@ -86,7 +86,7 @@ class BookmarkVC: UIViewController {
 		super.viewDidDisappear(animated)
 		UserDefaultsManager.shared.removeBookmarkDataObserver()
 	}
-
+	
 	@objc func updateBookmarkListData() {
 		print("BookmarkVC updateBookmarkListData")
 		if let navi = self.navigationController, navi.children.count > 1 {
@@ -149,9 +149,9 @@ extension BookmarkVC: UITableViewDataSource, UITableViewDelegate {
 			cell.editingAccessoryType = .disclosureIndicator
 			return cell
 		}
-//		else if bookmarkData[0].titleString == "Favorites" && bookmarkData[indexPath.row].isFolder {
-//			cell.imageView?.image = UIImage(systemName: "star")
-//		}
+			//		else if bookmarkData[0].titleString == "Favorites" && bookmarkData[indexPath.row].isFolder {
+			//			cell.imageView?.image = UIImage(systemName: "star")
+			//		}
 		else {
 			cell.imageView?.image = UIImage(systemName: "folder")
 		}
@@ -239,7 +239,7 @@ extension BookmarkVC: UITableViewDataSource, UITableViewDelegate {
 	}
 	
 	func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-//		let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+		//		let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
 		guard let bookmarkVC = storyboard?.instantiateViewController(identifier: "BookmarkVC") as? BookmarkVC else {
 			preconditionFailure("Failed to preview bookmarkVC")
 		}
@@ -294,6 +294,15 @@ extension BookmarkVC: UITableViewDataSource, UITableViewDelegate {
 		}
 		let openInNewTabAction = Menus.MenuActions.openInNewTab.createButtonAction { (action) in
 			print("Open in New Tab!")
+			
+			self.dismiss(animated: true) {
+				guard let bookmarkUrlString = self.bookmarkData[indexPath.row].urlString else { return }
+				NotificationGroup.shared.post(type: NotificationGroup.NotiType.bookmarkURLName, userInfo: ["newTabBookmarkURL": bookmarkUrlString])
+			}
+			
+			
+			
+			
 		}
 		let openInNewTabsAction = Menus.MenuActions.openInNewTabs.createButtonAction { (action) in
 			print("Open in New Tabs!")
@@ -335,7 +344,7 @@ extension BookmarkVC: UITableViewDataSource, UITableViewDelegate {
 			}
 		}
 		
-	
+		
 	}
 	
 	func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
@@ -390,12 +399,14 @@ extension BookmarkVC: UIContextMenuInteractionDelegate {
 		
 		let copyAction = Menus.MenuActions.copy.createButtonAction { (action) in
 			print("Copy!!")
+			//TODO: not final. copy doesn't know if the bookmarkdata is folder or bookmark
 			if let bookmarkUrlString = self.bookmarkData[indexPath.row].urlString {
 				UIPasteboard.general.string = bookmarkUrlString
 			}
 		}
 		let copyContentsAction = Menus.MenuActions.copyContents.createButtonAction { (action) in
 			print("Copy Contents!")
+			//TODO: not final. copy doesn't know if the bookmarkdata is folder or bookmark
 			for item in self.bookmarkData[indexPath.row].child {
 				if let urlStrings = item.urlString {
 					UIPasteboard.general.strings?.append(urlStrings)
@@ -404,9 +415,26 @@ extension BookmarkVC: UIContextMenuInteractionDelegate {
 		}
 		let openInNewTabAction = Menus.MenuActions.openInNewTab.createButtonAction { (action) in
 			print("Open in New Tab!")
+			self.dismiss(animated: true) {
+				guard let bookmarkUrlString = self.bookmarkData[indexPath.row].urlString else { return }
+				NotificationGroup.shared.post(type: NotificationGroup.NotiType.bookmarkURLName, userInfo: ["newTabBookmarkURL": bookmarkUrlString])
+			}
 		}
+		
 		let openInNewTabsAction = Menus.MenuActions.openInNewTabs.createButtonAction { (action) in
 			print("Open in New Tabs!")
+			var urlStringArray = [String]()
+			for item in self.bookmarkData[indexPath.row].child { // 유저가 선택한 row 의 데이터들을 for loop 으로 돌린다.
+				if !item.isFolder { //폴더가 아닌지를 체크
+					if let itemUrlString = item.urlString { //북마크 아이템들의 urlString 만을 urlStringArray 에 추가해준다.
+						urlStringArray.append(itemUrlString)
+					}
+				}
+			}
+			self.dismiss(animated: true) {
+				NotificationGroup.shared.post(type: NotificationGroup.NotiType.newTabsListDataUpdate, userInfo: ["newTabsURLs": urlStringArray])
+			}
+			
 		}
 		
 		///폴더일때
@@ -444,7 +472,7 @@ extension BookmarkVC: UIContextMenuInteractionDelegate {
 				])
 			}
 		}
-	
+		
 	}
 	
 	

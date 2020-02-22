@@ -35,6 +35,8 @@ class NotificationGroup {
 		case ReadingListDataUpdate
 		///북마크 데이트가 업데이트 되었을때 사용한다.
 		case BookmarkListDataUpdate
+		/// 북마크에 여러 탭들을 추가할때 사용.
+		case newTabsListDataUpdate
 		
 		/// Notification.Name 목록들.
 		func getNotificationName() -> Notification.Name? {
@@ -58,6 +60,8 @@ class NotificationGroup {
 				return Notification.Name.init("ReadingListDataUpdate")
 			case .BookmarkListDataUpdate:
 				return Notification.Name.init("BookmarkListDataUpdate")
+			case .newTabsListDataUpdate:
+				return Notification.Name.init("newTabsListDataUpdate")
 				
 			default:
 				return nil

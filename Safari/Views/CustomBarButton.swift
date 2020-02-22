@@ -22,13 +22,15 @@ class CustomBarButton: UIBarButtonItem {
 	
 	required init?(coder: NSCoder) {
 		super.init(coder: coder)
+//		self.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor.lightGray], for: UIControl.State.disabled)
 		
 		initSetting()
 	}
 	
 	func initSetting() {
-		if let cusomView = self.customView {
+		if let customView = self.customView {
 			print("customView!");
+			
 		} else {
 			print("customview is nil")
 			
@@ -47,10 +49,10 @@ class CustomBarButton: UIBarButtonItem {
 			tapGesture.numberOfTouchesRequired = 1
 			longGesture.minimumPressDuration = 0.5
 			longGesture.numberOfTouchesRequired = 1
-			imageView.addGestureRecognizer(tapGesture)
-			imageView.addGestureRecognizer(longGesture)
+			touchView.addGestureRecognizer(tapGesture)
+			touchView.addGestureRecognizer(longGesture)
 			
-			imageView.isUserInteractionEnabled = true
+			touchView.isUserInteractionEnabled = true
 			
 		}
 	}

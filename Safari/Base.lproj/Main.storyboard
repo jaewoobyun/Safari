@@ -44,7 +44,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemOrangeColor" red="1" green="0.58431372550000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="frV-92-sln" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Cma-fN-g3k"/>
                             <constraint firstItem="frV-92-sln" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Luq-vL-HCQ"/>
@@ -149,7 +149,7 @@
         <!--NavigationVC-->
         <scene sceneID="nWe-Dg-2FH">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" toolbarHidden="NO" hidesBarsOnSwipe="YES" hidesBarsWhenVerticallyCompact="YES" id="aH0-Zo-oAS" customClass="NavigationVC" customModule="Safari" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="NavigationVC" automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" toolbarHidden="NO" hidesBarsOnSwipe="YES" hidesBarsWhenVerticallyCompact="YES" id="aH0-Zo-oAS" customClass="NavigationVC" customModule="Safari" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="kZK-gO-ksk">
