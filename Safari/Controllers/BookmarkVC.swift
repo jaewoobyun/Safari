@@ -417,7 +417,7 @@ extension BookmarkVC: UIContextMenuInteractionDelegate {
 			print("Open in New Tab!")
 			self.dismiss(animated: true) {
 				guard let bookmarkUrlString = self.bookmarkData[indexPath.row].urlString else { return }
-				NotificationGroup.shared.post(type: NotificationGroup.NotiType.bookmarkURLName, userInfo: ["newTabBookmarkURL": bookmarkUrlString])
+				NotificationGroup.shared.post(type: NotificationGroup.NotiType.newTab, userInfo: ["newTab": bookmarkUrlString])
 			}
 		}
 		

@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import WebKit
 
 class UserDefaultsManager {
 	
@@ -18,13 +19,44 @@ class UserDefaultsManager {
 	let decoder = JSONDecoder()
 	
 	var visitedWebSiteHistoryRecords: [HistoryData] = []
-	var backList:[URL] = []
-	var forwardList:[URL] = []
+	var backList:[WKBackForwardListItem] = []
+	var forwardList:[WKBackForwardListItem] = []
+	
 	var readingListDataSave: [ReadingListData] = []
 	var bookmarkListDataSave: [BookmarkData] = []
 	
 	init() {
 		
+	}
+	
+	
+	func insertBackListItem(currentWebView: String, backList: [WKBackForwardListItem]) {
+//		userdefaultstandard.mutableSetValue(forKey: "BackListItem").add(backList)
+//		userdefaultstandard.array(forKey: "BackListItem")?.insert(contentsOf: backList, at: 0)
+//		userdefaultstandard.mutableArrayValue(forKey: "BackListItem" + currentWebView).insert(backList, at: 0)
+//		updateBackListStack(backList: backList)
+		print("currentWebView", currentWebView)
+		self.backList = backList
+		self.updateBackListStack(backList: backList)
+		
+	}
+	
+	func insertForwardListItem(currentWebView: String, forwardList: [WKBackForwardListItem]) {
+//		userdefaultstandard.array(forKey: "ForwardListItem" + currentWebView)?.append(contentsOf: forwardList)
+//		userdefaultstandard.mutableArrayValue(forKey: "ForwardListItem" + currentWebView).insert(forwardList, at: 0)
+		
+		print("currentWebView", currentWebView)
+		self.forwardList = forwardList
+		updateForwardListStack(forwardList: forwardList)
+	}
+	
+	func updateBackListStack(backList: [WKBackForwardListItem]) {
+		NotificationGroup.shared.post(type: NotificationGroup.NotiType.backListData, userInfo: ["backListStack": backList])
+		
+	}
+	
+	func updateForwardListStack(forwardList: [WKBackForwardListItem]) {
+		NotificationGroup.shared.post(type: NotificationGroup.NotiType.forwardListData, userInfo: ["forwardListStack": forwardList])
 	}
 	
 	

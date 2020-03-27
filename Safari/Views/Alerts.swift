@@ -44,7 +44,7 @@ class Alerts {
 		func getTitle() -> String {
 			switch self {
 			case .addToFavorites:
-				return "Add To Favorites"
+				return "Add To Favorites(Bookmark)"
 			case .share:
 				return "Share..."
 			case .requestDesktopSite:

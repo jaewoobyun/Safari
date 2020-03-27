@@ -51,12 +51,6 @@ class MainWebVC: UIViewController{
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		//-------------------
-//		let urlString = "https://www.google.com"
-//		let url = URL(string: urlString)
-//		let urlRequest = URLRequest(url: url!)
-//		webView.load(urlRequest)
-		
 		var loadedExistingURL = false
 		if let lastCommittedURLStringString = UserDefaults.standard.object(forKey: "LastCommittedURLString") as? String {
 			self.urlString = lastCommittedURLStringString
@@ -75,7 +69,7 @@ class MainWebVC: UIViewController{
 		//---------------------r
 		
 		self.webView.navigationDelegate = self
-		
+		self.webView.allowsBackForwardNavigationGestures = true
 		
 		let tapGesture = UITapGestureRecognizer(target: self, action: #selector(MainWebVC.onBackgroundTap(_:)))
 		self.view.addGestureRecognizer(tapGesture)
@@ -235,17 +229,33 @@ extension MainWebVC: WKNavigationDelegate {
 	
 	func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
 		print("WebView didCommit")
-		if let url = webView.url {
-			if url.scheme != "file" {
-				if let urlString = webView.url?.absoluteString {
-					UserDefaults.standard.set(urlString, forKey: "LastCommittedURLString")
-					//searchBar.text = urlString
-				}
+//		if let url = webView.url {
+//			if url.scheme != "file" {
+//				if let urlString = webView.url?.absoluteString {
+//					UserDefaults.standard.set(urlString, forKey: "LastCommittedURLString")
+//					//searchBar.text = urlString
+//				}
+//			}
+//			else {
+//				UserDefaults.standard.removeObject(forKey: "LastCommittedURLString")
+//				//searchBar.text = url.lastPathComponent
+//			}
+//		}
+		
+		if webView.url?.scheme == "file" {
+			print("webView did commit file Scheme")
+		}
+		if webView.url?.scheme == "https" {
+			print("webView did commit https Scheme")
+			if let urlString = webView.url?.absoluteString {
+				UserDefaults.standard.set(urlString, forKey: "LastCommittedURLString")
+				self.addresslb.text = urlString
+				NotificationGroup.shared.post(type: NotificationGroup.NotiType.urlUpdate, userInfo: ["urlString": urlString])
 			}
-			else {
-				UserDefaults.standard.removeObject(forKey: "LastCommittedURLString")
-				//searchBar.text = url.lastPathComponent
-			}
+//			Observables.shared.urlsObservationToken = webView.url
+		}
+		if webView.url?.scheme == "http" {
+			print("webView did commit http Scheme")
 		}
 		Observables.shared.currentContentMode = navigation.effectiveContentMode
 	}
@@ -263,6 +273,19 @@ extension MainWebVC: WKNavigationDelegate {
 		let historyDataInstance = HistoryData(url: currentItemUrl, initialUrl: currentItemInitialUrl, title: currentItemTitle, urlString: currentItemUrlString, date: now)
 		
 		UserDefaultsManager.shared.insertCurrentPage(historyData: historyDataInstance)
+		print("backList")
+		print(self.webView.backForwardList.backList.description)
+		
+		var backList = self.webView.backForwardList.backList
+		var forwardList = self.webView.backForwardList.forwardList
+		
+		UserDefaultsManager.shared.insertBackListItem(currentWebView: currentItemTitle, backList: backList)
+		UserDefaultsManager.shared.insertForwardListItem(currentWebView: currentItemTitle, forwardList: forwardList)
+//		UserDefaults.standard.removeObject(forKey: "LastCommittedURLString") // ?????????????????
+		
+//		NotificationGroup.shared.post(type: NotificationGroup.NotiType.backListData, userInfo: ["backListStack": backList])
+//		NotificationGroup.shared.post(type: NotificationGroup.NotiType.forwardListData, userInfo: ["forwardListStack": forwardList])
+		
 		
 	}
 	
@@ -278,6 +301,7 @@ extension MainWebVC: WKNavigationDelegate {
 		}
 		decisionHandler(.allow, preferences)
 	}
+	
 	
 	
 }

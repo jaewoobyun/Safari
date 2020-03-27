@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-/// To hide the keyboard when clicking around?? 
+/// To hide the keyboard when clicking around??
 extension UIViewController {
 	func hideKeyboardWhenTappedAround() {
 		let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard(_:)))
@@ -36,7 +36,7 @@ extension UIViewController {
 //	}
 //}
 
-
+// MARK: - UIColor Extension (for icon)
 extension UIColor {
 	public static var random: UIColor {
 		let max = CGFloat(UInt32.max)
@@ -57,3 +57,5 @@ extension UIColor {
 		 )
 	}
 }
+
+

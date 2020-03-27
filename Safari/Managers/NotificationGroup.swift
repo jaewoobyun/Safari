@@ -10,13 +10,15 @@ import Foundation
 import UIKit
 
 class NotificationGroup {
-	static let shared = NotificationGroup()
+		static let shared = NotificationGroup()
 	
 	private init(){
 //		super.init() /// NotificationGroup 이 다른 class 를 상속하고 있을때는 상위 클래스의 초기화도 해준다
 	}
 	
 	enum NotiType: String {
+		/// notify ContainerVC's searchbar the changes of URL
+		case urlUpdate
 		/// notify WebView of the Bookmark URL
 		case bookmarkURLName
 		/// notify WebView of the ReadingList URL
@@ -35,12 +37,16 @@ class NotificationGroup {
 		case ReadingListDataUpdate
 		///북마크 데이트가 업데이트 되었을때 사용한다.
 		case BookmarkListDataUpdate
+		/// 북마크에 탭 추가할때 사용
+		case newTab
 		/// 북마크에 여러 탭들을 추가할때 사용.
 		case newTabsListDataUpdate
 		
 		/// Notification.Name 목록들.
 		func getNotificationName() -> Notification.Name? {
 			switch self {
+			case .urlUpdate:
+				return Notification.Name.init("urlUpdate")
 			case .bookmarkURLName:
 				return Notification.Name.init("bookmarkURLName")
 			case .readinglistURLName:
@@ -60,6 +66,8 @@ class NotificationGroup {
 				return Notification.Name.init("ReadingListDataUpdate")
 			case .BookmarkListDataUpdate:
 				return Notification.Name.init("BookmarkListDataUpdate")
+			case .newTab:
+				return Notification.Name.init("newTab")
 			case .newTabsListDataUpdate:
 				return Notification.Name.init("newTabsListDataUpdate")
 				

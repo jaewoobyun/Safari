@@ -21,5 +21,5 @@ class Observables {
 	var canGoBackObservationToken: NSKeyValueObservation?
 	var canGoForwardObservationToken: NSKeyValueObservation?
 	
-	
+	var urlsObservationToken: URL?
 }

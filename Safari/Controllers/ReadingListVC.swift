@@ -286,8 +286,12 @@ extension ReadingListVC : UITableViewDelegate, UITableViewDataSource {
 					}
 				}),
 				Menus.MenuActions.openInNewTab.createButtonAction({ (action) in
-					//TODO: - need to implement this
-					print("open in New Tabs!", action)
+					print("open in New Tab!")
+					self.dismiss(animated: true) {
+						guard let readinglistUrlString = self.readingListDatas[indexPath.row].urlString else { return }
+						NotificationGroup.shared.post(type: NotificationGroup.NotiType.newTab, userInfo: ["newTab": readinglistUrlString])
+					}
+					
 				}),
 				deleteAction
 			])

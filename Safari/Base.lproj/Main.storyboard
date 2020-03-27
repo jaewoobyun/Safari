@@ -53,9 +53,9 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <toolbarItems>
-                        <barButtonItem image="chevron.left" catalog="system" id="YqH-9v-ahF" customClass="CustomBarButton" customModule="Safari" customModuleProvider="target"/>
+                        <barButtonItem enabled="NO" image="chevron.left" catalog="system" id="YqH-9v-ahF" customClass="CustomBarButton" customModule="Safari" customModuleProvider="target"/>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="ht0-5I-BeF"/>
-                        <barButtonItem image="chevron.right" catalog="system" id="uFs-0W-zHI" customClass="CustomBarButton" customModule="Safari" customModuleProvider="target"/>
+                        <barButtonItem enabled="NO" image="chevron.right" catalog="system" id="uFs-0W-zHI" customClass="CustomBarButton" customModule="Safari" customModuleProvider="target"/>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="DHu-19-yHw"/>
                         <barButtonItem image="square.and.arrow.up" catalog="system" id="3PY-FO-mSw">
                             <connections>
@@ -87,6 +87,50 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1044.9275362318842" y="136.95652173913044"/>
+        </scene>
+        <!--Search Results Controller-->
+        <scene sceneID="Kay-qf-EDr">
+            <objects>
+                <tableViewController storyboardIdentifier="SearchResultsController" id="WOy-Lu-ClY" customClass="SearchResultsController" customModule="Safari" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="rLA-VV-c4K">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="resultsCell" textLabel="ud5-x9-fdt" detailTextLabel="P2F-4h-ce6" style="IBUITableViewCellStyleSubtitle" id="Olj-In-oI5">
+                                <rect key="frame" x="0.0" y="28" width="414" height="55.666667938232422"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Olj-In-oI5" id="L7b-B1-J6P">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="55.666667938232422"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ud5-x9-fdt">
+                                            <rect key="frame" x="20.000000000000004" y="8.9999999999999982" width="33.333333333333336" height="20.333333333333332"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="P2F-4h-ce6">
+                                            <rect key="frame" x="19.999999999999996" y="31.333333333333332" width="43.666666666666664" height="14.333333333333334"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="WOy-Lu-ClY" id="F9b-oT-Trv"/>
+                            <outlet property="delegate" destination="WOy-Lu-ClY" id="514-F8-QOI"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="80a-TE-dBF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1864" y="119"/>
         </scene>
         <!--Segment ControlVC-->
         <scene sceneID="i0G-PU-gwr">
@@ -385,17 +429,67 @@
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
-                    <navigationItem key="navigationItem" title="History" id="YAA-hX-Krr"/>
+                    <navigationItem key="navigationItem" title="History" id="YAA-hX-Krr">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="hvF-o3-Vyd">
+                            <connections>
+                                <action selector="doneButton:" destination="tRw-BC-XxP" id="N76-fG-yQw"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="et6-lL-jHH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2907" y="2359"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Back Forward ListVC-->
+        <scene sceneID="RC3-uZ-9Iz">
+            <objects>
+                <tableViewController storyboardIdentifier="BackForwardListVC" id="Hdc-e2-Cvl" customClass="BackForwardListVC" customModule="Safari" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="O8A-PV-WM2">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="BackForwardListCell" textLabel="jGK-b4-bNO" detailTextLabel="GWU-0S-A7a" style="IBUITableViewCellStyleSubtitle" id="qaV-CO-wVS">
+                                <rect key="frame" x="0.0" y="28" width="414" height="55.666667938232422"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qaV-CO-wVS" id="DVC-c0-VCP">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="55.666667938232422"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="jGK-b4-bNO">
+                                            <rect key="frame" x="20.000000000000004" y="8.9999999999999982" width="33.333333333333336" height="20.333333333333332"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="GWU-0S-A7a">
+                                            <rect key="frame" x="19.999999999999996" y="31.333333333333332" width="43.666666666666664" height="14.333333333333334"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Hdc-e2-Cvl" id="rYX-tK-By0"/>
+                            <outlet property="delegate" destination="Hdc-e2-Cvl" id="XUD-4h-qsY"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Y3C-mm-D23" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2906" y="3028"/>
+        </scene>
+        <!--History Navigation Controller-->
         <scene sceneID="tqT-VY-Za0">
             <objects>
-                <navigationController storyboardIdentifier="HistoryNavigationController" toolbarHidden="NO" id="0qI-qB-AIt" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="HistoryNavigationController" toolbarHidden="NO" id="0qI-qB-AIt" customClass="HistoryNavigationController" customModule="Safari" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="aFb-ff-ZfS">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>

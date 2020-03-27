@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import WebKit
 
 class HistoryVC: UITableViewController {
 	
@@ -25,10 +26,10 @@ class HistoryVC: UITableViewController {
 	}
 	var sections: [Section] = []
 	
-	
+
 	// MARK: - LifeCycle
 	override func viewDidLoad() {
-		self.title = "History"
+//		self.title = "History"
 		self.navigationController?.navigationBar.isHidden = false
 		
 		tableView.delegate = self
@@ -88,7 +89,9 @@ class HistoryVC: UITableViewController {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-//		self.navigationController?.navigationBar.isHidden = false
+		self.title = "History"
+		self.title = super.title
+		
 		UserDefaultsManager.shared.registerHistoryDataObserver(vc: self, selector: #selector(updateHistoryData))
 		UserDefaultsManager.shared.loadUserHistoryData()
 	}
@@ -108,6 +111,11 @@ class HistoryVC: UITableViewController {
 		tableView.isUserInteractionEnabled = true
 		tableView.reloadData()
 	}
+	
+	@IBAction func doneButton(_ sender: UIBarButtonItem) {
+		self.dismiss(animated: true, completion: nil)
+	}
+	
 	
 	@IBAction func clearButton(_ sender: UIBarButtonItem) {
 		Alerts.shared.makeClearHistoryAlert(viewController: self, lastHourHandler: { (action) in
@@ -226,7 +234,12 @@ class HistoryVC: UITableViewController {
 				}),
 				///Open In New Tab
 				Menus.MenuActions.openInNewTab.createButtonAction({ (action) in
-					print("open In new tab action", action)
+					print("open In new tab")
+					self.dismiss(animated: true) {
+						guard let historyUrlString = self.historyData[indexPath.row].urlString else { return }
+						NotificationGroup.shared.post(type: NotificationGroup.NotiType.newTab, userInfo: ["newTab": historyUrlString])
+					}
+					
 				}),
 				///Delete [deleteConfirmation, delete cancel]
 				deleteAction

@@ -22,18 +22,37 @@ class CustomBarButton: UIBarButtonItem {
 	
 	required init?(coder: NSCoder) {
 		super.init(coder: coder)
-//		self.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor.lightGray], for: UIControl.State.disabled)
 		
 		initSetting()
 	}
 	
+	
+	
+//	@IBInspectable var accEnabled: Bool {
+//		get {
+//			return isAccessibilityElement
+//		}
+//		set {
+//			isAccessibilityElement = newValue
+//		}
+//	}
+	
+//	override init() {
+//		super.init()
+//	}
+	
 	func initSetting() {
+		
+		self.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor.gray], for: UIControl.State.disabled)
+		self.isEnabled = false
+		
 		if let customView = self.customView {
-			print("customView!");
+			print("customView!")
+//			self.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor.systemBlue], for: UIControl.State.normal)
+//			self.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor.gray], for: UIControl.State.disabled)
 			
 		} else {
-			print("customview is nil")
-			
+			print("customView is nil?")
 			touchView.frame = CGRect(x: 0, y: 0, width: 27, height: 27)
 			self.customView = touchView
 			
@@ -41,19 +60,18 @@ class CustomBarButton: UIBarButtonItem {
 			imageView.image = self.image
 			touchView.addSubview(imageView)
 			imageView.contentMode = .scaleAspectFit
-			
+
 			let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tap))
-			
+
 			let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(long))
-			
+
 			tapGesture.numberOfTouchesRequired = 1
 			longGesture.minimumPressDuration = 0.5
 			longGesture.numberOfTouchesRequired = 1
 			touchView.addGestureRecognizer(tapGesture)
 			touchView.addGestureRecognizer(longGesture)
-			
+
 			touchView.isUserInteractionEnabled = true
-			
 		}
 	}
 	
@@ -70,3 +88,19 @@ class CustomBarButton: UIBarButtonItem {
 	}
 	
 }
+
+//class CustomBarButtonItem: UIBarButtonItem {
+//	private (set) var button: UIButton!
+//
+//	override var tintColor: UIColor? {
+//		get { return button.tintColor }
+//		set { button.tintColor = newValue }
+//	}
+//
+//	convenience init(button: UIButton) {
+//		self.init(customView: button)
+//		self.button = button
+//		button.imageView?.contentMode = .scaleAspectFit
+//		button.frame = CGRect(x: 0, y: 0, width: 27, height: 27)
+//	}
+//}
