@@ -38,7 +38,7 @@ class HistoryVC: UITableViewController {
 		/// this is needed to fix searchbar in place. otherwise when it is clicked, navbar goes up!!!!!!!!!!
 		searchController.hidesNavigationBarDuringPresentation = false
 		searchController.searchResultsUpdater = self
-//		historySearchController = UISearchController(searchResultsController: self)
+		searchController.obscuresBackgroundDuringPresentation = false
 		
 		
 		tableView.delegate = self
@@ -141,6 +141,9 @@ class HistoryVC: UITableViewController {
 	
 	
 	override func numberOfSections(in tableView: UITableView) -> Int {
+		if isFiltering == true {
+			return filteredHistoryData.count
+		}
 		return sections.count
 	}
 	
@@ -148,39 +151,65 @@ class HistoryVC: UITableViewController {
 		dateFormatter.locale = Locale(identifier: "ko_kr")
 		dateFormatter.dateFormat = "EEEE, MMMM d" // ex) "화요일, 12월 17"
 		
-		let dateString = dateFormatter.string(from: sections[section].date)
-		return dateString
+		if isFiltering == true {
+			return nil
+		}
+		else {
+			let dateString = dateFormatter.string(from: sections[section].date)
+			return dateString
+		}
+		
 	}
 	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		if isFiltering == true {
+			return filteredHistoryData.count
+		}
 		return sections[section].cells.count
 	}
 	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "historyCell", for: indexPath)
 		cell.detailTextLabel?.textColor = UIColor.gray
-		
-		if let titleString = sections[indexPath.section].cells[indexPath.row].title {
-			cell.textLabel?.text = titleString
+		if isFiltering == true {
+			cell.textLabel?.text = filteredHistoryData[indexPath.row].title ?? " no title "
+			cell.detailTextLabel?.text = filteredHistoryData[indexPath.row].urlString
 		}
-		if let visitedDate = sections[indexPath.section].cells[indexPath.row].date {
-			dateFormatter.locale = Locale(identifier: "ko_kr")
-			dateFormatter.dateFormat = "EEEE, MMMM d HH:mm" // ex) "화요일, 12월 17"
-			let visitedDateString = dateFormatter.string(from: visitedDate)
-			if let urlString = sections[indexPath.section].cells[indexPath.row].urlString {
-				cell.detailTextLabel?.text = visitedDateString + " " + urlString
+		else {
+			if let titleString = sections[indexPath.section].cells[indexPath.row].title {
+				cell.textLabel?.text = titleString
+			}
+			if let visitedDate = sections[indexPath.section].cells[indexPath.row].date {
+				dateFormatter.locale = Locale(identifier: "ko_kr")
+				dateFormatter.dateFormat = "EEEE, MMMM d HH:mm" // ex) "화요일, 12월 17"
+				let visitedDateString = dateFormatter.string(from: visitedDate)
+				if let urlString = sections[indexPath.section].cells[indexPath.row].urlString {
+					cell.detailTextLabel?.text = visitedDateString + " " + urlString
+				}
 			}
 		}
+		
+		
 		
 		return cell
 	}
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		print("didSelectRowAt \(indexPath)")
-		let urlString = sections[indexPath.section].cells[indexPath.row].urlString
-		
-		NotificationGroup.shared.post(type: .historyURLName, userInfo: ["selectedHistoryURL": urlString])
-		self.dismiss(animated: true, completion: nil)
+		var urlString: String?
+		if isFiltering == true {
+			urlString = filteredHistoryData[indexPath.row].urlString
+		}
+		else {
+			urlString = sections[indexPath.section].cells[indexPath.row].urlString
+		}
+//		let urlString = sections[indexPath.section].cells[indexPath.row].urlString
+//		self.dismiss(animated: true) {
+//			NotificationGroup.shared.post(type: .historyURLName, userInfo: ["selectedHistoryURL": urlString])
+//		}
+		self.presentingViewController?.dismiss(animated: true, completion: {
+			NotificationGroup.shared.post(type: .historyURLName, userInfo: ["selectedHistoryURL": urlString])
+		})
 	}
 	
 	override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
@@ -263,7 +292,7 @@ class HistoryVC: UITableViewController {
 	
 }
 
-
+// MARK: - UISearchResultsUpdating
 extension HistoryVC: UISearchResultsUpdating {
 	
 	private func findMatches(searchString: String, keyPath: String) -> NSCompoundPredicate {

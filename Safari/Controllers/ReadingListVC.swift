@@ -33,10 +33,13 @@ class ReadingListVC: UIViewController {
 		}
 	}
 	
-	let searchController = UISearchController(searchResultsController: nil)
+	var searchController = UISearchController(searchResultsController: nil)
 	lazy var searchBar = UISearchBar(frame: CGRect.zero)
+	var isSearchBarEmpty: Bool?
+	var isFiltering: Bool?
 	
 	var readingListDatas : [ReadingListData] = []
+	var filteredReadingListData = [ReadingListData]()
 	
 	var deleteButton: UIButton?
 	var deleteBarButton: UIBarButtonItem?
@@ -47,7 +50,9 @@ class ReadingListVC: UIViewController {
 		self.navigationController?.navigationBar.isHidden = false
 		/// this is needed to fix searchbar in place. otherwise when it is clicked, navbar goes up!!!!!!!!!!
 		searchController.hidesNavigationBarDuringPresentation = false
-		
+		searchController.searchResultsUpdater = self
+		searchController.obscuresBackgroundDuringPresentation = false
+		searchBar = searchController.searchBar
 		
 		//		if isContentsHidden == true {
 		//			self.tableView.isHidden = true
@@ -88,6 +93,7 @@ class ReadingListVC: UIViewController {
 		//		}
 		UserDefaultsManager.shared.registerReadingListDataObserver(vc: self, selector: #selector(updateReadingListDatas))
 		UserDefaultsManager.shared.loadUserReadingListData()
+		
 	}
 	
 	override func viewDidDisappear(_ animated: Bool) {
@@ -147,13 +153,14 @@ class ReadingListVC: UIViewController {
 			tableView.isEditing = true
 			//			tableView.allowsMultipleSelectionDuringEditing = true
 			//			UserDefaultsManager.shared.removeReadingListDataObserver()
-			
 			deleteButton?.isHidden = false
-			
+			self.searchBar.isHidden = true
 		} else {
+			sender.title = "Edit"
 			tableView.isEditing = false
 			deleteButton?.isHidden = true
-			sender.title = "Edit"
+			self.searchBar.isHidden = false
+
 		}
 	}
 	
@@ -207,22 +214,77 @@ class ReadingListVC: UIViewController {
 	
 }
 
+// MARK: - SearchResultsUpdating
 extension ReadingListVC: UISearchResultsUpdating {
+	
+	private func findMatches(searchString: String, keyPath: String) -> NSCompoundPredicate {
+		
+		var searchItemsPredicate = [NSPredicate]()
+		
+		// title matching
+		//		let titleExpression = NSExpression(forKeyPath: Product.ExpressionKeys.title.rawValue)
+		let titleExpression = NSExpression(forKeyPath: keyPath)
+		
+		let searchStringExpression = NSExpression(forConstantValue: searchString)
+		
+		let titleSearchComparisonPredicate = NSComparisonPredicate(leftExpression: titleExpression, rightExpression: searchStringExpression, modifier: .direct, type: .contains, options: [.caseInsensitive, .diacriticInsensitive])
+		
+		searchItemsPredicate.append(titleSearchComparisonPredicate)
+		
+		var finalCompoundPredicate: NSCompoundPredicate!
+		
+		finalCompoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: searchItemsPredicate)
+		
+		return finalCompoundPredicate
+	}
+	
 	func updateSearchResults(for searchController: UISearchController) {
-		print("updateSearchResults")
+		print("update ReadingList SearchResults")
+//		searchBar = searchController.searchBar
+		
+		let readingListSearchResults = self.readingListDatas
+		
+		let whitespaceCharacterSet = CharacterSet.whitespaces
+		let strippedString = searchController.searchBar.text!.trimmingCharacters(in: whitespaceCharacterSet)
+		let searchItems = strippedString.components(separatedBy: " ") as [String]
+		
+		let andMatchReadingListPredicates: [NSPredicate] = searchItems.map { searchString in
+			findMatches(searchString: searchString, keyPath: ReadingListData.expressionkeys.urlString.rawValue)
+		}
+		let finalCompoundReadingListPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: andMatchReadingListPredicates)
+		let filteredReadingListResults = readingListSearchResults.filter { finalCompoundReadingListPredicate.evaluate(with: $0)}
+		
+		self.filteredReadingListData = filteredReadingListResults
+		
+		self.isSearchBarEmpty = searchController.searchBar.text?.isEmpty ?? true
+		self.isFiltering = searchController.isActive && !(self.isSearchBarEmpty ?? true)
+		
+		self.tableView.reloadData()
+		
 	}
 	
 }
 
 extension ReadingListVC : UITableViewDelegate, UITableViewDataSource {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return readingListDatas.count
+		if isFiltering == true {
+			return filteredReadingListData.count
+		}
+		else {
+			return readingListDatas.count
+		}
+		
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		//		let cell = tableView.dequeueReusableCell(withIdentifier: "readinglistprototype", for: indexPath)
 		let cell = tableView.dequeueReusableCell(withIdentifier: "ReadingListCell", for: indexPath) as! ReadingListCell
-		let data = readingListDatas[indexPath.row]
+		var data: ReadingListData?
+		if isFiltering == true {
+			data = filteredReadingListData[indexPath.row]
+		}
+		else {
+			data = readingListDatas[indexPath.row]
+		}
 		cell.setCellData(data)
 		
 		return cell
@@ -234,15 +296,27 @@ extension ReadingListVC : UITableViewDelegate, UITableViewDataSource {
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		print("didSelectRowAt \(indexPath)")
-		let urlString = self.readingListDatas[indexPath.row].urlString
+		
+//		let urlString = self.readingListDatas[indexPath.row].urlString
+		var urlString: String?
 		
 		if tableView.isEditing == true {
 			print("tableview is editing")
-			
+//			self.searchController.searchBar.isUserInteractionEnabled = false
 		}
 		else {
-			NotificationGroup.shared.post(type: .readinglistURLName, userInfo: ["selectedReadinglistURL": urlString])
-			self.dismiss(animated: true, completion: nil)
+			if isFiltering == true {
+				urlString = self.filteredReadingListData[indexPath.row].urlString
+			}
+			else {
+				urlString = self.readingListDatas[indexPath.row].urlString
+			}
+//			NotificationGroup.shared.post(type: .readinglistURLName, userInfo: ["selectedReadinglistURL": urlString])
+//			self.dismiss(animated: true, completion: nil)
+			
+			self.presentingViewController?.dismiss(animated: true, completion: {
+				NotificationGroup.shared.post(type: .readinglistURLName, userInfo: ["selectedReadinglistURL": urlString])
+			})
 		}
 		
 	}
@@ -356,7 +430,7 @@ extension ReadingListVC : UITableViewDelegate, UITableViewDataSource {
 	
 }
 
-
+// MARK: - FOR AUTHENTICATION!!
 extension ReadingListVC {
 	
 	func authenticationWithTouchID() {
