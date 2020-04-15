@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aH0-Zo-oAS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aH0-Zo-oAS">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -163,13 +163,17 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="scG-Vy-HsC" firstAttribute="leading" secondItem="M7z-bp-fHi" secondAttribute="leading" id="2aU-hW-DM6"/>
                             <constraint firstItem="xiG-wT-9D8" firstAttribute="trailing" secondItem="M7z-bp-fHi" secondAttribute="trailing" id="3IG-IZ-NNw"/>
                             <constraint firstItem="xiG-wT-9D8" firstAttribute="top" secondItem="M7z-bp-fHi" secondAttribute="top" id="HIv-d6-q9L"/>
+                            <constraint firstItem="scG-Vy-HsC" firstAttribute="top" secondItem="xiG-wT-9D8" secondAttribute="bottom" id="O0V-1E-MUY"/>
                             <constraint firstItem="xiG-wT-9D8" firstAttribute="leading" secondItem="M7z-bp-fHi" secondAttribute="leading" id="XPa-p1-otv"/>
+                            <constraint firstItem="scG-Vy-HsC" firstAttribute="trailing" secondItem="M7z-bp-fHi" secondAttribute="trailing" id="d52-q3-mXs"/>
                             <constraint firstItem="scG-Vy-HsC" firstAttribute="top" secondItem="xiG-wT-9D8" secondAttribute="bottom" symbolic="YES" id="dLO-Op-UEV"/>
                             <constraint firstItem="M7z-bp-fHi" firstAttribute="bottom" secondItem="scG-Vy-HsC" secondAttribute="bottom" id="e81-H4-0kg"/>
                             <constraint firstItem="scG-Vy-HsC" firstAttribute="trailing" secondItem="M7z-bp-fHi" secondAttribute="trailing" id="jSf-FF-hcL"/>
                             <constraint firstItem="scG-Vy-HsC" firstAttribute="leading" secondItem="M7z-bp-fHi" secondAttribute="leading" id="kCr-oN-WvG"/>
+                            <constraint firstItem="scG-Vy-HsC" firstAttribute="bottom" secondItem="M7z-bp-fHi" secondAttribute="bottom" id="uOQ-TI-puB"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="M7z-bp-fHi"/>
                     </view>
@@ -741,16 +745,16 @@
         </scene>
     </scenes>
     <resources>
-        <image name="book" catalog="system" width="64" height="50"/>
-        <image name="chevron.left" catalog="system" width="48" height="64"/>
-        <image name="chevron.right" catalog="system" width="48" height="64"/>
-        <image name="clock" catalog="system" width="64" height="60"/>
-        <image name="eyeglasses" catalog="system" width="64" height="26"/>
-        <image name="folder" catalog="system" width="64" height="46"/>
-        <image name="lock" catalog="system" width="64" height="64"/>
-        <image name="pencil.circle.fill" catalog="system" width="64" height="60"/>
-        <image name="photo" catalog="system" width="64" height="46"/>
-        <image name="square.and.arrow.up" catalog="system" width="56" height="64"/>
-        <image name="square.on.square" catalog="system" width="64" height="56"/>
+        <image name="book" catalog="system" width="128" height="101"/>
+        <image name="chevron.left" catalog="system" width="96" height="128"/>
+        <image name="chevron.right" catalog="system" width="96" height="128"/>
+        <image name="clock" catalog="system" width="128" height="121"/>
+        <image name="eyeglasses" catalog="system" width="128" height="54"/>
+        <image name="folder" catalog="system" width="128" height="95"/>
+        <image name="lock" catalog="system" width="128" height="128"/>
+        <image name="pencil.circle.fill" catalog="system" width="128" height="121"/>
+        <image name="photo" catalog="system" width="128" height="93"/>
+        <image name="square.and.arrow.up" catalog="system" width="115" height="128"/>
+        <image name="square.on.square" catalog="system" width="128" height="113"/>
     </resources>
 </document>

@@ -9,13 +9,17 @@
 import Foundation
 import UIKit
 
-class BookmarkData: Codable {
-	let urlString: String?
-	var titleString: String?
+class BookmarkData: NSObject, Codable {
+	
+	enum expressionKeys: String {
+		case titleString
+		case urlString
+	}
+	
+	@objc let urlString: String?
+	@objc var titleString: String?
 	let iconUrlString: String?
-	
 	let dataIndexPath:[Int]?
-	
 	var child: [BookmarkData] = []
 	var isFolder: Bool {
 		get {
@@ -40,6 +44,26 @@ class BookmarkData: Codable {
 		self.child = child
 		
 		self.dataIndexPath = indexPath
+	}
+
+//	required init(from decoder: Decoder) throws {
+//		let container = try decoder.container(keyedBy: CodingKeys.self)
+//		titleString = try container.decodeIfPresent(String.self, forKey: .titleString)
+//		urlString = try container.decodeIfPresent(String.self, forKey: .urlString)
+//		iconUrlString = try container.decodeIfPresent(String.self, forKey: .iconUrlString)
+//		dataIndexPath = nil
+//	}
+//
+//	func encode(to encoder: Encoder) throws {
+//		var container = encoder.container(keyedBy: CodingKeys.self)
+//		try container.encode(titleString, forKey: .titleString)
+//		try container.encode(urlString, forKey: .urlString)
+//		try container.encode(iconUrlString, forKey: .iconUrlString)
+//	}
+	
+	func getBookmarkTitle() -> String? {
+		if isFolder { return nil }
+		return titleString
 	}
 	
 	func getBookmarkUrl() -> URL? {
@@ -71,7 +95,7 @@ class BookmarkData: Codable {
 	
 }
 
-
+/// mockData
 class BookmarksDataModel {
 	static var mockDataArray = ["www.google.com", "www.m.naver.com", "www.apple.com", "www.github.com", "www.facebook.com"]
 	

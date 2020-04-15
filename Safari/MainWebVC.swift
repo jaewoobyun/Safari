@@ -221,7 +221,7 @@ class MainWebView: UIView {
 	}
 }
 
-
+// MARK: - WKNavigationDelegate
 extension MainWebVC: WKNavigationDelegate {
 	func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
 		print("didStartProvisionalNavigation")

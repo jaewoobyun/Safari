@@ -45,6 +45,9 @@ class ReadingListVC: UIViewController {
 		super.viewDidLoad()
 		self.title = "Reading List"
 		self.navigationController?.navigationBar.isHidden = false
+		/// this is needed to fix searchbar in place. otherwise when it is clicked, navbar goes up!!!!!!!!!!
+		searchController.hidesNavigationBarDuringPresentation = false
+		
 		
 		//		if isContentsHidden == true {
 		//			self.tableView.isHidden = true
@@ -95,7 +98,7 @@ class ReadingListVC: UIViewController {
 	@objc func updateReadingListDatas() {
 		print("readinglistVC updateReadinglistDatas")
 		self.readingListDatas.removeAll()
-		readingListDatas = UserDefaultsManager.shared.readingListDataSave
+		readingListDatas = UserDefaultsManager.shared.readingListRecords
 		
 		tableView.reloadData()
 	}

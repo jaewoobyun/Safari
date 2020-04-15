@@ -7,13 +7,20 @@
 //
 
 import Foundation
-import UIKit
+//import UIKit
 
-struct HistoryData: Codable {
+class HistoryData: NSObject, Codable {
+	
+	enum expressionKeys: String {
+		case title
+		case urlString
+	}
+	
+	
 	var url: URL? //ex)www.google.com//search?source... ???
 	var initialUrl: URL? // 제일 첫 URL? ex) www.google.com ???
-	var title: String? //구글
-	var urlString: String?
+	@objc var title: String? //구글
+	@objc var urlString: String?
 	var date: Date? //방문한 시각
 	var uuid: String = UUID.init().uuidString
 	
@@ -24,5 +31,21 @@ struct HistoryData: Codable {
 		self.urlString = urlString
 		self.date = date
 	}
+	
+//	required init(from decoder: Decoder) throws {
+//		let container = try decoder.container(keyedBy: CodingKeys.self)
+////		url = try container.decode
+//		title = try container.decode(String.self, forKey: .title)
+//		urlString = try container.decode(String.self, forKey: .urlString)
+//		uuid = try container.decode(String.self, forKey: .uuid)
+//
+//	}
+//
+//	func encoder(to encoder: Encoder) throws {
+//		var container = encoder.container(keyedBy: CodingKeys.self)
+//		try container.encode(title, forKey: .title)
+//		try container.encode(urlString, forKey: .urlString)
+//		try container.encode(uuid, forKey: .uuid)
+//	}
 	
 }

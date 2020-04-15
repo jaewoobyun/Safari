@@ -12,13 +12,17 @@ import WebKit
 
 class HistoryVC: UITableViewController {
 	
-	let searchController = UISearchController(searchResultsController: nil)
+	var searchController = UISearchController(searchResultsController: nil)
 	lazy var searchBar = UISearchBar(frame: CGRect.zero)
+	
+	var isSearchBarEmpty: Bool?
+	var isFiltering: Bool?
 	
 	let dateFormatter = DateFormatter()
 	let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
 	
 	var historyData: [HistoryData] = []
+	var filteredHistoryData = [HistoryData]()
 	
 	struct Section {
 		var date: Date
@@ -31,6 +35,11 @@ class HistoryVC: UITableViewController {
 	override func viewDidLoad() {
 //		self.title = "History"
 		self.navigationController?.navigationBar.isHidden = false
+		/// this is needed to fix searchbar in place. otherwise when it is clicked, navbar goes up!!!!!!!!!!
+		searchController.hidesNavigationBarDuringPresentation = false
+		searchController.searchResultsUpdater = self
+//		historySearchController = UISearchController(searchResultsController: self)
+		
 		
 		tableView.delegate = self
 		tableView.dataSource = self
@@ -256,8 +265,53 @@ class HistoryVC: UITableViewController {
 
 
 extension HistoryVC: UISearchResultsUpdating {
+	
+	private func findMatches(searchString: String, keyPath: String) -> NSCompoundPredicate {
+		
+		var searchItemsPredicate = [NSPredicate]()
+		
+		// title matching
+		//		let titleExpression = NSExpression(forKeyPath: Product.ExpressionKeys.title.rawValue)
+		let titleExpression = NSExpression(forKeyPath: keyPath)
+		
+		let searchStringExpression = NSExpression(forConstantValue: searchString)
+		
+		let titleSearchComparisonPredicate = NSComparisonPredicate(leftExpression: titleExpression, rightExpression: searchStringExpression, modifier: .direct, type: .contains, options: [.caseInsensitive, .diacriticInsensitive])
+		
+		searchItemsPredicate.append(titleSearchComparisonPredicate)
+		
+		var finalCompoundPredicate: NSCompoundPredicate!
+		
+		finalCompoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: searchItemsPredicate)
+		
+		return finalCompoundPredicate
+	}
+	
 	func updateSearchResults(for searchController: UISearchController) {
-		print("update SearchResults")
+		print("update History SearchResults")
+		searchBar = searchController.searchBar
+		
+		let historySearchResults = self.historyData
+		
+		let whitespaceCharacterSet = CharacterSet.whitespaces
+		let strippedString = searchController.searchBar.text!.trimmingCharacters(in: whitespaceCharacterSet)
+		let searchItems = strippedString.components(separatedBy: " ") as [String]
+		
+		let andMatchHistoryPredicates: [NSPredicate] = searchItems.map { searchString in
+			findMatches(searchString: searchString, keyPath: HistoryData.expressionKeys.urlString.rawValue)
+		}
+		
+		let finalCompoundHistoryPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: andMatchHistoryPredicates)
+		
+		let filteredHistoryResults = historySearchResults.filter { finalCompoundHistoryPredicate.evaluate(with: $0)}
+		
+		self.filteredHistoryData = filteredHistoryResults
+		
+		self.isSearchBarEmpty = searchController.searchBar.text?.isEmpty ?? true
+		self.isFiltering = searchController.isActive && !(self.isSearchBarEmpty ?? true)
+		
+		self.tableView.reloadData()
+		
 	}
 }
 

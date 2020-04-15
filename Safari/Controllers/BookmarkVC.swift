@@ -20,7 +20,8 @@ class BookmarkVC: UIViewController {
 	var isDepthViewController:Bool = false
 	var bookmarkData: [BookmarkData] = []
 	
-	let searchController = UISearchController(searchResultsController: nil)
+	var searchController = UISearchController(searchResultsController: nil)
+	
 	lazy var searchBar = UISearchBar(frame: CGRect.zero)
 	var toggle: Bool = false
 	var newFolderButton: UIBarButtonItem?
@@ -35,7 +36,11 @@ class BookmarkVC: UIViewController {
 		let library_path = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
 		print("library path is \(library_path)")
 		
-		//		bookmarkData = [BookmarkData(titleString: "Favorites", child: [], indexPath: [0])]
+		/// this is needed to fix searchbar in place. otherwise when it is clicked, navbar goes up!!!!!!!!!!
+		searchController.hidesNavigationBarDuringPresentation = false
+		
+		self.searchBar.delegate = self
+//		bookmarkData = [BookmarkData(titleString: "Favorites", child: [], indexPath: [0])]
 		
 		self.editButton = self.editButtonItem
 		tableView.delegate = self
@@ -68,11 +73,11 @@ class BookmarkVC: UIViewController {
 		
 		if bookmarkData.count == 0, !isDepthViewController {
 			self.title = "Bookmarks"
-			//			BookmarksDataModel.createSampleData()
-			//			let bookmarksArray = BookmarksDataModel.bookMarkDatas
-			//			bookmarkData = bookmarksArray
+//			BookmarksDataModel.createSampleData()
+//			let bookmarksArray = BookmarksDataModel.bookMarkDatas
+//			bookmarkData = bookmarksArray
 			
-			
+//			UserDefaultsManager.shared.initDatas()
 			bookmarkData = UserDefaultsManager.shared.loadUserBookMarkListData()
 		}
 		tableView.reloadData()
@@ -117,6 +122,7 @@ class BookmarkVC: UIViewController {
 		let editFolderVC = storyboard.instantiateViewController(identifier: "EditFolderVC")
 		if let editFolder = editFolderVC as? EditFolderVC {
 			editFolder.caseType = .AddNewFolder
+//			editFolder.folderTitle = "New Folder"
 			self.navigationController?.pushViewController(editFolder, animated: true)
 		}
 	}
@@ -124,6 +130,14 @@ class BookmarkVC: UIViewController {
 	
 	
 	
+}
+
+
+// MARK: - UISearchBarDelegate
+extension BookmarkVC: UISearchBarDelegate {
+	func position(for bar: UIBarPositioning) -> UIBarPosition {
+		return UIBarPosition.topAttached
+	}
 }
 
 // MARK: - UISearchResultsUpdating
@@ -165,11 +179,12 @@ extension BookmarkVC: UITableViewDataSource, UITableViewDelegate {
 		print("didSelectRowAt \(indexPath)")
 		let storybaord = UIStoryboard(name: "Main", bundle: Bundle.main)
 		if let reusableVC = storybaord.instantiateViewController(identifier: "BookmarkVC") as? BookmarkVC {
-			if bookmarkData[indexPath.row].isFolder {
+			if bookmarkData[indexPath.row].isFolder {	
 				if tableView.isEditing {
 					print("is Folder and editing")
 					if let reusableEditFolder = storyboard?.instantiateViewController(identifier: "EditFolderVC") as? EditFolderVC {
 						reusableEditFolder.selectedIndexPath = indexPath
+						reusableEditFolder.folderTitle = bookmarkData[indexPath.row].titleString
 						navigationController?.pushViewController(reusableEditFolder, animated: true)
 					}
 				}

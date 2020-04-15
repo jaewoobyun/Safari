@@ -22,8 +22,8 @@ class UserDefaultsManager {
 	var backList:[WKBackForwardListItem] = []
 	var forwardList:[WKBackForwardListItem] = []
 	
-	var readingListDataSave: [ReadingListData] = []
-	var bookmarkListDataSave: [BookmarkData] = []
+	var readingListRecords: [ReadingListData] = []
+	var bookmarkRecords: [BookmarkData] = []
 	
 	init() {
 		
@@ -112,13 +112,30 @@ class UserDefaultsManager {
 	//	}
 	
 	func initDatas() {
-		if let jsonData = userdefaultstandard.object(forKey: "HistoryData") {
+		if let jsonHistoryData = userdefaultstandard.object(forKey: "HistoryData") {
 			do {
-				visitedWebSiteHistoryRecords = try decoder.decode([HistoryData].self, from: jsonData as! Data)
+				visitedWebSiteHistoryRecords = try decoder.decode([HistoryData].self, from: jsonHistoryData as! Data)
 			} catch let error {
 				print(error)
 			}
 		}
+		
+//		if let jsonBookmarkData = userdefaultstandard.object(forKey: "BookmarkListData") {
+//			do {
+//				bookmarkRecords = try decoder.decode([BookmarkData].self, from: jsonBookmarkData as! Data)
+//			} catch let error {
+//				print(error)
+//			}
+//		}
+//
+//		if let jsonReadingListData = userdefaultstandard.object(forKey: "ReadingListData") {
+//			do {
+//				readingListRecords = try decoder.decode([ReadingListData].self, from: jsonReadingListData as! Data)
+//			} catch let error {
+//				print(error)
+//			}
+//		}
+		
 	}
 	
 	
@@ -253,7 +270,7 @@ class UserDefaultsManager {
 	func loadUserReadingListData() {
 		if let jsonData = userdefaultstandard.object(forKey: "ReadingListData") {
 			do {
-				self.readingListDataSave = try decoder.decode([ReadingListData].self, from: jsonData as! Data)
+				self.readingListRecords = try decoder.decode([ReadingListData].self, from: jsonData as! Data)
 			} catch let error {
 				print(error)
 			}
@@ -283,8 +300,8 @@ class UserDefaultsManager {
 		if !isSaveSuccess {
 			print("ReadingList 저장에 실패함!!")
 		}
-		self.readingListDataSave.removeAll()
-		self.readingListDataSave.append(contentsOf: data)
+		self.readingListRecords.removeAll()
+		self.readingListRecords.append(contentsOf: data)
 		
 		self.updateReadingListDataNoti()
 	}
@@ -297,8 +314,8 @@ class UserDefaultsManager {
 		if !isSaveSuccess {
 			print("ReadingList 저장 실패.")
 		}
-		self.readingListDataSave.removeAll()
-		self.readingListDataSave.append(contentsOf: data)
+		self.readingListRecords.removeAll()
+		self.readingListRecords.append(contentsOf: data)
 		
 		self.updateReadingListDataNoti()
 	}
@@ -320,8 +337,8 @@ class UserDefaultsManager {
 			print("ReadingList 저장 실패.")
 		}
 		
-		self.readingListDataSave.removeAll()
-		self.readingListDataSave.append(contentsOf: arrNew)
+		self.readingListRecords.removeAll()
+		self.readingListRecords.append(contentsOf: arrNew)
 		
 		self.updateReadingListDataNoti()
 	}
@@ -337,8 +354,8 @@ class UserDefaultsManager {
 	/// Save
 	func saveBookMarkListData(bookmarkD: [BookmarkData]) -> Bool {
 		do {
-			let encodedReadingListData = try encoder.encode(bookmarkD)
-			userdefaultstandard.set(encodedReadingListData, forKey: "BookMarkListData")
+			let encodedBookmarkListData = try encoder.encode(bookmarkD)
+			userdefaultstandard.set(encodedBookmarkListData, forKey: "BookMarkListData")
 			userdefaultstandard.synchronize()
 		} catch let error {
 			print(error)
@@ -365,10 +382,26 @@ class UserDefaultsManager {
 	
 	/// Insert
 	//TODO: - not yet final
-	func insertFolder(folder: BookmarkData, indexPath: IndexPath) {
-		var bookmarkDatas = self.loadUserBookMarkListData()
+	func insertFolderAtSelectedLocation(folderTitle: String, selectedNodeIndexs: [Int], originalData: NSMutableArray) {
+		let newFolderInstance = BookmarkData.init(titleString: folderTitle, child: [], indexPath: selectedNodeIndexs)
 		
+		if selectedNodeIndexs.count == 0 {
+			originalData.add(newFolderInstance)
+		}
+		else {
+			var data: BookmarkData?
+			for index in selectedNodeIndexs {
+				if data == nil {
+					data = originalData.object(at: index) as? BookmarkData
+				} else {
+					data = data?.child[index]
+				}
+			}
+			data?.child.append(newFolderInstance)
+		}
 		
+		saveBookMarkListData(bookmarkD: originalData as! [BookmarkData])
+		updateBookmarkListDataNoti()
 	}
 	
 	/// 데이터를 해당 indexPath 에서 지운다.
@@ -379,8 +412,8 @@ class UserDefaultsManager {
 		if !isSaveSuccess {
 			print("BookmarkData 를 indexPath.row 에서 지우고 저장하는데에 실패")
 		}
-		self.bookmarkListDataSave.removeAll()
-		self.bookmarkListDataSave.append(contentsOf: data)
+		self.bookmarkRecords.removeAll()
+		self.bookmarkRecords.append(contentsOf: data)
 		
 		self.updateBookmarkListDataNoti()
 		
@@ -395,8 +428,8 @@ class UserDefaultsManager {
 		if !isSaveSuccess {
 			print("title 을 가진 데이터를 지운 데이터를 저장하는데 실패")
 		}
-		self.bookmarkListDataSave.removeAll()
-		self.bookmarkListDataSave.append(contentsOf: newDatas)
+		self.bookmarkRecords.removeAll()
+		self.bookmarkRecords.append(contentsOf: newDatas)
 		self.updateBookmarkListDataNoti()
 	}
 	
@@ -420,6 +453,7 @@ class UserDefaultsManager {
 	
 	func isNameDuplicate(targetDatas:[BookmarkData], title: String) -> Bool {
 		//target 데이터를 for loop 으로 돌린다.
+		print("checking duplicate folder names.....")
 		for data in targetDatas {
 			//첫번째 depth 의 아이템의 titleString 이 우리가 검색하는 title 이면 duplicate
 			

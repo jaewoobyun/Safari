@@ -41,6 +41,7 @@ class EditFolderVC: UIViewController {
 	var caseType: CaseType = .EditFolder
 	var folderTitle: String?
 	var bookmarkData: NSMutableArray = []
+//	var bookmarkData: [BookmarkData] = []
 	var folderTitleInputText: String?
 	var selectedNode: CITreeViewNode? //
 	var selectedIndexPath: IndexPath? //
@@ -57,6 +58,7 @@ class EditFolderVC: UIViewController {
 		self.title = caseType.getTitle()
 		
 		super.viewDidLoad()
+//		self.bookmarkData = UserDefaultsManager.shared.loadUserBookMarkListData()
 		self.bookmarkData.addObjects(from: UserDefaultsManager.shared.loadUserBookMarkListData())
 		
 //		if let folderTitle = folderTitle {
@@ -103,7 +105,7 @@ class EditFolderVC: UIViewController {
 		
 		if caseType == .EditFolder {
 			if let folderTitle = folderTitle {
-				let editTargetData = locateSelectedFolder(targetArray: (self.bookmarkData as! [BookmarkData]), searchKeyword: folderTitle)
+				let editTargetData = locateSelectedFolder(targetArray: (self.bookmarkData as! [BookmarkData] ), searchKeyword: folderTitle)
 	//			editTargetData?.titleString = self.titleTextField.text
 				self.editTargetData = editTargetData
 			}
@@ -112,6 +114,8 @@ class EditFolderVC: UIViewController {
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
+		
+		UserDefaultsManager.shared.initDatas()
 	}
 	
 	override func viewDidDisappear(_ animated: Bool) {
@@ -175,132 +179,114 @@ class EditFolderVC: UIViewController {
 			3-2. 없으면 최 상단에 생성.
 		*/
 		
-		
-		
-		
 		///New title input here
-		guard let title = self.titleTextField.text, !title.isEmpty else { return }
+		guard let folderTitle = self.titleTextField.text, !folderTitle.isEmpty else { return }
 		let origin = UserDefaultsManager.shared.loadUserBookMarkListData()
-		guard let edittedFolderTitle = self.folderTitleInputText else { return }
+//		guard let edittedFolderTitle = self.folderTitleInputText else { return }
+		let edittedFolderTitle = self.folderTitleInputText
 //		guard let selectedIndexPath = self.selectedIndexPath else {return}
 //		guard let selectedNode = self.selectedNode else { return}
 		
-//		/// 제일 처음 아무 폴더도 없을떄????????
-//		if caseType == .AddNewFolder { /// 새로운 폴더를 추가하려고 할때
-//			if UserDefaultsManager.shared.isNameDuplicate(targetDatas: origin, title: title) {
-//					let alert = UIAlertController.init(title: "Duplicate Folder Name", message: nil, preferredStyle: UIAlertController.Style.alert)
-//					let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.destructive, handler: nil)
-//					alert.addAction(okAction)
-//					self.present(alert, animated: true, completion: nil)
-//			} else {
-//				self.insertFolderAtSelectedLocation(folderTitle: title, selectNodeIndexs: self.selectNodeIndexs)
-//			}
-//		}
-//
-//		if caseType == .EditFolder { /// 기존 데이터 (폴더이름) 을 수정 할때
-//			// 만약에 고친 폴더 이름이 원래 있던 폴더 이름과 같다면 그냥 pop.
-//
-//			// 만약에 고친 폴더 이름이 다르다면 원본데이터에 고친 이름이 같은 폴더가 있는지 확인해야 함.
-//
-//
-//			/// Editting folder title here
-//			guard let edittedFolderTitle = self.folderTitleInputText else {
-//				return
-//			}
-//
-//			self.treeView.isUserInteractionEnabled = false
-//			editFolderNameAtSelectedLocation(edittedFolderTitle: edittedFolderTitle)
-//
-//		}
+////		/// 제일 처음 아무 폴더도 없을떄????????
+
 		
+		//--------------------------------------------------------------------
 		// input 에 있는 텍스트가 원본 데이터를 돌며 duplicate 가 있는지 확인한다.
-			if UserDefaultsManager.shared.isNameDuplicate(targetDatas: origin, title: title) {
-				if caseType == .AddNewFolder { //추가 시에는 같은 이름의 폴더 추가를 불가
+		if UserDefaultsManager.shared.isNameDuplicate(targetDatas: origin, title: folderTitle) {
+			if caseType == .AddNewFolder { //추가 시에는 같은 이름의 폴더 추가를 불가
+				let alert = UIAlertController.init(title: "Duplicate Folder Name", message: nil, preferredStyle: UIAlertController.Style.alert)
+				let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.destructive, handler: nil)
+				alert.addAction(okAction)
+				self.present(alert, animated: true, completion: nil)
+			}
+			if caseType == .EditFolder { //수정 시에는 변경된 폴더 이름이 원본에 있으면 불가
+				if UserDefaultsManager.shared.isNameDuplicate(targetDatas: origin, title: edittedFolderTitle!) { //중복이 있는지를 edittedFolderTitle 과 비교해 한번 더 돈다.
 					let alert = UIAlertController.init(title: "Duplicate Folder Name", message: nil, preferredStyle: UIAlertController.Style.alert)
 					let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.destructive, handler: nil)
 					alert.addAction(okAction)
 					self.present(alert, animated: true, completion: nil)
 				}
-				if caseType == .EditFolder { //수정 시에는 변경된 폴더 이름이 원본에 있으면 불가
-					if UserDefaultsManager.shared.isNameDuplicate(targetDatas: origin, title: edittedFolderTitle) { //중복이 있는지를 edittedFolderTitle 과 비교해 한번 더 돈다.
-						let alert = UIAlertController.init(title: "Duplicate Folder Name", message: nil, preferredStyle: UIAlertController.Style.alert)
-						let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.destructive, handler: nil)
-						alert.addAction(okAction)
-						self.present(alert, animated: true, completion: nil)
-					}
-					else { //변경된 폴더이름이 다르다면
-						DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-							self.navigationController?.popViewController(animated: true)
-						}
+				else { //변경된 폴더이름이 다르다면
+					DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+						self.navigationController?.popViewController(animated: true)
 					}
 				}
 			}
+		}
 		else { // duplicate 이 없다면
 			if caseType == .AddNewFolder { //해당 위치에 폴더 타이틀을 가져와 insert 한다.
-				self.insertFolderAtSelectedLocation(folderTitle: title, selectNodeIndexs: self.selectNodeIndexs)
+				self.insertFolderAtSelectedLocation(folderTitle: folderTitle, selectNodeIndexs: self.selectNodeIndexs)
+//				self.insertFolderAtSelectedLocation(indexPath: selectedIndexPath!, selectedNode: selectedNode!, title: folderTitle)
+				
+//				UserDefaultsManager.shared.insertFolderAtSelectedLocation(folderTitle: folderTitle, selectedNodeIndexs: selectNodeIndexs, originalData: bookmarkData)
+				treeView.reloadData()
+				treeView.expandAllRows()
+				
 			}
 			if caseType == .EditFolder { //treeview 의 다른 row 를 선택 불가로 만들고 그 위치의 폴더이름을 변경한다.
 				self.treeView.isUserInteractionEnabled = false
-				self.editFolderNameAtSelectedLocation(edittedFolderTitle: edittedFolderTitle)
+				self.editFolderNameAtSelectedLocation(edittedFolderTitle: edittedFolderTitle!)
 			}
 		}
+		
+		//--------------------------------------------------------------------
 		
 	}
 	
 	func editFolderNameAtSelectedLocation(edittedFolderTitle: String) {
 		if let folderTitle = folderTitle {
-			let editTargetData = locateSelectedFolder(targetArray: (self.bookmarkData as! [BookmarkData]), searchKeyword: folderTitle)
+			let editTargetData = locateSelectedFolder(targetArray: (self.bookmarkData as! [BookmarkData] ), searchKeyword: folderTitle)
 			editTargetData?.titleString = edittedFolderTitle
 			self.editTargetData = editTargetData
 		}
-		let isSaveSuccess = UserDefaultsManager.shared.saveBookMarkListData(bookmarkD: bookmarkData as! [BookmarkData])
+		let isSaveSuccess = UserDefaultsManager.shared.saveBookMarkListData(bookmarkD: bookmarkData as! [BookmarkData] )
 		print("Editing Folder Name at Selected Location success?: ", isSaveSuccess)
 		treeView.reloadData()
 		treeView.expandAllRows()
 	}
 	
-	
-//	func insertFolderAtSelectedLocation(indexPath: IndexPath, selectedNode: CITreeViewNode, title: String) {
-//		let newFolder = BookmarkData.init(titleString: title, child: [], indexPath: [indexPath.row])
-//
-//		var array = UserDefaultsManager.shared.loadUserBookMarkListData()
-//
-//		if let selectedNodeItem = selectedNode.item as? BookmarkData {
-//			print(selectedNodeItem.dataIndexPath)
-//			array[indexPath.row].child.append(newFolder)
-//		}
-//
-////		array.append(newFolder)
-//
-//		let isSaveSuccess = UserDefaultsManager.shared.saveBookMarkListData(bookmarkD: array)
-//		print(isSaveSuccess)
-//
-//	}
-	
 	func insertFolderAtSelectedLocation(folderTitle:String, selectNodeIndexs:[Int]) {
-		let appendFolder = BookmarkData.init(titleString: folderTitle, child: [], indexPath: selectNodeIndexs)
+		let appendingFolder = BookmarkData.init(titleString: folderTitle, child: [], indexPath: selectNodeIndexs)
+//		if selectNodeIndexs.count == 0 {
+//			self.bookmarkData.add(appendingFolder)
+//		}
+//		else {
+//			var data: BookmarkData?
+//			for index in selectNodeIndexs {
+//
+//				if data == nil {
+//					data = self.bookmarkData.object(at: index) as? BookmarkData
+//				} else {
+//					data = data?.child[index]
+//				}
+//
+//			}
+//
+//			data?.child.append(appendingFolder)
+//			for index in selectNodeIndexs {
+//				self.bookmarkData.replaceObject(at: index, with: data)
+//			}
+//
+//		}
 		
 		if selectNodeIndexs.count == 0 {
-			//self.bookmarkData.append(appendFolder)
-			self.bookmarkData.add(appendFolder)
-		} else {
-			
-			var data:BookmarkData?
+			self.bookmarkData.add(appendingFolder)
+		}
+		else {
+			var data: BookmarkData?
 			for index in selectNodeIndexs {
 				if data == nil {
-					//data = self.bookmarkData[index]
 					data = self.bookmarkData.object(at: index) as! BookmarkData
 				} else {
 					data = data?.child[index]
 				}
 			}
-			
-			data?.child.append(appendFolder)
+			data?.child.append(appendingFolder)
 		}
-		
-		let isSaveSuccess = UserDefaultsManager.shared.saveBookMarkListData(bookmarkD: bookmarkData as! [BookmarkData])
+
+		let isSaveSuccess = UserDefaultsManager.shared.saveBookMarkListData(bookmarkD: bookmarkData as! [BookmarkData] )
 		print("Inserting Folder at Selected Location success?: ", isSaveSuccess)
-//		UserDefaultsManager.shared.updateBookmarkListDataNoti() //?????????
+		UserDefaultsManager.shared.updateBookmarkListDataNoti() //?????????
 		treeView.reloadData()
 		treeView.expandAllRows()
 	}
@@ -312,7 +298,7 @@ class EditFolderVC: UIViewController {
 extension EditFolderVC: UITextFieldDelegate {
 	func textFieldDidEndEditing(_ textField: UITextField) {
 		print("textfieldDidEndEditing!!")
-
+//		self.folderTitleInputText = self.titleTextField.text
 		
 	}
 	

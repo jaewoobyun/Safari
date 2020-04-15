@@ -14,21 +14,20 @@ class SearchResultsController: UITableViewController {
 	// MARK: - Properties
 	
 	/// Data Models
-	let sectionLists = ["Top Hits", "Google Search", "Bookmarks and History", "On This Page"]
-	var topHitsData = ["a","b","c","d"]
-	var googleSearchData = ["e","f","g"]
-	var bookmarksAndHistoryData = ["h","i","j"]
+	let sectionLists = ["Wikipedia", "History", "Bookmarks", "ReadingList", "On This Page"]
+//	var topHitsData = ["a","b","c","d"]
+//	var googleSearchData = ["e","f","g"]
+//	var bookmarksAndHistoryData = ["h","i","j"]
+	
+	var wikipediaData: [String] = []
+	var wikipediaUrlStrings: [String] = []
 	var historyData: [HistoryData] = []
-	var onThisPageData = ["k","l","m"]
+	var bookmarkData: [BookmarkData] = []
+	var readingListData: [ReadingListData] = []
+	var onThisPageData = ["a","b","c","d","e","f","g","h","i","j","k","l","m"]
 	
 	/// Search Controller to help us with filtering items in the table view
 	var searchController: UISearchController!
-	
-	/// Search results table view
-	private var resultsTableController: ResultsTableController!
-	
-	/// Restoration state for UISearchController
-//	var restoredState = SearchControllerRestorableState()
 	
 	var searchText: String?
 	var isSearchBarEmpty: Bool?
@@ -38,42 +37,17 @@ class SearchResultsController: UITableViewController {
 	var displayData: [String] = []
 	var filteredData: [String] = []
 	
+	var filteredWikipediaData = [String]()
+	var filteredWikipediaURLStrings = [String]()
+	var filteredHistoryData = [HistoryData]()
+	var filteredBookmarkData = [BookmarkData]()
+	var filteredReadingListData = [ReadingListData]()
 	
 	// MARK: - View Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		// ----------------
-//		resultsTableController = self.storyboard?.instantiateViewController(identifier: "ResultsTableController") as? ResultsTableController
-//		// This view Controller is interested in the table view row selections.
-//		resultsTableController.tableView.delegate = self
-//
-//		searchController = UISearchController(searchResultsController: resultsTableController)
-//		searchController.delegate = self
-//		searchController.searchResultsUpdater = self
-//		searchController.searchBar.autocapitalizationType = .none
-//		searchController.searchBar.delegate = self // Monitor when the search button is tapped.
-//
-//		// Place the search bar in the navigation bar.
-//		navigationItem.searchController = searchController
-//
-//		// Make the search bar always visible.
-////		navigationItem.hidesSearchBarWhenScrolling = true //
-//
-//		definesPresentationContext = true
-//
-//		
-//
-		
-		// ----------------
-		
-		
-//		bookmarksAndHistoryData = UserDefaults.standard.stringArray(forKey: "HistoryData") ?? [String]()
-//		bookmarksAndHistoryData = UserDefaultsManager.shared.visitedWebSiteHistoryRecords
-		
-		
-		
-//		historyData = UserDefaultsManager.shared.visitedWebSiteHistoryRecordss
+
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -81,6 +55,42 @@ class SearchResultsController: UITableViewController {
 		
 		UserDefaultsManager.shared.registerHistoryDataObserver(vc: self, selector: #selector(updateHistoryData))
 		UserDefaultsManager.shared.loadUserHistoryData()
+		
+		UserDefaultsManager.shared.registerBookmarkDataObserver(vc: self, selector: #selector(updateBookmarkData))
+		UserDefaultsManager.shared.initDatas()
+		
+		bookmarkData = UserDefaultsManager.shared.loadUserBookMarkListData()
+		bookmarkData = bookmarkData.filter { (bookmarkData) -> Bool in
+			!bookmarkData.isFolder && bookmarkData.child.isEmpty
+		}
+//		bookmarkData = bookmarkData.filter { (bookmarkData) -> Bool in
+//			!bookmarkData.isFolder && bookmarkData.child.isEmpty
+//			var notFolderItems: [BookmarkData] = []
+//			for item in self.bookmarkData {
+//				notFolderItems = item.child
+//			}
+//			return notFolderItems.
+//		}
+		
+		UserDefaultsManager.shared.registerReadingListDataObserver(vc: self, selector: #selector(updateReadingListData))
+		UserDefaultsManager.shared.loadUserReadingListData()
+	}
+	
+	@objc func updateReadingListData() {
+		print("SearchResultsController updated ReadingList Data")
+		readingListData.removeAll()
+		readingListData = UserDefaultsManager.shared.readingListRecords
+		tableView.reloadData()
+	}
+	
+	@objc func updateBookmarkData() {
+		print("SearchResultsController updated Bookmark Data")
+		bookmarkData.removeAll()
+		bookmarkData = UserDefaultsManager.shared.bookmarkRecords
+		bookmarkData = bookmarkData.filter { (bookmarkData) -> Bool in
+			!bookmarkData.isFolder && bookmarkData.child.isEmpty
+		}
+		tableView.reloadData()
 	}
 	
 	@objc func updateHistoryData() {
@@ -108,32 +118,6 @@ class SearchResultsController: UITableViewController {
 	
 }
 
-extension SearchResultsController: UISearchResultsUpdating {
-	func updateSearchResults(for searchController: UISearchController) {
-		originalData = bookmarksAndHistoryData
-		
-		self.searchController = searchController //????
-		searchText = searchController.searchBar.text!
-		isSearchBarEmpty = { searchController.searchBar.text?.isEmpty ?? true }()
-		isFiltering = { searchController.isActive && !(isSearchBarEmpty ?? true) }()
-		
-		DispatchQueue.main.async {
-			self.filterContentForSearchText(self.searchText!) //
-			self.tableView.reloadData()
-		}
-		
-	}
-	
-	func filterContentForSearchText(_ searchText: String) {
-		filteredData = originalData.filter({ (string) -> Bool in
-			Jamo.getJamo(string.lowercased()).contains(Jamo.getJamo(searchText.lowercased()))
-		})
-		tableView.reloadData()
-	}
-	
-	
-}
-
 // MARK: - UITableViewDataSource
 extension SearchResultsController {
 	override func numberOfSections(in tableView: UITableView) -> Int {
@@ -141,23 +125,74 @@ extension SearchResultsController {
 	}
 	
 	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		return sectionLists[section]
+//		return sectionLists[section]
+		var title = ""
+		switch section {
+		case 0:
+			title = Product.productTypeName(forType: .wikipedia)
+		case 1:
+			title = Product.productTypeName(forType: .bookmarks)
+		case 2:
+			title = Product.productTypeName(forType: .history)
+		case 3:
+			title = Product.productTypeName(forType: .readingList)
+		case 4:
+			title = Product.productTypeName(forType: .onThisPage)
+		default:
+			break
+		}
+		
+		return title
+		
 	}
 	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		switch section {
 		case 0:
-			return topHitsData.count
-		case 1:
-			return googleSearchData.count
-		case 2:
-//			if isFiltering! {
+//			if isFiltering == true {
 //				return filteredData.count
 //			}
-//			return bookmarksAndHistoryData.count
-			return historyData.count
+//			else {
+//				return topHitsData.count
+//			}
+			
+			if isFiltering == true {
+				return filteredWikipediaData.count
+			}
+			else {
+				return wikipediaData.count
+			}
+		case 1:
+			if isFiltering == true {
+				return filteredBookmarkData.count
+			}
+			else {
+//				let justBookmarkData = bookmarkData.filter { (bookmarkData) -> Bool in
+//					!bookmarkData.isFolder && bookmarkData.child.isEmpty
+//				}
+				return bookmarkData.count
+			}
+		case 2:
+			if isFiltering == true {
+				return filteredHistoryData.count
+			}
+			else {
+				return historyData.count
+			}
 		case 3:
-			return onThisPageData.count
+			if isFiltering == true {
+				return filteredReadingListData.count
+			}
+			else {
+				return readingListData.count
+			}
+		case 4:
+			if isFiltering == true {
+				return filteredData.count
+			}
+			else {
+				return originalData.count
+			}
 		default:
 			return 1
 		}
@@ -168,22 +203,47 @@ extension SearchResultsController {
 		
 		switch indexPath.section {
 		case 0:
-			cell.textLabel?.text = topHitsData[indexPath.row]
-			cell.detailTextLabel?.text = "detail"
-		case 1:
-			cell.textLabel?.text = googleSearchData[indexPath.row]
-			cell.detailTextLabel?.text = "detail"
-		case 2:
-//			if isFiltering! {
+//			cell.textLabel?.text = topHitsData[indexPath.row]
+//			if isFiltering == true {
 //				cell.textLabel?.text = filteredData[indexPath.row]
-//				cell.detailTextLabel?.text = "FOUND IT"
+//				cell.detailTextLabel?.text = "detail" + filteredData[indexPath.row]
 //			}
-//			cell.textLabel?.text = bookmarksAndHistoryData[indexPath.row]
+			
+			if isFiltering == true {
+				cell.textLabel?.text = filteredWikipediaData[indexPath.row]
+				cell.detailTextLabel?.text = filteredWikipediaURLStrings[indexPath.row]
+			} else {
+				cell.textLabel?.text = wikipediaData[indexPath.row]
+			}
+		case 1:
+//			let justBookmarkData = bookmarkData.filter { (bookmarkData) -> Bool in
+//				!bookmarkData.isFolder && bookmarkData.child.isEmpty
+//			}
+			cell.textLabel?.text = bookmarkData[indexPath.row].titleString
+			cell.detailTextLabel?.text = bookmarkData[indexPath.row].urlString
+			if isFiltering == true {
+				cell.textLabel?.text = filteredBookmarkData[indexPath.row].titleString
+				cell.detailTextLabel?.text = filteredBookmarkData[indexPath.row].urlString
+			}
+		case 2:
 			cell.textLabel?.text = historyData[indexPath.row].title
-			cell.detailTextLabel?.text = "detail"
+			cell.detailTextLabel?.text = historyData[indexPath.row].urlString
+			if isFiltering == true {
+				cell.textLabel?.text = filteredHistoryData[indexPath.row].title
+				cell.detailTextLabel?.text = filteredHistoryData[indexPath.row].urlString
+			}
 		case 3:
-			cell.textLabel?.text = topHitsData[indexPath.row]
-			cell.detailTextLabel?.text = "detail"
+			cell.textLabel?.text = readingListData[indexPath.row].title
+			cell.detailTextLabel?.text = readingListData[indexPath.row].urlString
+			if isFiltering == true {
+				cell.textLabel?.text = filteredReadingListData[indexPath.row].title
+				cell.detailTextLabel?.text = filteredReadingListData[indexPath.row].urlString
+			}
+		case 4:
+			cell.textLabel?.text = originalData[indexPath.row]
+			if isFiltering == true {
+				cell.textLabel?.text = filteredData[indexPath.row]
+			}
 		default:
 			return cell
 		}
@@ -198,13 +258,62 @@ extension SearchResultsController {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		switch indexPath.section {
 		case 0:
-			print("0 top search?")
+			print("0 wikipedia?")
+//			guard let filteredWikiURLs = filteredWikipediaURLStrings[indexPath.row] else { return }
+			let filteredWikiURL = filteredWikipediaURLStrings[indexPath.row]
+			self.dismiss(animated: true) {
+				NotificationGroup.shared.post(type: .bookmarkURLName, userInfo: ["selectedBookmarkURL": filteredWikiURL])
+			}
 		case 1:
-			print("1 google search?")
+			print("2 bookmarks")
+			guard let urlString = bookmarkData[indexPath.row].urlString else { return }
+			self.dismiss(animated: true) {
+				NotificationGroup.shared.post(type: .bookmarkURLName, userInfo: ["selectedBookmarkURL": urlString])
+			}
 		case 2:
-			print("2 bookmarks and history?")
+			print("3 history")
+//			guard let urlString = filteredHistoryData[indexPath.row].urlString else { return }
+//			self.dismiss(animated: true) {
+//				NotificationGroup.shared.post(type: .historyURLName, userInfo: ["selectedHistoryURL": urlString])
+//			}
+			if isFiltering == true {
+				guard let urlString = filteredHistoryData[indexPath.row].urlString else { return }
+				self.dismiss(animated: true) {
+					NotificationGroup.shared.post(type: .historyURLName, userInfo: ["selectedHistoryURL": urlString])
+				}
+			} else {
+				guard let urlString = historyData[indexPath.row].urlString else { return }
+				self.dismiss(animated: true) {
+					NotificationGroup.shared.post(type: .historyURLName, userInfo: ["selectedHistoryURL": urlString])
+				}
+			}
+			
+			
 		case 3:
-			print("3 on this page?")
+			print("4 readingList")
+			if isFiltering == true {
+				guard let urlString = filteredReadingListData[indexPath.row].urlString else { return }
+				self.dismiss(animated: true) {
+					NotificationGroup.shared.post(type: .readinglistURLName, userInfo: ["selectedReadingListURL": urlString])
+				}
+			}
+			else {
+				guard let urlString = readingListData[indexPath.row].urlString else { return }
+				self.dismiss(animated: true) {
+					NotificationGroup.shared.post(type: .readinglistURLName, userInfo: ["selectedReadingListURL": urlString])
+				}
+			}
+			
+		case 4:
+			print("5 on this page?")
+			if isFiltering == true {
+				print("Filtering!!!")
+				print(filteredData[indexPath.row])
+			}
+			else {
+				print("isn't filtering!!")
+				print(originalData[indexPath.row])
+			}
 		default:
 			print("default")
 		}

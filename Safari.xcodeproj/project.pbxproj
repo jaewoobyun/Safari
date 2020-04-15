@@ -29,10 +29,9 @@
 		DB41938B23DFFF4E002C9216 /* NavigationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB41938A23DFFF4E002C9216 /* NavigationVC.swift */; };
 		DB52B083242A43A3001D3E51 /* SearchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB52B082242A43A3001D3E51 /* SearchResultsController.swift */; };
 		DB52B085242A4547001D3E51 /* Jamo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB52B084242A4547001D3E51 /* Jamo.swift */; };
-		DB52B087242B980B001D3E51 /* ResultsTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB52B086242B980B001D3E51 /* ResultsTableController.swift */; };
-		DB52B089242C679F001D3E51 /* SearchContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB52B088242C679F001D3E51 /* SearchContainerVC.swift */; };
 		DB5906582403B8600086F92D /* HistoryNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5906572403B8600086F92D /* HistoryNavigationController.swift */; };
 		DB59065A2403C47D0086F92D /* BackForwardListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5906592403C47D0086F92D /* BackForwardListVC.swift */; };
+		DB62CDF7242F18EC006AC7BD /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB62CDF6242F18EC006AC7BD /* Product.swift */; };
 		DB6F408523E94FB40018D75F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6F408423E94FB40018D75F /* Extensions.swift */; };
 		DB6F408723E95A410018D75F /* Observables.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6F408623E95A410018D75F /* Observables.swift */; };
 		DB6F408A23ED14870018D75F /* Menus.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6F408923ED14870018D75F /* Menus.swift */; };
@@ -97,10 +96,9 @@
 		DB41938A23DFFF4E002C9216 /* NavigationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationVC.swift; sourceTree = "<group>"; };
 		DB52B082242A43A3001D3E51 /* SearchResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsController.swift; sourceTree = "<group>"; };
 		DB52B084242A4547001D3E51 /* Jamo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Jamo.swift; sourceTree = "<group>"; };
-		DB52B086242B980B001D3E51 /* ResultsTableController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsTableController.swift; sourceTree = "<group>"; };
-		DB52B088242C679F001D3E51 /* SearchContainerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchContainerVC.swift; sourceTree = "<group>"; };
 		DB5906572403B8600086F92D /* HistoryNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryNavigationController.swift; sourceTree = "<group>"; };
 		DB5906592403C47D0086F92D /* BackForwardListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackForwardListVC.swift; sourceTree = "<group>"; };
+		DB62CDF6242F18EC006AC7BD /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		DB6F408423E94FB40018D75F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		DB6F408623E95A410018D75F /* Observables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observables.swift; sourceTree = "<group>"; };
 		DB6F408923ED14870018D75F /* Menus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menus.swift; sourceTree = "<group>"; };
@@ -179,8 +177,6 @@
 				DB3D8C1723F98FFE00AD72D7 /* EditBookmarkVC.swift */,
 				DBE3C2CE23F992F9008986C0 /* EditFolderVC.swift */,
 				DB52B082242A43A3001D3E51 /* SearchResultsController.swift */,
-				DB52B086242B980B001D3E51 /* ResultsTableController.swift */,
-				DB52B088242C679F001D3E51 /* SearchContainerVC.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -189,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				DB104E7523F3A79C002A8F5B /* HistoryData.swift */,
+				DB62CDF6242F18EC006AC7BD /* Product.swift */,
 				DB104E7723F3A7D4002A8F5B /* BookmarkData.swift */,
 				DB104E7923F3A97F002A8F5B /* ReadingListData.swift */,
 				DB3D8C1323F90D0C00AD72D7 /* bookmarks_11_19_19.html */,
@@ -532,7 +529,6 @@
 				DB104E7A23F3A97F002A8F5B /* ReadingListData.swift in Sources */,
 				DB41938B23DFFF4E002C9216 /* NavigationVC.swift in Sources */,
 				DBA4B99623D6D29100122D39 /* MainWebVC.swift in Sources */,
-				DB52B089242C679F001D3E51 /* SearchContainerVC.swift in Sources */,
 				DBA4B96623D6CBF600122D39 /* ContainerVC.swift in Sources */,
 				DB5906582403B8600086F92D /* HistoryNavigationController.swift in Sources */,
 				DB104E7E23F3BB41002A8F5B /* ReadingListCell.swift in Sources */,
@@ -547,11 +543,11 @@
 				DB104E8523F3BDD3002A8F5B /* ReadingListVC.swift in Sources */,
 				DBA4B96223D6CBF600122D39 /* AppDelegate.swift in Sources */,
 				DB104E8B23F3BFBD002A8F5B /* SegmentControlVC.swift in Sources */,
+				DB62CDF7242F18EC006AC7BD /* Product.swift in Sources */,
 				DB3D8C1623F95C5700AD72D7 /* HistoryCell.swift in Sources */,
 				DB52B085242A4547001D3E51 /* Jamo.swift in Sources */,
 				DB104E8723F3BEF1002A8F5B /* NotificationGroup.swift in Sources */,
 				DBA4B96423D6CBF600122D39 /* SceneDelegate.swift in Sources */,
-				DB52B087242B980B001D3E51 /* ResultsTableController.swift in Sources */,
 				DB6F408523E94FB40018D75F /* Extensions.swift in Sources */,
 				DB104E8923F3BF35002A8F5B /* UserDefaultsManager.swift in Sources */,
 				DB3D8C1823F98FFE00AD72D7 /* EditBookmarkVC.swift in Sources */,

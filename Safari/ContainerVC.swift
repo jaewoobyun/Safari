@@ -9,16 +9,17 @@
 import UIKit
 import WebKit
 import SCSafariPageController
+import Alamofire
 
 let hostNameForLocalFile = ""
 
 class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariPageControllerDelegate, ViewControllerDelegate {
-
+	
 	let kDefaultNumberOfPages = 1
 	var dataSource = Array<MainWebVC?>()
 	let safariPageController: SCSafariPageController = SCSafariPageController()
 	
-//	@IBOutlet weak var toolbar: UIToolbar!
+	//	@IBOutlet weak var toolbar: UIToolbar!
 	
 	@IBOutlet weak var tabsBarView: UIView!
 	@IBOutlet weak var doneButton: UIButton!
@@ -35,9 +36,9 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 	
 	/// Search Container ViewController
 	var searchContainerViewController: UISearchContainerViewController?
-		
+	
 	lazy var searchBar = UISearchBar(frame: CGRect.zero)
-//	let searchController = UISearchController(searchResultsController: nil)
+	//	let searchController = UISearchController(searchResultsController: nil)
 	
 	/// Search Controller to help use with filtering items in the table view.
 	var searchController: UISearchController!
@@ -70,16 +71,16 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		self.view.insertSubview(self.safariPageController.view, at: 0)
 		self.safariPageController.didMove(toParent: self)
 		
-//		let storyboard = UIStoryboard(name: "Main", bundle: nil)
+		//		let storyboard = UIStoryboard(name: "Main", bundle: nil)
 		resultsController = storyboard?.instantiateViewController(identifier: "SearchResultsController") as? SearchResultsController
 		searchController = UISearchController(searchResultsController: resultsController)
 		
 		searchContainerViewController = UISearchContainerViewController(searchController: searchController)
 		
-//		searchController.showsSearchResultsController = false
+		//		searchController.showsSearchResultsController = false
 		searchController.delegate = self
 		searchController.searchResultsUpdater = self
-//		searchController.searchResultsUpdater = resultsController //!!!!!!!!!!
+		//		searchController.searchResultsUpdater = resultsController //!!!!!!!!!!
 		searchController.searchBar.autocapitalizationType = .none
 		searchController.searchBar.delegate = self
 		searchController.searchBar.placeholder = "Search or enter website name"
@@ -87,9 +88,9 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		
 		for vc in self.dataSource {
 			vc?.webView.scrollView.delegate = self
-//			vc?.webView.navigationDelegate = self
-//			self.navigationController?.title = vc?.urlString //
-
+			//			vc?.webView.navigationDelegate = self
+			//			self.navigationController?.title = vc?.urlString //
+			
 		}
 		
 		if #available(iOS 11.0, *) {
@@ -97,15 +98,15 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 			navigationItem.searchController = searchController
 			navigationItem.hidesSearchBarWhenScrolling = false
 			navigationItem.prompt = nil
-//			navigationController?.toolbar.delegate = self
+			//			navigationController?.toolbar.delegate = self
 		}
-//		self.navigationController?.navigationBar.isHidden = true
+		//		self.navigationController?.navigationBar.isHidden = true
 		self.navigationController?.navigationBar.barTintColor = UIColor.white
 		
 		var loadedExistingURL = false //???????
-//		if let lastCommittedURLStringString = UserDefaults.standard.object(forKey: "LastCommittedURLString") as? String {
-//			self.searchBar.text = lastCommittedURLStringString
-//		}
+		//		if let lastCommittedURLStringString = UserDefaults.standard.object(forKey: "LastCommittedURLString") as? String {
+		//			self.searchBar.text = lastCommittedURLStringString
+		//		}
 		
 		////  searchBar customization
 		searchBar.showsBookmarkButton = true
@@ -124,11 +125,27 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		NotificationGroup.shared.registerObserver(type: NotificationGroup.NotiType.urlUpdate, vc: self, selector: #selector(updateSearchBarText(notification:)))
 		registerNewTabObserver()
 		setupBackForwardObservation()
-//		setupLongPressObservation()
+		//		setupLongPressObservation()
 		
 		setupCustomButtons()
 		
 	}
+	
+	//	func searchQueryFromWikiOpenSearch(query: String) {
+	//		let url = URL(string: "https://en.wikipedia.org/w/api.php?")
+	//		let param: Parameters = [
+	//			"action" : "opensearch",
+	//			"search" : query
+	//		]
+	//
+	////		AF.request(url as! URLConvertible, method: HTTPMethod.get, parameters: param, encoding: ParameterEncoding.self, headers: <#T##HTTPHeaders?#>, interceptor: <#T##RequestInterceptor?#>)
+	//		AF.request(URL(string:"https://en.wikipedia.org/w/api.php?action=opensearch&search=\(query)")!)
+	//		.validate()
+	//			.response {
+	//
+	//		}
+	//
+	//	}
 	
 	func registerNewTabObserver() {
 		NotificationGroup.shared.registerObserver(type: NotificationGroup.NotiType.newTab, vc: self, selector: #selector(onNewTabNotification(notification:)))
@@ -171,24 +188,24 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		}
 	}
 	
-//	func setupLongPressObservation() {
-//		let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.didLongpressBarButtonItem(recognizer:)))
-//		self.tabsButton.addGestureRecognizer(recognizer)
-//	}
-//
-//	@objc func didLongpressBarButtonItem(recognizer: UILongPressGestureRecognizer) {
-//		print("Long Press!")
-//	}
+	//	func setupLongPressObservation() {
+	//		let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.didLongpressBarButtonItem(recognizer:)))
+	//		self.tabsButton.addGestureRecognizer(recognizer)
+	//	}
+	//
+	//	@objc func didLongpressBarButtonItem(recognizer: UILongPressGestureRecognizer) {
+	//		print("Long Press!")
+	//	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-//		self.safariPageController.dataSource = self
-//		self.safariPageController.delegate = self
-//		for vc in self.dataSource {
-//			vc?.webView.scrollView.delegate = self
-////			vc?.webView.navigationDelegate = self
-////			self.navigationController?.title = vc?.urlString //
-//		}
+		//		self.safariPageController.dataSource = self
+		//		self.safariPageController.delegate = self
+		//		for vc in self.dataSource {
+		//			vc?.webView.scrollView.delegate = self
+		////			vc?.webView.navigationDelegate = self
+		////			self.navigationController?.title = vc?.urlString //
+		//		}
 		
 		
 	}
@@ -199,11 +216,11 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		if let lastCommittedURLStringString = UserDefaults.standard.object(forKey: "LastCommittedURLString") as? String {
 			self.searchBar.text = lastCommittedURLStringString
 		}
-//		self.safariPageController.zoomOut(animated: true, completion: nil)
-//		if let urlObservationToken = Observables.shared.urlsObservationToken {
-//			let urlString = String(describing: urlObservationToken)
-//			self.searchBar.text = urlString
-//		}
+		//		self.safariPageController.zoomOut(animated: true, completion: nil)
+		//		if let urlObservationToken = Observables.shared.urlsObservationToken {
+		//			let urlString = String(describing: urlObservationToken)
+		//			self.searchBar.text = urlString
+		//		}
 		
 		if restoredState.wasActive {
 			searchController.isActive = restoredState.wasActive
@@ -242,21 +259,21 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		if let topWebVC = self.dataSource[selectedPageIndex ?? 0] {
 			Observables.shared.canGoBackObservationToken = topWebVC.webView.observe(\.canGoBack) { (object, change) in
 				self.backButton.isEnabled = topWebVC.webView.canGoBack
-
+				
 				if self.backButton.isEnabled == false {
 					self.backButton.imageView.tintColor = UIColor.systemGray
 				} else {
 					self.backButton.imageView.tintColor = UIColor.systemBlue
 				}
-	
-			}
 				
+			}
+			
 		}
 		
 		if let topWebVC = self.dataSource[selectedPageIndex ?? 0] {
 			Observables.shared.canGoForwardObservationToken = topWebVC.webView.observe(\.canGoForward) { (object, change) in
 				self.forwardButton.isEnabled = topWebVC.webView.canGoForward
-
+				
 				if self.forwardButton.isEnabled == false {
 					self.forwardButton.imageView.tintColor = UIColor.systemGray
 				}
@@ -266,7 +283,7 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 				
 			}
 		}
-
+		
 	}
 	
 	func setupCustomButtons() {
@@ -275,7 +292,7 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 			print("<- Back")
 			self.dataSource[self.selectedPageIndex ?? 0]?.webView.goBack()
 		}
-
+		
 		backButton.longEvent = {
 			print("Back long")
 			//TODO: - set the datasource to back list
@@ -283,25 +300,25 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 			let historyNav = storyboard.instantiateViewController(identifier: "HistoryNavigationController") as HistoryNavigationController
 			historyNav.entryPoint = HistoryNavigationController.entryPointType.backList
 			self.navigationController?.present(historyNav, animated: true, completion: nil)
-//			historyNav.modalPresentationStyle = .currentContext
-
-
-
+			//			historyNav.modalPresentationStyle = .currentContext
+			
+			
+			
 		}
-
+		
 		// MARK: ForwardButton
 		forwardButton.tapEvent = {
 			print("-> Forward")
 			self.dataSource[self.selectedPageIndex ?? 0]?.webView.goForward()
 		}
-
+		
 		forwardButton.longEvent = {
 			print("-> Forward long")
 			//TODO: - set the datasource to forward list
 			let storyboard = UIStoryboard(name: "Main", bundle: nil)
 			let historyNav = storyboard.instantiateViewController(identifier: "HistoryNavigationController") as HistoryNavigationController
 			historyNav.entryPoint = HistoryNavigationController.entryPointType.forwardList
-
+			
 			self.navigationController?.present(historyNav, animated: true, completion: nil)
 		}
 		
@@ -361,12 +378,12 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 			self.navigationController?.navigationBar.isHidden = self.safariPageController.isZoomedOut ? true : false
 			self.navigationController?.isToolbarHidden = self.safariPageController.isZoomedOut ? true : false
 			self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true
-
+			
 			for viewController in self.dataSource {
 				viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
 				viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
 			}
-
+			
 		}
 		
 		tabsButton.longEvent = {
@@ -384,10 +401,10 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 				//TODO: need to zoom out -> zoom into new tab first.
 				self.safariPageController.zoomOut(animated: true, completion: nil)
 				self.dataSource.insert(nil, at: Int(self.safariPageController.numberOfPages))
-						self.safariPageController.insertPages(at: IndexSet(integer: Int(self.safariPageController.numberOfPages)), animated: true) { () -> Void in
-							self.safariPageController.zoomIntoPage(at: self.safariPageController.numberOfPages - 1, animated: true, completion: nil)
-						}
-						self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? true : false
+				self.safariPageController.insertPages(at: IndexSet(integer: Int(self.safariPageController.numberOfPages)), animated: true) { () -> Void in
+					self.safariPageController.zoomIntoPage(at: self.safariPageController.numberOfPages - 1, animated: true, completion: nil)
+				}
+				self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? true : false
 			}
 			
 			
@@ -406,14 +423,14 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		self.dataSource[self.selectedPageIndex ?? 0]?.webView.goForward()
 	}
 	
-//// Delete later
-//	@IBAction func backButton(_ sender: UIBarButtonItem) {
-//		self.dataSource[selectedPageIndex ?? 0]?.webView.goBack()
-//	}
-//
-//	@IBAction func forwardButton(_ sender: UIBarButtonItem) {
-//		self.dataSource[selectedPageIndex ?? 0]?.webView.goForward()
-//	}
+	//// Delete later
+	//	@IBAction func backButton(_ sender: UIBarButtonItem) {
+	//		self.dataSource[selectedPageIndex ?? 0]?.webView.goBack()
+	//	}
+	//
+	//	@IBAction func forwardButton(_ sender: UIBarButtonItem) {
+	//		self.dataSource[selectedPageIndex ?? 0]?.webView.goForward()
+	//	}
 	
 	@IBAction func shareButton(_ sender: UIBarButtonItem) {
 		if let link = NSURL(string: self.searchBar.text!) {
@@ -424,44 +441,44 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		}
 	}
 	
-//// DeleteLater
-//	@IBAction func tabsBarButton(_ sender: UIBarButtonItem) {
-//		self.safariPageController.zoomOut(animated: true, completion: nil)
-//		self.navigationController?.navigationBar.isHidden = self.safariPageController.isZoomedOut ? true : false
-//		self.navigationController?.isToolbarHidden = self.safariPageController.isZoomedOut ? true : false
-//		self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true
-//
-//		for viewController in self.dataSource {
-//			viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
-//			viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
-//		}
-//
-//
-////		guard let touch = event.allTouches?.first else {
-////			return
-////		}
-////
-////		if touch.tapCount == 1 {
-////			self.safariPageController.zoomOut(animated: true, completion: nil)
-////			self.navigationController?.navigationBar.isHidden = self.safariPageController.isZoomedOut ? true : false
-////			self.navigationController?.isToolbarHidden = self.safariPageController.isZoomedOut ? true : false
-////			self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true
-////
-////			for viewController in self.dataSource {
-////				viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
-////				viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
-////			}
-////		}
-////		else if touch.tapCount == 0 {
-////			print("Tab Long touch??")
-////		}
-//
-//	}
+	//// DeleteLater
+	//	@IBAction func tabsBarButton(_ sender: UIBarButtonItem) {
+	//		self.safariPageController.zoomOut(animated: true, completion: nil)
+	//		self.navigationController?.navigationBar.isHidden = self.safariPageController.isZoomedOut ? true : false
+	//		self.navigationController?.isToolbarHidden = self.safariPageController.isZoomedOut ? true : false
+	//		self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true
+	//
+	//		for viewController in self.dataSource {
+	//			viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
+	//			viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
+	//		}
+	//
+	//
+	////		guard let touch = event.allTouches?.first else {
+	////			return
+	////		}
+	////
+	////		if touch.tapCount == 1 {
+	////			self.safariPageController.zoomOut(animated: true, completion: nil)
+	////			self.navigationController?.navigationBar.isHidden = self.safariPageController.isZoomedOut ? true : false
+	////			self.navigationController?.isToolbarHidden = self.safariPageController.isZoomedOut ? true : false
+	////			self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true
+	////
+	////			for viewController in self.dataSource {
+	////				viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
+	////				viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
+	////			}
+	////		}
+	////		else if touch.tapCount == 0 {
+	////			print("Tab Long touch??")
+	////		}
+	//
+	//	}
 	
 	
 	
 	@IBAction func doneButtonTap(_ sender: UIButton) {
-//		self.toggleZoomWithPageIndex(self.safariPageController.currentPage)
+		//		self.toggleZoomWithPageIndex(self.safariPageController.currentPage)
 		if self.safariPageController.isZoomedOut {
 			self.safariPageController.zoomIntoPage(at: self.safariPageController.currentPage, animated: true, completion: nil)
 			for viewController in self.dataSource {
@@ -475,7 +492,7 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 	@IBAction func addButtonTap(_ sender: UIButton) {
 		self.dataSource.insert(nil, at: Int(self.safariPageController.numberOfPages))
 		self.safariPageController.insertPages(at: IndexSet(integer: Int(self.safariPageController.numberOfPages)), animated: true) { () -> Void in
-//			self.toggleZoomWithPageIndex(self.safariPageController.numberOfPages - 1)
+			//			self.toggleZoomWithPageIndex(self.safariPageController.numberOfPages - 1)
 			self.safariPageController.zoomIntoPage(at: self.safariPageController.numberOfPages - 1, animated: true, completion: nil)
 		}
 		self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? true : false
@@ -510,34 +527,34 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 	// MARK: - SCViewControllerDelegate
 	
 	func viewControllerDidReceiveTap(_ viewController: MainWebVC) {
-//
-//		if !self.safariPageController.isZoomedOut {
-//			viewController.webView.isUserInteractionEnabled = true //
-//			return
-//		}
-//		let pageIndex = self.dataSource.firstIndex{$0 === viewController}
-//		selectedPageIndex = self.dataSource.firstIndex{$0 === viewController}
-//
-//		self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true //
-//		for viewController in self.dataSource {
-//			viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
-//			viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
-//		}
+		//
+		//		if !self.safariPageController.isZoomedOut {
+		//			viewController.webView.isUserInteractionEnabled = true //
+		//			return
+		//		}
+		//		let pageIndex = self.dataSource.firstIndex{$0 === viewController}
+		//		selectedPageIndex = self.dataSource.firstIndex{$0 === viewController}
+		//
+		//		self.tabsBarView.isHidden = self.safariPageController.isZoomedOut ? false : true //
+		//		for viewController in self.dataSource {
+		//			viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
+		//			viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
+		//		}
 		
 		if self.safariPageController.isZoomedOut { //zoomed out
 			let pageIndex = self.dataSource.firstIndex{$0 === viewController}
 			selectedPageIndex = self.dataSource.firstIndex{$0 === viewController}
-//			self.safariPageController.zoomIntoPage(at: UInt(pageIndex!), animated: true, completion: nil)
+			//			self.safariPageController.zoomIntoPage(at: UInt(pageIndex!), animated: true, completion: nil)
 			self.safariPageController.zoomIntoPage(at: UInt(pageIndex!), animated: true) {
 				self.tabsBarView.isHidden = true
 				viewController.webView.isUserInteractionEnabled = true
 			}
 			
 			
-//			self.safariPageController.zoomIntoPage(at: UInt(selectedPageIndex!), animated: true) {
-//				self.tabsBarView.isHidden = true
-//				viewController.webView.isUserInteractionEnabled = true
-//			}
+			//			self.safariPageController.zoomIntoPage(at: UInt(selectedPageIndex!), animated: true) {
+			//				self.tabsBarView.isHidden = true
+			//				viewController.webView.isUserInteractionEnabled = true
+			//			}
 			
 			
 			
@@ -547,8 +564,8 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 			self.tabsBarView.isHidden = false
 		}
 		
-//		self.toggleZoomWithPageIndex(UInt(pageIndex!))
-//		self.safariPageController.zoomIntoPage(at: UInt(pageIndex!), animated: true, completion: nil)
+		//		self.toggleZoomWithPageIndex(UInt(pageIndex!))
+		//		self.safariPageController.zoomIntoPage(at: UInt(pageIndex!), animated: true, completion: nil)
 	}
 	
 	func requestLoad(_ viewController: MainWebVC, urlToRequest: URL) {
@@ -664,28 +681,28 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 	
 	
 	// MARK: Private
-//	fileprivate func ZoomWithPageIndex(_ pageIndex:UInt) {
-//		if self.safariPageController.isZoomedOut {
-//			self.safariPageController.zoomIntoPage(at: pageIndex, animated: true, completion: nil)
-//		} else {
-//			self.safariPageController.zoomOut(animated: true, completion: nil)
-//		}
-//
-//		for viewController in self.dataSource {
-//			viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
-//			viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
-//		}
-//
-//		UIView.animate(withDuration: 0.25) { () -> Void in
-//			self.addButton.alpha = (self.safariPageController.isZoomedOut ? 1.0 : 0.0)
-//		}
-//
-//	}
-	
-
+	//	fileprivate func ZoomWithPageIndex(_ pageIndex:UInt) {
+	//		if self.safariPageController.isZoomedOut {
+	//			self.safariPageController.zoomIntoPage(at: pageIndex, animated: true, completion: nil)
+	//		} else {
+	//			self.safariPageController.zoomOut(animated: true, completion: nil)
+	//		}
+	//
+	//		for viewController in self.dataSource {
+	//			viewController?.setHeaderVisible(self.safariPageController.isZoomedOut, animated: true)
+	//			viewController?.blockUserInteractionWhenOpeningTab(self.safariPageController.isZoomedOut)
+	//		}
+	//
+	//		UIView.animate(withDuration: 0.25) { () -> Void in
+	//			self.addButton.alpha = (self.safariPageController.isZoomedOut ? 1.0 : 0.0)
+	//		}
+	//
+	//	}
 	
 	
-
+	
+	
+	
 }
 
 // MARK: - UISearchControllerDelegate
@@ -693,13 +710,13 @@ extension ContainerVC: UISearchControllerDelegate {
 	
 	func presentSearchController(_ searchController: UISearchController) {
 		print("presentSearchController")
-//		self.searchController.showsSearchResultsController = true
+		//		self.searchController.showsSearchResultsController = true
 	}
 	
 	func willPresentSearchController(_ searchController: UISearchController) {
 		print("willPresentSearchController")
 		
-//		searchController.showsSearchResultsController = false
+		//		searchController.showsSearchResultsController = false
 	}
 	
 	func didPresentSearchController(_ searchController: UISearchController) {
@@ -714,16 +731,68 @@ extension ContainerVC: UISearchControllerDelegate {
 	
 	func didDismissSearchController(_ searchController: UISearchController) {
 		print("didDismissSearchController")
-
+		
 	}
 	
 }
 
 // MARK: - UISearchResultsUpdating
 extension ContainerVC: UISearchResultsUpdating {
-	func updateSearchResults(for searchController: UISearchController) {
-		searchBar = searchController.searchBar
-		guard let text = searchController.searchBar.text else { return }
+
+	func searchContentForText(_ searchText: String) {
+		// Strip out all the leading and trailing spaces.
+		let whitespaceCharacterSet = CharacterSet.whitespaces
+		let strippedString = searchText.trimmingCharacters(in: whitespaceCharacterSet)
+		//		let searchItems = strippedString.components(separatedBy: " ") as [String]
+		//		searchQueryFromWikiOpenSearch(query: strippedString)
+		
+		let url = URL(string: "https://en.wikipedia.org/w/api.php?")!
+		let param: Parameters = [
+			"action" : "opensearch",
+			"search" : searchText
+		]
+		
+		var headers = HTTPHeaders()
+		headers = [
+			//			"Content-Type" : "text/html; charset=UTF-8",
+			//			"Content-Type" : "application/x-www-form-urlencoded",
+			"Content-Type" : "application/json",
+			"Accept": "multipart/form-data"
+		]
+		AF.request(url, method: .get, parameters: param, headers: headers)
+			.validate()
+			.response { (response) in
+				if let data = response.data {
+					do {
+						if let json = try JSONSerialization.jsonObject(with: data, options: [.mutableContainers, .allowFragments]) as? [Any] {
+							print("json!!!", json)
+							
+							if let suggestionsArray = json[1] ?? nil {
+								print("autocompleteSuggestions!!!")
+								print(suggestionsArray)
+//								self.resultsController.wikipediaData = suggestionsArray as! [String]
+								self.resultsController.filteredWikipediaData = suggestionsArray as! [String]
+								//TODO: - do I need to put this inside dispatch queue????
+								self.resultsController.tableView.reloadData()
+							}
+							
+							if let suggestionsURLArray = json[3] ?? nil {
+								print("autocompletionSuggestionsURLs!!!!")
+								print(suggestionsURLArray)
+//								self.resultsController.wikipediaUrlStrings = suggestionsURLArray as! [String]
+								self.resultsController.filteredWikipediaURLStrings = suggestionsURLArray as! [String]
+								//TODO: - do I need to put this inside dispatch queue????
+								self.resultsController.tableView.reloadData()
+							}
+						}
+					}
+					catch {
+						print("ERRORFEFEFE", error)
+						//TODO: - How should I handle this error here if there is no search text??
+					}
+				}
+		}
+
 	}
 	
 	func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -742,7 +811,9 @@ extension ContainerVC: UISearchResultsUpdating {
 	
 	func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
 		print("searchBarTextDidBeginEditing")
-		
+		if self.childBookmarkVC.view != nil {
+			self.childBookmarkVC.view.removeFromSuperview()
+		}
 	}
 	
 	func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
@@ -770,27 +841,26 @@ extension ContainerVC: UISearchResultsUpdating {
 		/// MainWebView의 protocol 중 하나인 requestLoad 는 현재 선택된 웹뷰 (selectedPageIndex) 를 가지고 그 해당 웹뷰에 URL 을 보낸다. 만약에 선택된 웹뷰탭이 없다면 0번째 웹뷰에 urlRequest를 보낸다.
 		requestLoad(self.dataSource[selectedPageIndex ?? 0] ?? MainWebVC(), urlToRequest: urlToRequest!)
 		
-//		let targetUrl = URL(string: urlString)
-//		let urlRequest = URLRequest(url: targetUrl!)
-//		print(self.safariPageController.loadedViewControllers)
-//		let pageIndex = self.dataSource.firstIndex{$0 === viewController}
-//-----------
-//		self.dataSource[UInt(self.selectedPageIndex)]
-//---------
-//		if let toppickedvc = self.dataSource.first {
-//			if let targetUrl = URL(string: urlString) {
-//				toppickedvc?.webView.load(URLRequest(url: targetUrl))
-//			}
-//		}
-//---------------
-//		if webView.url?.absoluteString == urlString {
-//			return
-//		}
-//
-//		if let targetUrl = URL(string: urlString) {
-//			webView.load(URLRequest(url: targetUrl))
-//		}
-
+		//		let targetUrl = URL(string: urlString)
+		//		let urlRequest = URLRequest(url: targetUrl!)
+		//		print(self.safariPageController.loadedViewControllers)
+		//		let pageIndex = self.dataSource.firstIndex{$0 === viewController}
+		//-----------
+		//		self.dataSource[UInt(self.selectedPageIndex)]
+		//---------
+		//		if let toppickedvc = self.dataSource.first {
+		//			if let targetUrl = URL(string: urlString) {
+		//				toppickedvc?.webView.load(URLRequest(url: targetUrl))
+		//			}
+		//		}
+		//---------------
+		//		if webView.url?.absoluteString == urlString {
+		//			return
+		//		}
+		//
+		//		if let targetUrl = URL(string: urlString) {
+		//			webView.load(URLRequest(url: targetUrl))
+		//		}
 	}
 	
 	func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -800,14 +870,140 @@ extension ContainerVC: UISearchResultsUpdating {
 		if self.childBookmarkVC.view != nil {
 			self.childBookmarkVC.view.removeFromSuperview()
 		}
+		self.searchController.showsSearchResultsController = false
 	}
-
+	
 	/* ---------- [FROM TableSearch] ---------- */
-
+	private func findMatches(searchString: String, keyPath: String) -> NSCompoundPredicate {
+		
+		var searchItemsPredicate = [NSPredicate]()
+		
+		// title matching
+		//		let titleExpression = NSExpression(forKeyPath: Product.ExpressionKeys.title.rawValue)
+		let titleExpression = NSExpression(forKeyPath: keyPath)
+		
+		let searchStringExpression = NSExpression(forConstantValue: searchString)
+		
+		let titleSearchComparisonPredicate = NSComparisonPredicate(leftExpression: titleExpression, rightExpression: searchStringExpression, modifier: .direct, type: .contains, options: [.caseInsensitive, .diacriticInsensitive])
+		
+		searchItemsPredicate.append(titleSearchComparisonPredicate)
+		
+		var finalCompoundPredicate: NSCompoundPredicate!
+		
+		finalCompoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: searchItemsPredicate)
+		
+		return finalCompoundPredicate
+	}
 	
 	
 	/* -------------------- */
-
+	
+	func updateSearchResults(for searchController: UISearchController) {
+		searchBar = searchController.searchBar
+		//		guard let text = searchController.searchBar.text else { return }
+		
+		// Update the filtered array based on the search text.
+		let wikipediaSearchResults = resultsController.wikipediaData
+		let bookmarkSearchResults = resultsController.bookmarkData
+		let historySearchResults = resultsController.historyData
+		let readingListSearchResults = resultsController.readingListData
+		
+		// Strip out all the leading and trailing spaces.
+		let whitespaceCharacterSet = CharacterSet.whitespaces
+		let strippedString = searchController.searchBar.text!.trimmingCharacters(in: whitespaceCharacterSet)
+		let searchItems = strippedString.components(separatedBy: " ") as [String]
+		
+		/* ---------- [Bookmark] ---------- */
+		let andMatchBookmarkPredicates: [NSPredicate] = searchItems.map { searchString in
+//			findMatches(searchString: searchString, keyPath: BookmarkData.expressionKeys.titleString.rawValue)
+			findMatches(searchString: searchString, keyPath: BookmarkData.expressionKeys.urlString.rawValue)
+		}
+		
+		let finalCompoundBookmarkPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: andMatchBookmarkPredicates)
+		
+		//		for item in bookmarkSearchResults { // 폴더가 아닌지를 체크 하기 위해??
+		//			if !item.isFolder {
+		//				let filteredBookmarkResults = bookmarkSearchResults.filter { (bookmarkData) -> Bool in
+		//					finalCompoundBookmarkPredicate.evaluate(with: bookmarkData )
+		//				}
+		//			}
+		//		}
+		
+		//		let filteredBookmarkResults  = bookmarkSearchResults.filter { (bookmarkData) -> Bool in
+		////			bookmarkData.child.count == 0 && finalCompoundBookmarkPredicate.evaluate(with: bookmarkData)
+		//			for item in bookmarkData.child {
+		//				return item.child.isEmpty && finalCompoundBookmarkPredicate.evaluate(with: item)
+		//			}
+		//
+		//		}
+		/* ---------- [Bookmark] ---------- */
+		var filteredBookmarkResults: [BookmarkData] = []
+		for bookmarkItem in bookmarkSearchResults {
+			if bookmarkItem.child.isEmpty && !bookmarkItem.isFolder {
+				filteredBookmarkResults = bookmarkSearchResults.filter { (bookmarkData) -> Bool in
+					finalCompoundBookmarkPredicate.evaluate(with: bookmarkData)
+				}
+			}
+		}
+		
+		
+		/* ---------- [History] ---------- */
+		// Build all the "AND" expressions for each value in searchString.
+		let andMatchHistoryPredicates: [NSPredicate] = searchItems.map { searchString in
+//			findMatches(searchString: searchString, keyPath: HistoryData.expressionKeys.title.rawValue)
+			findMatches(searchString: searchString, keyPath: HistoryData.expressionKeys.urlString.rawValue)
+		}
+		
+		// Match up the fields of the Product object.
+		let finalCompoundHistoryPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: andMatchHistoryPredicates)
+		
+		let filteredHistoryResults = historySearchResults.filter { finalCompoundHistoryPredicate.evaluate(with: $0)}
+		
+		// Apply the filtered results to the search results table.
+		//		if let resultsController = self.searchController.searchResultsController as? SearchResultsController {
+		//			resultsController.filteredHistoryData = filteredResults
+		//			resultsController.tableView.reloadData()
+		//		}
+		
+		/* ---------- [ReadingList] ---------- */
+		
+		let andMatchReadingListPredicates: [NSPredicate] = searchItems.map { searchString in
+//			findMatches(searchString: searchString, keyPath: ReadingListData.expressionkeys.title.rawValue)
+			findMatches(searchString: searchString, keyPath: ReadingListData.expressionkeys.urlString.rawValue)
+		}
+		
+		let finalCompoundReadingListPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: andMatchReadingListPredicates)
+		
+		let filteredReadingListResults = readingListSearchResults.filter { finalCompoundReadingListPredicate.evaluate(with: $0)}
+		
+		/* ---------- [On this page] ---------- */
+		
+		resultsController.originalData = resultsController.onThisPageData
+		
+		self.searchController = searchController
+		resultsController.searchText = searchController.searchBar.text!
+		resultsController.isSearchBarEmpty = { searchController.searchBar.text?.isEmpty ?? true }()
+		resultsController.isFiltering = { searchController.isActive && !(resultsController.isSearchBarEmpty ?? true)}()
+		
+		DispatchQueue.main.async {
+//			self.filterContentForSearchText(self.resultsController.searchText!)
+//			self.resultsController.filteredWikipediaData =
+			self.resultsController.filteredBookmarkData = filteredBookmarkResults
+			self.resultsController.filteredHistoryData = filteredHistoryResults
+			self.resultsController.filteredReadingListData = filteredReadingListResults
+			self.resultsController.tableView.reloadData()
+		}
+		
+	}
+	
+	func filterContentForSearchText(_ searchText: String) {
+		resultsController.filteredData = resultsController.originalData.filter( { (string) -> Bool in
+			Jamo.getJamo(string.lowercased()).contains(Jamo.getJamo(searchText.lowercased()))
+		})
+		
+		resultsController.tableView.reloadData()
+	}
+	
 }
 
 // MARK: - UISearchBarDelegate
@@ -816,13 +1012,17 @@ extension ContainerVC: UISearchBarDelegate {
 		print("textDidChange")
 		
 		self.searchController.showsSearchResultsController = true
+		filterContentForSearchText(searchText)
+		searchContentForText(searchText)
+		resultsController.tableView.reloadData()
 	}
+	
 	
 	func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
 		searchBar.endEditing(true)
 		searchBar.resignFirstResponder()
 		resignFirstResponder()
-//		hideKeyboardWhenTappedAround()
+		//		hideKeyboardWhenTappedAround()
 		self.searchController.showsSearchResultsController = false
 		if self.childBookmarkVC.view != nil {
 			self.childBookmarkVC.view.removeFromSuperview()
@@ -908,7 +1108,7 @@ extension ContainerVC {
 		coder.encode(searchController.searchBar.isFirstResponder, forKey: RestorationKeys.searchBarIsFirstResponder.rawValue)
 		
 		// Encode the first responder status (scope button)
-//		coder.encode(searchController.searchBar.selectedScopeButtonIndex, forKey: RestorationKeys.selectedScope.rawValue)
+		//		coder.encode(searchController.searchBar.selectedScopeButtonIndex, forKey: RestorationKeys.selectedScope.rawValue)
 		
 		// Encode the search bar text.
 		coder.encode(searchController.searchBar.text, forKey: RestorationKeys.searchBarText.rawValue)
@@ -932,7 +1132,7 @@ extension ContainerVC {
 		restoredState.wasFirstResponder = coder.decodeBool(forKey: RestorationKeys.searchBarIsFirstResponder.rawValue)
 		
 		// Restore the scope bar selection.
-//		searchController.searchBar.selectedScopeButtonIndex = coder.decodeInteger(forKey: RestorationKeys.selectedScope.rawValue)
+		//		searchController.searchBar.selectedScopeButtonIndex = coder.decodeInteger(forKey: RestorationKeys.selectedScope.rawValue)
 		
 		searchController.searchBar.text = coder.decodeObject(forKey: RestorationKeys.searchBarText.rawValue) as? String
 	}
