@@ -19,10 +19,14 @@ class BookmarkVC: UIViewController {
 	// MARK: - Constants X Properties
 	var isDepthViewController:Bool = false
 	var bookmarkData: [BookmarkData] = []
+	var filteredBookmarkData = [BookmarkData]()
 	
 	var searchController = UISearchController(searchResultsController: nil)
-	
 	lazy var searchBar = UISearchBar(frame: CGRect.zero)
+	
+	var isSearchBarEmpty: Bool?
+	var isFiltering: Bool?
+	
 	var toggle: Bool = false
 	var newFolderButton: UIBarButtonItem?
 	var btnTemp: UIButton?
@@ -38,8 +42,11 @@ class BookmarkVC: UIViewController {
 		
 		/// this is needed to fix searchbar in place. otherwise when it is clicked, navbar goes up!!!!!!!!!!
 		searchController.hidesNavigationBarDuringPresentation = false
+		searchController.searchResultsUpdater = self
+		searchController.obscuresBackgroundDuringPresentation = false
+		self.searchBar = searchController.searchBar
 		
-		self.searchBar.delegate = self
+//		self.searchBar.delegate = self
 //		bookmarkData = [BookmarkData(titleString: "Favorites", child: [], indexPath: [0])]
 		
 		self.editButton = self.editButtonItem
@@ -49,6 +56,9 @@ class BookmarkVC: UIViewController {
 		tableView.isEditing = false
 		toggle = tableView.isEditing
 		tableView.allowsSelectionDuringEditing = true
+		
+		tableView.register(UINib(nibName: "BookmarkCell", bundle: nil), forCellReuseIdentifier: "BookmarkCell")
+		
 		
 		btnTemp = UIButton.init(type: UIButton.ButtonType.custom)
 		btnTemp?.setTitle("New Folder", for: UIControl.State.normal)
@@ -134,16 +144,56 @@ class BookmarkVC: UIViewController {
 
 
 // MARK: - UISearchBarDelegate
-extension BookmarkVC: UISearchBarDelegate {
-	func position(for bar: UIBarPositioning) -> UIBarPosition {
-		return UIBarPosition.topAttached
-	}
-}
+//extension BookmarkVC: UISearchBarDelegate {
+//	func position(for bar: UIBarPositioning) -> UIBarPosition {
+//		return UIBarPosition.topAttached
+//	}
+//}
 
 // MARK: - UISearchResultsUpdating
 extension BookmarkVC: UISearchResultsUpdating {
+	
+	private func findMatches(searchString: String, keyPath: String) -> NSCompoundPredicate {
+		
+		var searchItemsPredicate = [NSPredicate]()
+		
+		// title matching
+		//		let titleExpression = NSExpression(forKeyPath: Product.ExpressionKeys.title.rawValue)
+		let titleExpression = NSExpression(forKeyPath: keyPath)
+		
+		let searchStringExpression = NSExpression(forConstantValue: searchString)
+		
+		let titleSearchComparisonPredicate = NSComparisonPredicate(leftExpression: titleExpression, rightExpression: searchStringExpression, modifier: .direct, type: .contains, options: [.caseInsensitive, .diacriticInsensitive])
+		
+		searchItemsPredicate.append(titleSearchComparisonPredicate)
+		
+		var finalCompoundPredicate: NSCompoundPredicate!
+		
+		finalCompoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: searchItemsPredicate)
+		
+		return finalCompoundPredicate
+	}
+	
 	func updateSearchResults(for searchController: UISearchController) {
-		//
+		print("update Bookmark SearchResults")
+		let bookmarkSearchResults = self.bookmarkData
+		
+		let whitespaceCharacterSet = CharacterSet.whitespaces
+		let strippedString = searchController.searchBar.text!.trimmingCharacters(in: whitespaceCharacterSet)
+		let searchItems = strippedString.components(separatedBy: " ") as [String]
+		
+		let andMatchBookmarkPredicates: [NSPredicate] = searchItems.map { searchString in
+			findMatches(searchString: searchString, keyPath: BookmarkData.expressionKeys.titleString.rawValue)
+		}
+		let finalCompoundBookmarkPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: andMatchBookmarkPredicates)
+		let filteredBookmarkResults = bookmarkSearchResults.filter { finalCompoundBookmarkPredicate.evaluate(with: $0)}
+		self.filteredBookmarkData = filteredBookmarkResults
+		
+		self.isSearchBarEmpty = searchController.searchBar.text?.isEmpty ?? true
+		self.isFiltering = searchController.isActive && !(self.isSearchBarEmpty ?? true)
+		
+		self.tableView.reloadData()
+		
 	}
 }
 
@@ -151,26 +201,58 @@ extension BookmarkVC: UISearchResultsUpdating {
 extension BookmarkVC: UITableViewDataSource, UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return bookmarkData.count
+		if isFiltering == true {
+			return filteredBookmarkData.count
+		}
+		else {
+			return bookmarkData.count
+		}
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "sample", for: indexPath)
+//		let cell = tableView.dequeueReusableCell(withIdentifier: "sample", for: indexPath)
+		let cell = tableView.dequeueReusableCell(withIdentifier: "BookmarkCell", for: indexPath) as! BookmarkCell
+		var data: BookmarkData?
 		
-		if !bookmarkData[indexPath.row].isFolder {
-			cell.imageView?.image = UIImage(systemName: "book")
-			cell.textLabel?.text = bookmarkData[indexPath.row].titleString
-			cell.editingAccessoryType = .disclosureIndicator
-			return cell
+		if isFiltering == true {
+			data = filteredBookmarkData[indexPath.row]
 		}
-			//		else if bookmarkData[0].titleString == "Favorites" && bookmarkData[indexPath.row].isFolder {
-			//			cell.imageView?.image = UIImage(systemName: "star")
-			//		}
 		else {
-			cell.imageView?.image = UIImage(systemName: "folder")
+			data = bookmarkData[indexPath.row]
 		}
+
+		cell.setCellData(data)
 		
-		cell.textLabel?.text = bookmarkData[indexPath.row].titleString
+//		if isFiltering == true {
+//			if !filteredBookmarkData[indexPath.row].isFolder {
+//				cell.imageView?.image = UIImage(systemName: "book")
+//				cell.textLabel?.text = bookmarkData[indexPath.row].titleString
+//				cell.editingAccessoryType = .disclosureIndicator
+//				return cell
+//			}
+//			else {
+//				cell.imageView?.image = UIImage(systemName: "folder")
+//			}
+//			cell.textLabel?.text = filteredBookmarkData[indexPath.row].titleString
+//		}
+//		else {
+//			if !bookmarkData[indexPath.row].isFolder {
+//						cell.imageView?.image = UIImage(systemName: "book")
+//						cell.textLabel?.text = bookmarkData[indexPath.row].titleString
+//						cell.editingAccessoryType = .disclosureIndicator
+//						return cell
+//					}
+//			//		else if bookmarkData[0].titleString == "Favorites" && bookmarkData[indexPath.row].isFolder {
+//			//			cell.imageView?.image = UIImage(systemName: "star")
+//			//		}
+//					else {
+//						cell.imageView?.image = UIImage(systemName: "folder")
+//					}
+//
+//					cell.textLabel?.text = bookmarkData[indexPath.row].titleString
+//		}
+		
+		
 		
 		return cell
 	}
@@ -179,45 +261,94 @@ extension BookmarkVC: UITableViewDataSource, UITableViewDelegate {
 		print("didSelectRowAt \(indexPath)")
 		let storybaord = UIStoryboard(name: "Main", bundle: Bundle.main)
 		if let reusableVC = storybaord.instantiateViewController(identifier: "BookmarkVC") as? BookmarkVC {
-			if bookmarkData[indexPath.row].isFolder {	
-				if tableView.isEditing {
-					print("is Folder and editing")
-					if let reusableEditFolder = storyboard?.instantiateViewController(identifier: "EditFolderVC") as? EditFolderVC {
-						reusableEditFolder.selectedIndexPath = indexPath
-						reusableEditFolder.folderTitle = bookmarkData[indexPath.row].titleString
-						navigationController?.pushViewController(reusableEditFolder, animated: true)
+			/// CHECK if user is filtering data or not
+			if isFiltering == true {
+				/// CHECK if data is folder or bookmark
+				if filteredBookmarkData[indexPath.row].isFolder {
+					/// CHECK if isEdinging or not
+					if tableView.isEditing {
+						print("is Folder and editing")
+						if let reusableEditFolder = storyboard?.instantiateViewController(identifier: "EditFolderVC") as? EditFolderVC {
+							reusableEditFolder.selectedIndexPath = indexPath
+							reusableEditFolder.folderTitle = filteredBookmarkData[indexPath.row].titleString
+							navigationController?.pushViewController(reusableEditFolder, animated: true)
+						}
+					}
+					else {
+						print("is Folder and not editing")
+						reusableVC.navigationController?.title = filteredBookmarkData[indexPath.row].titleString
+						reusableVC.title = filteredBookmarkData[indexPath.row].titleString
+						reusableVC.bookmarkData = filteredBookmarkData[indexPath.row].child
+						reusableVC.isDepthViewController = true
+						
+						if let cc = self.completionHandler {
+							reusableVC.completionHandler = cc
+						}
+						navigationController?.pushViewController(reusableVC, animated: true)
 					}
 				}
 				else {
-					print("is Folder and not editing")
-					reusableVC.navigationController?.title = bookmarkData[indexPath.row].titleString
-					reusableVC.title = bookmarkData[indexPath.row].titleString
-					reusableVC.bookmarkData = bookmarkData[indexPath.row].child
-					reusableVC.isDepthViewController = true
-					
-					if let cc = self.completionHandler {
-						reusableVC.completionHandler = cc
+					print("is bookmark and not editing")
+					guard let urlString = filteredBookmarkData[indexPath.row].urlString else { return }
+					guard let titleString = filteredBookmarkData[indexPath.row].titleString else { return }
+					if tableView.isEditing {
+						print("is bookmark and editing")
+						if let reusableEditBookmarkVC = storyboard?.instantiateViewController(identifier: "EditBookmarkVC") as? EditBookmarkVC {
+							reusableEditBookmarkVC.bookmarkTitle = titleString
+							reusableEditBookmarkVC.address = urlString
+							navigationController?.pushViewController(reusableEditBookmarkVC, animated: true)
+						}
 					}
-					navigationController?.pushViewController(reusableVC, animated: true)
+					else {
+						self.presentingViewController?.dismiss(animated: true) {
+							NotificationGroup.shared.post(type: .bookmarkURLName, userInfo: ["selectedBookmarkURL": urlString])
+						}
+					}
 				}
 			}
 			else {
-				print("is bookmark and not editing")
-				guard let urlString = bookmarkData[indexPath.row].urlString else { return }
-				guard let titleString = bookmarkData[indexPath.row].titleString else { return }
-				if tableView.isEditing {
-					print("is bookmark and editing")
-					if let reusableEditBookmarkVC = storyboard?.instantiateViewController(identifier: "EditBookmarkVC") as? EditBookmarkVC {
-						reusableEditBookmarkVC.bookmarkTitle = titleString
-						reusableEditBookmarkVC.address = urlString
-						navigationController?.pushViewController(reusableEditBookmarkVC, animated: true)
+				if bookmarkData[indexPath.row].isFolder {
+					if tableView.isEditing {
+						print("is Folder and editing")
+						if let reusableEditFolder = storyboard?.instantiateViewController(identifier: "EditFolderVC") as? EditFolderVC {
+							reusableEditFolder.selectedIndexPath = indexPath
+							reusableEditFolder.folderTitle = bookmarkData[indexPath.row].titleString
+							navigationController?.pushViewController(reusableEditFolder, animated: true)
+						}
+					}
+					else {
+						print("is Folder and not editing")
+						reusableVC.navigationController?.title = bookmarkData[indexPath.row].titleString
+						reusableVC.title = bookmarkData[indexPath.row].titleString
+						reusableVC.bookmarkData = bookmarkData[indexPath.row].child
+						reusableVC.isDepthViewController = true
+						
+						if let cc = self.completionHandler {
+							reusableVC.completionHandler = cc
+						}
+						navigationController?.pushViewController(reusableVC, animated: true)
 					}
 				}
 				else {
-					NotificationGroup.shared.post(type: .bookmarkURLName, userInfo: ["selectedBookmarkURL": urlString])
-					self.dismiss(animated: true, completion: nil)
+					print("is bookmark and not editing")
+					guard let urlString = bookmarkData[indexPath.row].urlString else { return }
+					guard let titleString = bookmarkData[indexPath.row].titleString else { return }
+					if tableView.isEditing {
+						print("is bookmark and editing")
+						if let reusableEditBookmarkVC = storyboard?.instantiateViewController(identifier: "EditBookmarkVC") as? EditBookmarkVC {
+							reusableEditBookmarkVC.bookmarkTitle = titleString
+							reusableEditBookmarkVC.address = urlString
+							navigationController?.pushViewController(reusableEditBookmarkVC, animated: true)
+						}
+					}
+					else {
+						self.presentingViewController?.dismiss(animated: true) {
+							NotificationGroup.shared.post(type: .bookmarkURLName, userInfo: ["selectedBookmarkURL": urlString])
+						}
+					}
 				}
 			}
+			
 		} else {
 			print("vc load fail")
 		}

@@ -70,9 +70,6 @@ class NotificationGroup {
 				return Notification.Name.init("newTab")
 			case .newTabsListDataUpdate:
 				return Notification.Name.init("newTabsListDataUpdate")
-				
-			default:
-				return nil
 			}
 		}
 	}

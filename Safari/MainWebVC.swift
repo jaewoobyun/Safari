@@ -276,8 +276,8 @@ extension MainWebVC: WKNavigationDelegate {
 		print("backList")
 		print(self.webView.backForwardList.backList.description)
 		
-		var backList = self.webView.backForwardList.backList
-		var forwardList = self.webView.backForwardList.forwardList
+		let backList = self.webView.backForwardList.backList
+		let forwardList = self.webView.backForwardList.forwardList
 		
 		UserDefaultsManager.shared.insertBackListItem(currentWebView: currentItemTitle, backList: backList)
 		UserDefaultsManager.shared.insertForwardListItem(currentWebView: currentItemTitle, forwardList: forwardList)

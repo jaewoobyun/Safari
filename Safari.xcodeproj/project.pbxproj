@@ -47,6 +47,8 @@
 		DBA4B98723D6CBFA00122D39 /* SafariUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B98623D6CBFA00122D39 /* SafariUITests.swift */; };
 		DBA4B99623D6D29100122D39 /* MainWebVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA4B99423D6D29100122D39 /* MainWebVC.swift */; };
 		DBA4B99723D6D29100122D39 /* MainWebVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = DBA4B99523D6D29100122D39 /* MainWebVC.xib */; };
+		DBC517B724481A480039DD33 /* BookmarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC517B524481A470039DD33 /* BookmarkCell.swift */; };
+		DBC517B824481A480039DD33 /* BookmarkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DBC517B624481A470039DD33 /* BookmarkCell.xib */; };
 		DBE3C2CF23F992F9008986C0 /* EditFolderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBE3C2CE23F992F9008986C0 /* EditFolderVC.swift */; };
 		F6D7BB6F5D818B6ECF7A8A41 /* Pods_SafariTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 126AC6A83B1F3FD52C8B880D /* Pods_SafariTests.framework */; };
 /* End PBXBuildFile section */
@@ -120,6 +122,8 @@
 		DBA4B98823D6CBFA00122D39 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DBA4B99423D6D29100122D39 /* MainWebVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWebVC.swift; sourceTree = "<group>"; };
 		DBA4B99523D6D29100122D39 /* MainWebVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWebVC.xib; sourceTree = "<group>"; };
+		DBC517B524481A470039DD33 /* BookmarkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkCell.swift; sourceTree = "<group>"; };
+		DBC517B624481A470039DD33 /* BookmarkCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BookmarkCell.xib; sourceTree = "<group>"; };
 		DBE3C2CE23F992F9008986C0 /* EditFolderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFolderVC.swift; sourceTree = "<group>"; };
 		ECEA09382295F7242CFB3081 /* Pods-SafariUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SafariUITests.debug.xcconfig"; path = "Target Support Files/Pods-SafariUITests/Pods-SafariUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED32E9907F9188BF032D94E4 /* Pods-Safari.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Safari.debug.xcconfig"; path = "Target Support Files/Pods-Safari/Pods-Safari.debug.xcconfig"; sourceTree = "<group>"; };
@@ -196,6 +200,8 @@
 		DB104E7B23F3BAF8002A8F5B /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				DBC517B524481A470039DD33 /* BookmarkCell.swift */,
+				DBC517B624481A470039DD33 /* BookmarkCell.xib */,
 				DB104E7C23F3BB41002A8F5B /* ReadingListCell.swift */,
 				DB104E7D23F3BB41002A8F5B /* ReadingListCell.xib */,
 				DB104E8123F3BD68002A8F5B /* FolderCell.swift */,
@@ -416,6 +422,7 @@
 				DB104E7F23F3BB41002A8F5B /* ReadingListCell.xib in Resources */,
 				DBA4B99723D6D29100122D39 /* MainWebVC.xib in Resources */,
 				DBA4B96923D6CBF600122D39 /* Main.storyboard in Resources */,
+				DBC517B824481A480039DD33 /* BookmarkCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -551,6 +558,7 @@
 				DB6F408523E94FB40018D75F /* Extensions.swift in Sources */,
 				DB104E8923F3BF35002A8F5B /* UserDefaultsManager.swift in Sources */,
 				DB3D8C1823F98FFE00AD72D7 /* EditBookmarkVC.swift in Sources */,
+				DBC517B724481A480039DD33 /* BookmarkCell.swift in Sources */,
 				DB104E6E23F25CBB002A8F5B /* Alerts.swift in Sources */,
 				DB52B083242A43A3001D3E51 /* SearchResultsController.swift in Sources */,
 				DBE3C2CF23F992F9008986C0 /* EditFolderVC.swift in Sources */,

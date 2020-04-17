@@ -103,7 +103,6 @@ class ContainerVC: UIViewController, SCSafariPageControllerDataSource, SCSafariP
 		//		self.navigationController?.navigationBar.isHidden = true
 		self.navigationController?.navigationBar.barTintColor = UIColor.white
 		
-		var loadedExistingURL = false //???????
 		//		if let lastCommittedURLStringString = UserDefaults.standard.object(forKey: "LastCommittedURLString") as? String {
 		//			self.searchBar.text = lastCommittedURLStringString
 		//		}

@@ -18,13 +18,13 @@ class HistoryNavigationController: UINavigationController {
 		case history
 	}
 	
-//	override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-//		<#code#>
-//	}
-//
-//	required init?(coder aDecoder: NSCoder) {
-//		fatalError("init(coder:) has not been implemented")
-//	}
+	//	override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+	//		<#code#>
+	//	}
+	//
+	//	required init?(coder aDecoder: NSCoder) {
+	//		fatalError("init(coder:) has not been implemented")
+	//	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -41,46 +41,46 @@ class HistoryNavigationController: UINavigationController {
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		switch self.entryPoint {
-					case .backList:
-						let storyboard = UIStoryboard(name: "Main", bundle: nil)
-						let backVC = storyboard.instantiateViewController(identifier: "BackForwardListVC") as BackForwardListVC
+		case .backList:
+			let storyboard = UIStoryboard(name: "Main", bundle: nil)
+			let backVC = storyboard.instantiateViewController(identifier: "BackForwardListVC") as BackForwardListVC
 			//			let backVC = storyboard?.instantiateViewController(withIdentifier: "BackForwardListVC") //as! BackForwardListVC
-						backVC.title = "Back List"
-//						backVC.registerBackObservers()
+			backVC.title = "Back List"
+			//						backVC.registerBackObservers()
 			//			self.pushViewController(backVC!, animated: true)
-						backVC.dataSource = UserDefaultsManager.shared.backList
-						
-						self.show(backVC, sender: nil)
+			backVC.dataSource = UserDefaultsManager.shared.backList
+			
+			self.show(backVC, sender: nil)
 			//			self.present(backVC, animated: true, completion: nil)
-						
-					case .forwardList:
-						let storyboard = UIStoryboard(name: "Main", bundle: nil)
-						let forwardVC = storyboard.instantiateViewController(withIdentifier: "BackForwardListVC") as! BackForwardListVC
-						forwardVC.title = "Forward List"
+			
+		case .forwardList:
+			let storyboard = UIStoryboard(name: "Main", bundle: nil)
+			let forwardVC = storyboard.instantiateViewController(withIdentifier: "BackForwardListVC") as! BackForwardListVC
+			forwardVC.title = "Forward List"
 			//			forwardVC.registerForwardObservers()
 			//			self.pushViewController(forwardVC!, animated: true)
-						
-						forwardVC.dataSource = UserDefaultsManager.shared.forwardList
-						self.show(forwardVC, sender: nil)
+			
+			forwardVC.dataSource = UserDefaultsManager.shared.forwardList
+			self.show(forwardVC, sender: nil)
 			//			self.present(forwardVC!, animated: true, completion: nil)
-						
-					default:
-						let historyVC = storyboard?.instantiateViewController(withIdentifier: "HistoryVC")
+			
+		default:
+			let historyVC = storyboard?.instantiateViewController(withIdentifier: "HistoryVC")
 			//			self.pushViewController(historyVC!, animated: true)
 			//			self.show(historyVC!, sender: nil)
-						self.present(historyVC!, animated: true, completion: nil)
-					}
+			self.present(historyVC!, animated: true, completion: nil)
+		}
 	}
 	
 	
 	// MARK: - Navigation
 	
 	// In a storyboard-based application, you will often want to do a little preparation before navigation
-//	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//	// Get the new view controller using segue.destination.
-//	// Pass the selected object to the new view controller.
-//		print("whatttt?")
-//	}
+	//	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	//	// Get the new view controller using segue.destination.
+	//	// Pass the selected object to the new view controller.
+	//		print("whatttt?")
+	//	}
 	
 	
 }

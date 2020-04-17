@@ -23,7 +23,7 @@ class BackForwardListVC: UITableViewController {
 		registerBackObservers()
 		registerForwardObservers()
 		
-		tableView.register(UITableViewCell.self, forCellReuseIdentifier: "BackForwardListCell")
+//		tableView.register(UITableViewCell.self, forCellReuseIdentifier: "BackForwardListCell")
 		
 		
 	}
@@ -42,6 +42,12 @@ class BackForwardListVC: UITableViewController {
 		}
 		
 		
+	}
+	
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		
+		NotificationGroup.shared.removeAllObserver(vc: self)
 	}
 	
 	func registerBackObservers() {
@@ -72,11 +78,7 @@ class BackForwardListVC: UITableViewController {
 		self.tableView.reloadData()
 	}
 	
-	override func viewDidDisappear(_ animated: Bool) {
-		super.viewDidDisappear(animated)
-		
-		NotificationGroup.shared.removeAllObserver(vc: self)
-	}
+
 	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return dataSource.count
@@ -85,10 +87,15 @@ class BackForwardListVC: UITableViewController {
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "BackForwardListCell", for: indexPath)
 		cell.textLabel?.text = dataSource[indexPath.row].title
-		
 		cell.detailTextLabel?.text = dataSource[indexPath.row].url.absoluteString
 		
 		return cell
+	}
+	
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		self.presentingViewController?.dismiss(animated: true, completion: {
+			//TODO: need to implement this: if user selects a row, the webview needs to go back to that specific url. ㅠㅠ
+		})
 	}
 	
 }
